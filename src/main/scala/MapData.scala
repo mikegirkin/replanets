@@ -1,6 +1,6 @@
 package replanets.common
 
-case Minerals(
+case class Minerals(
 	ne: Int,
 	tr: Int,
 	du: Int,
@@ -21,7 +21,7 @@ case class PlanetStructures(
 )
 
 case class PlanetState(
-	planetId: id,
+	planetId: Int,
 	mineralsMined: Minerals,
 	mineralsCore: Minerals,
 	mineralsDensity: Minerals,

@@ -1,8 +1,7 @@
-import java._
-
 object Runner {
     def main(args: Array[String]) = {
-        println("Hello world!")
+        val map = replanets.common.Map.readFromXyplan("sdfsdf")
+        println(map.toList)
     }
 }
 
