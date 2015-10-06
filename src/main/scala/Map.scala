@@ -3,6 +3,8 @@ package replanets.common
 import java.nio.{ByteOrder, ByteBuffer}
 import java.nio.file.Paths
 
+import replanets.recipes._
+
 case class Map(
 	height: Int,
 	width: Int,
@@ -10,32 +12,35 @@ case class Map(
 	storms: Seq[IonStorm]
 )
 
-trait BinaryReadRecipe[T] {
-	def read(source: Iterator[Byte]): T
-	val size: Int
+case class PlanetName(
+	name: String
+)
+
+object PlanetName {
+	val raceNameSize = 20
+	val recipe = RecordRecipe(
+		SpacePaddedString(raceNameSize)
+	)(PlanetName.apply)
 }
 
-object WORD extends BinaryReadRecipe[Short] {
-	val size = 2
+case class RaceName(
+	longName: String,
+	shortname: String,
+  adjective: String
+)
 
-	def read(source: Iterator[Byte]): Short =
-		ByteBuffer.wrap(Array(source.next(), source.next())).order(ByteOrder.LITTLE_ENDIAN).getShort
-}
+object RaceName {
+	private val longNameSize = 30
+	private val shortNameSize = 20
+	private val adjectiveSize = 12
 
-object RecordRecipe {
-	def apply[R, A1, A2, A3](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2], a3: BinaryReadRecipe[A3])(apply: (A1, A2, A3) => R) = new BinaryReadRecipe[R] {
-		val size = a1.size + a2.size + a3.size
-
-		override def read(source: Iterator[Byte]): R =
-			apply(
-				a1.read(source),
-				a2.read(source),
-				a3.read(source)
-			)
-	}
+	val longNameRecipe = SpacePaddedString(longNameSize)
+	val shortNameRecipe = SpacePaddedString(shortNameSize)
+	val adjectiveRecipe = SpacePaddedString(adjectiveSize)
 }
 
 object Map {
+
 
 	case class XYPlanDatRecord(
 		x: Short,
