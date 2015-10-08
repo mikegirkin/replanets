@@ -1,6 +1,5 @@
 package replanets.common
 
-import java.nio.{ByteOrder, ByteBuffer}
 import java.nio.file.Paths
 
 import replanets.recipes._
@@ -37,6 +36,32 @@ object RaceName {
 	val longNameRecipe = SpacePaddedString(longNameSize)
 	val shortNameRecipe = SpacePaddedString(shortNameSize)
 	val adjectiveRecipe = SpacePaddedString(adjectiveSize)
+}
+
+case class TorpspecItem(
+	name: String,
+	moneyCost: Short,
+	triCost: Short,
+	durCost: Short,
+	molCost: Short,
+	mass: Short,
+	techLevel: Short,
+	kill: Short,
+	damage: Short
+)
+
+object TorpspecItem {
+	val recipe = RecordRecipe(
+		SpacePaddedString(20),
+		WORD,
+		WORD,
+		WORD,
+		WORD,
+		WORD,
+		WORD,
+		WORD,
+		WORD
+	)(TorpspecItem.apply)
 }
 
 object Map {
