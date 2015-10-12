@@ -1,6 +1,6 @@
 import java.nio.file.Paths
 
-import replanets.common.{PlanetName, RaceName}
+import replanets.common.{PlanetnmItem, PlanetnmItem$, RacenmItem}
 
 object Runner {
     def main(args: Array[String]) = {
@@ -24,29 +24,29 @@ object Runner {
         val numberOfRaces = 11
 
         val longNames = byteArray
-          .take(numberOfRaces * RaceName.longNameRecipe.size)
-          .grouped(RaceName.longNameRecipe.size)
-          .map(x => RaceName.longNameRecipe.read(x.iterator))
+          .take(numberOfRaces * RacenmItem.longNameRecipe.size)
+          .grouped(RacenmItem.longNameRecipe.size)
+          .map(x => RacenmItem.longNameRecipe.read(x.iterator))
         val shortNames = byteArray
           .slice(
-            numberOfRaces * RaceName.longNameRecipe.size,
-            numberOfRaces * RaceName.longNameRecipe.size + numberOfRaces * RaceName.shortNameRecipe.size)
-          .grouped(RaceName.shortNameRecipe.size)
-          .map(x => RaceName.shortNameRecipe.read(x.iterator))
+            numberOfRaces * RacenmItem.longNameRecipe.size,
+            numberOfRaces * RacenmItem.longNameRecipe.size + numberOfRaces * RacenmItem.shortNameRecipe.size)
+          .grouped(RacenmItem.shortNameRecipe.size)
+          .map(x => RacenmItem.shortNameRecipe.read(x.iterator))
         val adjectiveNames = byteArray
           .slice(
-            numberOfRaces * RaceName.longNameRecipe.size + numberOfRaces * RaceName.shortNameRecipe.size,
-            numberOfRaces * RaceName.longNameRecipe.size + numberOfRaces * RaceName.shortNameRecipe.size + numberOfRaces * RaceName.adjectiveRecipe.size)
-          .grouped(RaceName.adjectiveRecipe.size)
-          .map(x => RaceName.adjectiveRecipe.read(x.iterator))
-        longNames zip shortNames zip adjectiveNames map { case ((ln, sn), adj) => RaceName(ln, sn, adj) } toList
+            numberOfRaces * RacenmItem.longNameRecipe.size + numberOfRaces * RacenmItem.shortNameRecipe.size,
+            numberOfRaces * RacenmItem.longNameRecipe.size + numberOfRaces * RacenmItem.shortNameRecipe.size + numberOfRaces * RacenmItem.adjectiveRecipe.size)
+          .grouped(RacenmItem.adjectiveRecipe.size)
+          .map(x => RacenmItem.adjectiveRecipe.read(x.iterator))
+        longNames zip shortNames zip adjectiveNames map { case ((ln, sn), adj) => RacenmItem(ln, sn, adj) } toList
     }
 
     def readPlanetnames(filename: String) = {
         val byteArray = java.nio.file.Files.readAllBytes(Paths.get(filename))
-        byteArray.grouped(PlanetName.recipe.size).map { record =>
+        byteArray.grouped(PlanetnmItem.recipe.size).map { record =>
             val iter = record.iterator
-            PlanetName.recipe.read(iter)
+            PlanetnmItem.recipe.read(iter)
         }.toList
     }
 }

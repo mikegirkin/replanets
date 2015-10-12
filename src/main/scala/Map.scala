@@ -2,8 +2,6 @@ package replanets.common
 
 import java.nio.file.Paths
 
-import replanets.recipes._
-
 case class Map(
 	height: Int,
 	width: Int,
@@ -11,75 +9,13 @@ case class Map(
 	storms: Seq[IonStorm]
 )
 
-case class PlanetName(
-	name: String
-)
-
-object PlanetName {
-	val raceNameSize = 20
-	val recipe = RecordRecipe(
-		SpacePaddedString(raceNameSize)
-	)(PlanetName.apply)
-}
-
-case class RaceName(
-	longName: String,
-	shortname: String,
-  adjective: String
-)
-
-object RaceName {
-	private val longNameSize = 30
-	private val shortNameSize = 20
-	private val adjectiveSize = 12
-
-	val longNameRecipe = SpacePaddedString(longNameSize)
-	val shortNameRecipe = SpacePaddedString(shortNameSize)
-	val adjectiveRecipe = SpacePaddedString(adjectiveSize)
-}
-
-case class TorpspecItem(
-	name: String,
-	moneyCost: Short,
-	triCost: Short,
-	durCost: Short,
-	molCost: Short,
-	mass: Short,
-	techLevel: Short,
-	kill: Short,
-	damage: Short
-)
-
-object TorpspecItem {
-	val recipe = RecordRecipe(
-		SpacePaddedString(20),
-		WORD,
-		WORD,
-		WORD,
-		WORD,
-		WORD,
-		WORD,
-		WORD,
-		WORD
-	)(TorpspecItem.apply)
-}
-
 object Map {
 
-
-	case class XYPlanDatRecord(
-		x: Short,
-		y: Short,
-		owner: Short
-	)
-
-	def readFromXyplan(filename: String): Array[XYPlanDatRecord] = {
-		val filename = "/Users/mgirkin/proj/gmil/replanets/testfiles/xyplan.dat"
+	def readFromXyplan(filename: String): Array[XyplandatItem] = {
 		val byteArray = java.nio.file.Files.readAllBytes(Paths.get(filename))
-		val xyPlanRecordRecipe = RecordRecipe(WORD, WORD, WORD)(XYPlanDatRecord.apply)
-		byteArray.grouped(xyPlanRecordRecipe.size).map { record =>
+		byteArray.grouped(XyplandatItem.recipe.size).map { record =>
 			val iter = record.iterator
-			xyPlanRecordRecipe.read(iter)
+			XyplandatItem.recipe.read(iter)
 		}.toArray
 	}
 
