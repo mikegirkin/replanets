@@ -1,10 +1,12 @@
 package replanets.common
 
-import replanets.recipes.{WORD, SpacePaddedString, RecordRecipe}
+import common.Constants
+import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class TorpspecItem(
   name: String,
-  moneyCost: Short,
+  topredoMoneyCost: Short,
+  launcherMoneyCost: Short,
   triCost: Short,
   durCost: Short,
   molCost: Short,
@@ -15,8 +17,11 @@ case class TorpspecItem(
 )
 
 object TorpspecItem {
+  val nameLength = 20
+
   val recipe = RecordRecipe(
-    SpacePaddedString(20),
+    SpacePaddedString(nameLength),
+    WORD,
     WORD,
     WORD,
     WORD,
@@ -26,4 +31,9 @@ object TorpspecItem {
     WORD,
     WORD
   )(TorpspecItem.apply)
+
+  def readFromFile(filename: String): IndexedSeq[TorpspecItem] =
+    TorpspecItem.recipe
+      .readFromFile(filename, Some(Constants.TorpspecRecordsNumber))
+      .toIndexedSeq
 }
