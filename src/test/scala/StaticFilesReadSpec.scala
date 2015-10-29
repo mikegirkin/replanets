@@ -2,13 +2,15 @@ package replanets.tests
 
 import common.Constants
 import org.scalatest.{Matchers, WordSpec}
-import replanets.common.{HullspecItem, TorpspecItem}
+import replanets.common.{HullAssignment, HullspecItem, TorpspecItem}
 
 class StaticFilesReadSpec extends WordSpec with Matchers {
 
+  private def getResourceFilename(path: String) = getClass.getResource(path).getPath
+
   "A torpspec.dat reader reads file correctly" in {
 
-    val filename = getClass.getResource("/torpspec.dat").getPath
+    val filename = getResourceFilename("/torpspec.dat")
 
     val torps = TorpspecItem.readFromFile(filename)
 
@@ -20,7 +22,7 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
   "A hullspec.dat should be read correctly" in {
 
-    var filename = getClass.getResource("/hullspec.dat").getPath
+    val filename = getResourceFilename("/hullspec.dat")
 
     val hulls = HullspecItem.readFromFile(filename)
 
@@ -40,6 +42,17 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
     hull.fuelTankSize should be (55)
     hull.crewSize should be (25)
 
+  }
+
+  "truehull.dat should be read correctly" in {
+
+    val filename = getResourceFilename("/truehull.dat")
+
+    var assignment = HullAssignment.readFromFile(filename)
+
+    assignment should have size 11
+    assignment(0)(0) should be (0)
+    assignment(10).last should be (104)
   }
 
 }

@@ -1,6 +1,5 @@
 package replanets.common
 
-import common.Constants
 import replanets.recipes.{WORD, SpacePaddedString, RecordRecipe}
 
 case class HullspecItem(
@@ -46,7 +45,7 @@ object HullspecItem {
   )(HullspecItem.apply)
 
   def readFromFile(filename: String): IndexedSeq[HullspecItem] =
-    HullspecItem.recipe
+    recipe
       .readFromFile(filename)
       .toIndexedSeq
 }
