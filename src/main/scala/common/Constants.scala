@@ -1,7 +1,8 @@
-package common
+package replanets.common
 
 object Constants {
 
   val TorpspecRecordsNumber = 10
-  val numberOfRaces = 11
+  val NumberOfRaces = 11
+
 }

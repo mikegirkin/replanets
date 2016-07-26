@@ -1,6 +1,5 @@
 package replanets.common
 
-import common.Constants
 import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class TorpspecItem(

@@ -1,6 +1,5 @@
 package replanets.common
 
-import common.Constants
 import replanets.recipes.WORD
 
 case class HullAssignment(
@@ -14,7 +13,7 @@ object HullAssignment {
   def readFromFile(filename: String) = {
     recipe.readFromFile(filename)
       .grouped(numberOfHullsPerRace)
-      .take(Constants.numberOfRaces)
+      .take(Constants.NumberOfRaces)
       .map { raceArray =>
         raceArray.filter(_ != 0).map(_ - 1).toIndexedSeq
       }

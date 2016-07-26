@@ -1,3 +1,5 @@
+package replanets
+
 import java.nio.file.Paths
 
 import replanets.common.{BeamspecItem, EngspecItem, TorpspecItem, PlanetnmItem, RacenmItem}
