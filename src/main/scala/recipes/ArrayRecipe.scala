@@ -15,4 +15,6 @@ class ArrayRecipe[T](length: Int)(implicit elementRecipe: BinaryReadRecipe[T]) e
 
 }
 
-
+object ArrayRecipe {
+  def apply[T](length: Int, elementRecipe: BinaryReadRecipe[T]): ArrayRecipe[T] = new ArrayRecipe(length)(elementRecipe)
+}

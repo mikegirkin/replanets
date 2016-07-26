@@ -2,16 +2,18 @@ package replanets
 
 import java.nio.file.Paths
 
-import replanets.common.{BeamspecItem, EngspecItem, TorpspecItem, PlanetnmItem, RacenmItem}
+import replanets.common._
 
 object Runner {
   def main(args: Array[String]) = {
+    val testFilesDirectory = "/Users/mgirkin/proj/gmil/replanets/testfiles"
     val xyplanFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/xyplan.dat"
     val planetsNamesFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/planet.nm"
     val raceNamesFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/race.nm"
     val torpspecFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/torpspec.dat"
     val engspecFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/engspec.dat"
     val beamspecFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/beamspec.dat"
+    val rstFilename = "Player1.RST"
 
     val map = replanets.common.Map.readFromXyplan(xyplanFilename)
     println(map.toList)
@@ -30,6 +32,11 @@ object Runner {
     println
     val beams = readBeamspecs(beamspecFilename)
     println(beams)
+    println
+    println
+
+    val rstReadResult = RstFileReader.read(Paths.get(testFilesDirectory, rstFilename))
+    println(rstReadResult)
     println
   }
 
