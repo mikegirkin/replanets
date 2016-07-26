@@ -33,6 +33,6 @@ object TorpspecItem {
 
   def readFromFile(filename: String): IndexedSeq[TorpspecItem] =
     TorpspecItem.recipe
-      .readFromFile(filename, Some(Constants.TorpspecRecordsNumber))
+      .readFromFile(filename, Constants.TorpspecRecordsNumber)
       .toIndexedSeq
-}
+  }

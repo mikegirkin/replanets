@@ -60,7 +60,7 @@ object Runner {
 
   def readTorpspecs = TorpspecItem.readFromFile _
 
-  def readEngspecs(filename: String) = EngspecItem.recipe.readFromFile(filename, Some(9)).toIndexedSeq
+  def readEngspecs(filename: String) = EngspecItem.recipe.readFromFile(filename, 9).toIndexedSeq
 
   def readBeamspecs(filename: String) = BeamspecItem.recipe.readFromFile(filename).toIndexedSeq
 }

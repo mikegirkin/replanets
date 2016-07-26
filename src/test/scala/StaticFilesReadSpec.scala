@@ -1,8 +1,7 @@
 package replanets.tests
 
-import common.Constants
 import org.scalatest.{Matchers, WordSpec}
-import replanets.common.{HullAssignment, HullspecItem, TorpspecItem}
+import replanets.common.{Constants, HullAssignment, HullspecItem, TorpspecItem}
 
 class StaticFilesReadSpec extends WordSpec with Matchers {
 

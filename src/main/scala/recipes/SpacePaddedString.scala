@@ -8,12 +8,15 @@ object SpacePaddedString {
 }
 
 class SpacePaddedString(length: Int) extends BinaryReadRecipe[String] {
+
+  import IteratorExtensions._
+
   final val Decoder = Charset.forName("ASCII")
 
   override val size: Int = length
 
   override def read(source: Iterator[Byte]): String = {
-    val bytes = source.take(size).toArray
+    val bytes = source.readSome(size).toArray
     Decoder.decode(ByteBuffer.wrap(bytes)).toString.trim
   }
 }
