@@ -1,5 +1,7 @@
-[Player.RST](#player-rst)
+[Player.RST](#player.rst)
+
 [PDATAx.DAT](#pdata-dat)
+
 [BDATAx.DAT](#bdata-dat)
 
 <div id='player-rst'></div>
