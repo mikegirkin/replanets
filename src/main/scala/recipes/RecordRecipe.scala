@@ -1,6 +1,13 @@
 package replanets.recipes
 
 object RecordRecipe {
+
+  def apply[R](fieldSize: Int, reader: Iterator[Byte] => R) = new BinaryReadRecipe[R] {
+    override val size: Int = fieldSize
+
+    override def read(source: Iterator[Byte]): R = reader(source)
+  }
+
   def apply[R, A1](a1: BinaryReadRecipe[A1])(apply: (A1) => R) =
     new BinaryReadRecipe[R] {
       val size = a1.size

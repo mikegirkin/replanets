@@ -13,7 +13,8 @@ case class RstFile(
 
   ships: IndexedSeq[ShipRecord],
   targets: IndexedSeq[TargetRecord],
-  planets: IndexedSeq[PlanetRecord]
+  planets: IndexedSeq[PlanetRecord],
+  bases: IndexedSeq[BaseRecord]
 )
 
 object RstFileReader {
@@ -31,8 +32,9 @@ object RstFileReader {
     val ships = ShipsReader.read(buffer.iterator.drop(pointers(0) - 1))
     val targets = TargetReader.read(buffer.iterator.drop(pointers(1) - 1))
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
+    val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
 
-    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets)
+    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases)
   }
 
 }

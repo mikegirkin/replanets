@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{DWORD, SpacePaddedString, WORD}
+import replanets.recipes._
 
 /**
   * Created by mgirkin on 26/07/2016.
@@ -39,9 +39,11 @@ case class PlanetRecord(
 )
 
 object PlanetsReader {
+  val planetRecordsFieldSize = 85
 
-  private def readRecord(it: Iterator[Byte]): PlanetRecord = {
-    PlanetRecord(
+  val planetRecipe = RecordRecipe(
+    planetRecordsFieldSize,
+    it => PlanetRecord(
       WORD.read(it),
       WORD.read(it),
       SpacePaddedString(3).read(it),
@@ -73,10 +75,10 @@ object PlanetsReader {
       WORD.read(it),
       WORD.read(it)
     )
-  }
+  )
 
   def read(it: Iterator[Byte]): IndexedSeq[PlanetRecord] = {
     val recordsNum = WORD.read(it)
-    for(i <- 0 until recordsNum) yield readRecord(it)
+    ArrayRecipe(recordsNum, planetRecipe).read(it)
   }
 }
