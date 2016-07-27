@@ -12,7 +12,8 @@ case class RstFile(
   leechPosition: Int,
 
   ships: IndexedSeq[ShipRecord],
-  targets: IndexedSeq[TargetRecord]
+  targets: IndexedSeq[TargetRecord],
+  planets: IndexedSeq[PlanetRecord]
 )
 
 object RstFileReader {
@@ -27,10 +28,11 @@ object RstFileReader {
     val winplanDataPosition = DWORD.read(it)
     val leechPosition = DWORD.read(it)
 
-    val ships = ShipsReader.read(buffer.iterator.drop(pointers(0) + 1))
-    val targets = TargetReader.read(buffer.iterator.drop(pointers(1) + 1))
+    val ships = ShipsReader.read(buffer.iterator.drop(pointers(0) - 1))
+    val targets = TargetReader.read(buffer.iterator.drop(pointers(1) - 1))
+    val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
 
-    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets)
+    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets)
   }
 
 }
