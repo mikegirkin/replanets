@@ -1,6 +1,8 @@
-package replanets.common
+package replanets
 
 import java.nio.file.Paths
+
+import replanets.common.XyplandatItem
 
 case class Map(
 	height: Int,

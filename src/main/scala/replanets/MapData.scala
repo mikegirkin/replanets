@@ -1,4 +1,4 @@
-package replanets.common
+package replanets
 
 case class Minerals(
 	ne: Int,

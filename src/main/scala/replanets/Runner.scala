@@ -15,7 +15,7 @@ object Runner {
     val beamspecFilename = "/Users/mgirkin/proj/gmil/replanets/testfiles/beamspec.dat"
     val rstFilename = "Player1.RST"
 
-    val map = replanets.common.Map.readFromXyplan(xyplanFilename)
+    val map = Map.readFromXyplan(xyplanFilename)
     println(map.toList)
     println
     val races = readRacenames(raceNamesFilename)
@@ -71,4 +71,3 @@ object Runner {
 
   def readBeamspecs(filename: String) = BeamspecItem.recipe.readFromFile(filename).toIndexedSeq
 }
-

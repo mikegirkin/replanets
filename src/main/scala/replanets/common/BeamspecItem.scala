@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{WORD, SpacePaddedString, RecordRecipe}
+import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class BeamspecItem(
   name: String,

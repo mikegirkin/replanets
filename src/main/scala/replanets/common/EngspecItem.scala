@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{WORD, DWORD, RecordRecipe, SpacePaddedString}
+import replanets.recipes.{DWORD, RecordRecipe, SpacePaddedString, WORD}
 
 case class FuelConsumption(
   level1consumption: Int,

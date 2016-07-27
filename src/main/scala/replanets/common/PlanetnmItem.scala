@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{SpacePaddedString, RecordRecipe}
+import replanets.recipes.{RecordRecipe, SpacePaddedString}
 
 case class PlanetnmItem(
   name: String

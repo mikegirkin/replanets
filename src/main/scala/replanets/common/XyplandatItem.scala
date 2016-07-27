@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{WORD, RecordRecipe}
+import replanets.recipes.{RecordRecipe, WORD}
 
 
 case class XyplandatItem(
