@@ -16,6 +16,7 @@ case class RstFile(
   planets: IndexedSeq[PlanetRecord],
   bases: IndexedSeq[BaseRecord],
   messages: IndexedSeq[MessageInfo],
+  shipCoords: IndexedSeq[ShipCoordsRecord],
   generalInfo: GeneralTurnInformation
 )
 
@@ -36,11 +37,11 @@ object RstFileReader {
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
     val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
-    //ship coords
+    val shipCoords = ShipCoordsReader.read(buffer.iterator.drop(pointers(5) - 1))
     val generalInfo = GeneralDataReader.read(buffer.view.drop(pointers(6) - 1))
     //vcrs
 
-    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases, messages, generalInfo)
+    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases, messages, shipCoords, generalInfo)
   }
 
 }
