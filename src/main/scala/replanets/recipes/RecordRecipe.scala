@@ -18,6 +18,17 @@ object RecordRecipe {
         )
     }
 
+  def apply[R, A1, A2](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2])(apply: (A1, A2) => R) =
+    new BinaryReadRecipe[R] {
+      val size = a1.size + a2.size
+
+      override def read(source: Iterator[Byte]): R =
+        apply(
+          a1.read(source),
+          a2.read(source)
+        )
+    }
+
   def apply[R, A1, A2, A3](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2], a3: BinaryReadRecipe[A3])(apply: (A1, A2, A3) => R) =
     new BinaryReadRecipe[R] {
       val size = a1.size + a2.size + a3.size
