@@ -2,7 +2,7 @@ package replanets.model
 
 import java.nio.file.Path
 
-import replanets.common.{Constants, RacenmItem}
+import replanets.common.{Constants, RacenmItem, RstFileReader}
 
 /**
   * Created by mgirkin on 27/07/2016.
@@ -15,11 +15,20 @@ case class Game(
   map: ClusterMap,
   specs: Specs
 ) {
+
+  val turns: TurnInfo = TurnInfo(GameState(), IndexedSeq())
+
   override def toString: String = {
     String.join(
       sys.props("line.separator") + sys.props("line.separator"),
       name.toString, dataPath.toString, races.toString, map.toString, specs.toString)
   }
+
+  def processRstFile(rstFile: Path): Game = {
+    val rawData = RstFileReader.read(rstFile)
+    ???
+  }
+
 }
 
 object Game {
