@@ -1,6 +1,6 @@
 package replanets.recipes
 
-import java.nio.file.Paths
+import java.nio.file.{Path, Paths}
 
 trait BinaryReadRecipe[T] {
 
@@ -16,15 +16,15 @@ trait BinaryReadRecipe[T] {
     }.toIndexedSeq
   }
 
-  def readFromFile(filename: String): IndexedSeq[T] = {
+  def readFromFile(file: Path): IndexedSeq[T] = {
     readAll(
-      java.nio.file.Files.readAllBytes(Paths.get(filename)).iterator
+      java.nio.file.Files.readAllBytes(file).iterator
     )
   }
 
-  def readFromFile(filename: String, exactAmount: Int): IndexedSeq[T] = {
+  def readFromFile(file: Path, exactAmount: Int): IndexedSeq[T] = {
     readAll(
-      java.nio.file.Files.readAllBytes(Paths.get(filename))
+      java.nio.file.Files.readAllBytes(file)
         .take(exactAmount*size)
         .iterator
     )

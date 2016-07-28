@@ -1,7 +1,8 @@
 package replanets.common
 
-import replanets.recipes.SpacePaddedString
+import java.nio.file.Path
 
+import replanets.recipes.{ArrayRecipe, SpacePaddedString}
 
 case class RacenmItem(
   longName: String,
@@ -17,4 +18,13 @@ object RacenmItem {
   val longNameRecipe = SpacePaddedString(longNameSize)
   val shortNameRecipe = SpacePaddedString(shortNameSize)
   val adjectiveRecipe = SpacePaddedString(adjectiveSize)
+
+  def fromFile(file: Path): IndexedSeq[RacenmItem] = {
+    val it = java.nio.file.Files.readAllBytes(file).iterator
+    val longNames = ArrayRecipe(Constants.NumberOfRaces, longNameRecipe).read(it)
+    val shortNames = ArrayRecipe(Constants.NumberOfRaces, shortNameRecipe).read(it)
+    val adjectives = ArrayRecipe(Constants.NumberOfRaces, adjectiveRecipe).read(it)
+    (longNames, shortNames, adjectives).zipped
+      .map(RacenmItem.apply)
+  }
 }

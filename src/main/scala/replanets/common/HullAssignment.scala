@@ -1,5 +1,7 @@
 package replanets.common
 
+import java.nio.file.Path
+
 import replanets.recipes.WORD
 
 case class HullAssignment(
@@ -10,13 +12,15 @@ object HullAssignment {
   val recipe = WORD
   val numberOfHullsPerRace = 20
 
-  def readFromFile(filename: String) = {
-    recipe.readFromFile(filename)
+  def fromFile(file: Path): HullAssignment = {
+    val assignments = recipe.readFromFile(file)
       .grouped(numberOfHullsPerRace)
       .take(Constants.NumberOfRaces)
       .map { raceArray =>
-        raceArray.filter(_ != 0).map(_ - 1).toIndexedSeq
+        raceArray.filter(_ != 0).map(x => (x - 1).toShort).toIndexedSeq
       }
       .toIndexedSeq
+
+    HullAssignment(assignments)
   }
 }

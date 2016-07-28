@@ -1,5 +1,7 @@
 package replanets.common
 
+import java.nio.file.Path
+
 import replanets.recipes.{DWORD, RecordRecipe, SpacePaddedString, WORD}
 
 case class FuelConsumption(
@@ -50,6 +52,10 @@ object EngspecItem {
     WORD,
     FuelConsumption.recipe
   )(EngspecItem.apply)
+
+  def fromFile(file: Path) = {
+    recipe.readFromFile(file, 9)
+  }
 }
 
 

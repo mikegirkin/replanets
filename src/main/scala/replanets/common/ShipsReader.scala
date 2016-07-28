@@ -100,9 +100,6 @@ object ShipsReader {
 
   def read(it: Iterator[Byte]) = {
     val numrecords = WORD.read(it)
-    println()
-    println(s"Numrecords = $numrecords")
-    println
     for(i <- 0 until numrecords)
       yield readShipRecord(it)
   }

@@ -1,5 +1,7 @@
 package replanets.common
 
+import java.nio.file.Path
+
 import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class HullspecItem(
@@ -44,8 +46,6 @@ object HullspecItem {
     WORD
   )(HullspecItem.apply)
 
-  def readFromFile(filename: String): IndexedSeq[HullspecItem] =
-    recipe
-      .readFromFile(filename)
-      .toIndexedSeq
+  def fromFile(file: Path): IndexedSeq[HullspecItem] =
+    recipe.readFromFile(file)
 }

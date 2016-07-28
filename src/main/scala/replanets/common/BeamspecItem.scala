@@ -1,5 +1,7 @@
 package replanets.common
 
+import java.nio.file.Path
+
 import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class BeamspecItem(
@@ -28,4 +30,8 @@ object BeamspecItem {
     WORD,
     WORD
   )(BeamspecItem.apply)
+
+  def fromFile(file: Path): IndexedSeq[BeamspecItem] = {
+    recipe.readFromFile(file)
+  }
 }

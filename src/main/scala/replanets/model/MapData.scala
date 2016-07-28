@@ -1,4 +1,4 @@
-package replanets
+package replanets.model
 
 case class Minerals(
 	ne: Int,

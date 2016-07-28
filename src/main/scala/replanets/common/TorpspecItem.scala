@@ -1,5 +1,7 @@
 package replanets.common
 
+import java.nio.file.Path
+
 import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class TorpspecItem(
@@ -31,8 +33,6 @@ object TorpspecItem {
     WORD
   )(TorpspecItem.apply)
 
-  def readFromFile(filename: String): IndexedSeq[TorpspecItem] =
-    TorpspecItem.recipe
-      .readFromFile(filename, Constants.TorpspecRecordsNumber)
-      .toIndexedSeq
-  }
+  def fromFile(file: Path): IndexedSeq[TorpspecItem] =
+    recipe.readFromFile(file, Constants.TorpspecRecordsNumber)
+}
