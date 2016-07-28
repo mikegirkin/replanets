@@ -1,6 +1,6 @@
 package replanets.recipes
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.Path
 
 trait BinaryReadRecipe[T] {
 

@@ -3,7 +3,7 @@ package replanets
 import java.nio.file.Paths
 
 import replanets.common._
-import replanets.model.{ClusterMap, Game, Specs}
+import replanets.model.Game
 
 object ConsoleRunner {
   def run = {

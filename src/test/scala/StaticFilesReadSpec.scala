@@ -1,5 +1,7 @@
 package replanets.tests
 
+import java.nio.file.Paths
+
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common.{Constants, HullAssignment, HullspecItem, TorpspecItem}
 
@@ -11,7 +13,7 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
     val filename = getResourceFilename("/torpspec.dat")
 
-    val torps = TorpspecItem.readFromFile(filename)
+    val torps = TorpspecItem.fromFile(Paths.get(filename))
 
     torps should have size Constants.TorpspecRecordsNumber
     torps(5).name should be("Mark 4 Photon")
@@ -23,7 +25,7 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
     val filename = getResourceFilename("/hullspec.dat")
 
-    val hulls = HullspecItem.readFromFile(filename)
+    val hulls = HullspecItem.fromFile(Paths.get(filename))
 
     hulls should have size 105
     val hull = hulls(65)
@@ -47,11 +49,11 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
     val filename = getResourceFilename("/truehull.dat")
 
-    var assignment = HullAssignment.readFromFile(filename)
+    val assignment = HullAssignment.fromFile(Paths.get(filename))
 
-    assignment should have size 11
-    assignment(0)(0) should be (0)
-    assignment(10).last should be (104)
+    assignment.availableHulls should have size 11
+    assignment.availableHulls(0)(0) should be (0)
+    assignment.availableHulls(10).last should be (104)
   }
 
 }

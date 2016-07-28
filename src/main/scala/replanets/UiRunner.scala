@@ -6,9 +6,9 @@ import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.paint.Color._
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{BorderPane, HBox}
+
 
 object UiRunner extends JFXApp {
   val gamePath: Path = Paths.get(
@@ -26,9 +26,10 @@ object UiRunner extends JFXApp {
         center = new Label(absolutePath.toString)
         bottom = new HBox {
           padding = Insets(5)
-          fill = Red
           children = Seq(
-            new Button("F1 - Beams"),
+            new Button {
+              text = "F1 - Beams"
+            },
             new Button("F2 - Torps"),
             new Button("F3 - Engines")
           )
@@ -40,5 +41,6 @@ object UiRunner extends JFXApp {
   override def main(args: Array[String]): Unit = {
     if(args.length == 1 && args(0) == "console")
       ConsoleRunner.run
+    else super.main(args)
   }
 }
