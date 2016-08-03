@@ -45,10 +45,6 @@ class MapView(game: Game) extends Pane {
         redraw()
       }
     }
-
-    onMouseClicked = (e: MouseEvent) => {
-      println(s"x=${e.x}   y=${e.y}   height=${self.height}   width=${self.width}")
-    }
   }
 
   children = Seq(canvas)
@@ -56,32 +52,22 @@ class MapView(game: Game) extends Pane {
   redraw()
 
 
-  def zoomIn(): Unit = {
-    val zoomPoint = Coords(width.toDouble/2, height.toDouble/2)
-    println(s"Scale: $scale   OffsetX: $offsetX   OffsetY: $offsetY")
-    println(s"Zoompoint = $zoomPoint")
+  def zoom(scaleStep: Double, zoomPoint: Coords) = {
     val mapCoordsZoomPoint = Coords((zoomPoint.x - offsetX) / scale, (zoomPoint.y - offsetY) / scale)
-    println(s"mapCoordsZoomPoint = $mapCoordsZoomPoint")
 
     scale = scale * scaleStep
     offsetX = zoomPoint.x - mapCoordsZoomPoint.x * scale
     offsetY = zoomPoint.y - mapCoordsZoomPoint.y * scale
 
-    println(s"Scale: $scale   OffsetX: $offsetX   OffsetY: $offsetY")
-    println(s"NewzoomPoint = ( ${mapCoordsZoomPoint.x * scale + offsetX}, ${mapCoordsZoomPoint.y * scale + offsetY} )")
-
     redraw()
   }
 
+  def zoomIn(): Unit = {
+    zoom(scaleStep, Coords(width.toDouble/2, height.toDouble/2))
+  }
+
   def zoomOut(): Unit = {
-    val zoomPoint = Coords(width.toDouble/2, height.toDouble/2)
-    val mapCoordsZoomPoint = Coords((zoomPoint.x - offsetX) / scale, (zoomPoint.y - offsetY) / scale)
-
-    scale = scale / scaleStep
-    offsetX = zoomPoint.x - mapCoordsZoomPoint.x * scale
-    offsetY = zoomPoint.y - mapCoordsZoomPoint.y * scale
-
-    redraw()
+    zoom(1/scaleStep, Coords(width.toDouble/2, height.toDouble/2))
   }
 
   def redraw(): Unit = {
