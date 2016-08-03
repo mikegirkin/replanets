@@ -16,8 +16,8 @@ object ClusterMap {
 		val xyplanData = readFromXyplan(path.resolve(Constants.xyplanFilename))
 		val planetNames = PlanetnmItem.fromFile(path.resolve(Constants.planetnmFilename))
 		ClusterMap(
-			4000,
-			4000,
+			Constants.MapHeight,
+			Constants.MapWidth,
 			xyplanData.zipWithIndex.map { case (item, idx) => Planet(
 				idx + 1,
 				item.x,

@@ -1,14 +1,18 @@
 package replanets.model
 
 case class TurnInfo(
-  serverReceiveState: GameState,
-  playerCommands: IndexedSeq[PlayerCommand]
+  serverReceiveState: ReceivedState,
+  playerCommands: IndexedSeq[PlayerCommand] = IndexedSeq()
 )
 
 case class PlayerCommand(
 
 )
 
-case class GameState(
+case class ReceivedState(
+  messages: IndexedSeq[MessageInfo]
+)
 
+case class MessageInfo(
+  text: String
 )

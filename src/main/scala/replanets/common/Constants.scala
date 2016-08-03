@@ -5,6 +5,9 @@ object Constants {
   val TorpspecRecordsNumber = 10
   val NumberOfRaces = 11
 
+  val MapHeight = 4000
+  val MapWidth = 4000
+
   val xyplanFilename = "xyplan.dat"
   val racenmFilename = "race.nm"
   val planetnmFilename = "planet.nm"

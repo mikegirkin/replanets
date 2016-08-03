@@ -2,6 +2,9 @@ package replanets
 
 import java.nio.file.{Path, Paths}
 
+import replanets.model.Game
+import replanets.ui.ReplanetsPrimaryStage
+
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -17,26 +20,10 @@ object UiRunner extends JFXApp {
   )
   val absolutePath = gamePath.toAbsolutePath
 
-  stage = new PrimaryStage {
-    title = "rePlanets"
-    width = 400
-    height = 400
-    scene = new Scene{
-      root = new BorderPane {
-        center = new Label(absolutePath.toString)
-        bottom = new HBox {
-          padding = Insets(5)
-          children = Seq(
-            new Button {
-              text = "F1 - Beams"
-            },
-            new Button("F2 - Torps"),
-            new Button("F3 - Engines")
-          )
-        }
-      }
-    }
-  }
+  val game = Game.initFromDirectory(absolutePath)
+  game.processRstFile(absolutePath.resolve("Player1.RST"))
+
+  stage = new ReplanetsPrimaryStage(game)
 
   override def main(args: Array[String]): Unit = {
     if(args.length == 1 && args(0) == "console")

@@ -2,6 +2,7 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
+import replanets.model.ReceivedState
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class RstFile(
@@ -18,7 +19,13 @@ case class RstFile(
   messages: IndexedSeq[MessageInfo],
   shipCoords: IndexedSeq[ShipCoordsRecord],
   generalInfo: GeneralTurnInformation
-)
+) {
+  def receivedState(): ReceivedState = {
+    ReceivedState(
+      messages.map(x => replanets.model.MessageInfo(x.messageText))
+    )
+  }
+}
 
 object RstFileReader {
 
