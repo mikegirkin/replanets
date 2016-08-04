@@ -17,5 +17,30 @@ object Constants {
   val hullspecFileName = "hullspec.dat"
   val hullsAssignmentFilename = "truehull.dat"
 
+  val natives = Map[Int, String](
+    0 -> "none",
+    1 -> "Humanoid",
+    2 -> "Bovinoid",
+    3 -> "Reptilian",
+    4 -> "Avian",
+    5 -> "Amorphous",
+    6 -> "Insectoid",
+    7 -> "Amphibian",
+    8 -> "Ghipsoldal",
+    9 -> "Siliconoid"
+  )
+
+  val nativeGovernments = Map[Int, String](
+    0 -> "none",
+    1 -> "Anarchy",
+    2 -> "Pre-Tribal",
+    3 -> "Early-Tribal",
+    4 -> "Tribal",
+    5 -> "Feudal",
+    6 -> "Monarchy",
+    7 -> "Representative",
+    8 -> "Participatory",
+    9 -> "Unity"
+  )
 
 }

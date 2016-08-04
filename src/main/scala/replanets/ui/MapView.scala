@@ -10,9 +10,7 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color
 
-case class Coords(x: Double, y: Double)
-
-class MapView(game: Game) extends Pane {
+class MapView(game: Game, viewModel: ViewModel) extends Pane {
   self: Node =>
 
   var scale = 0.2
@@ -20,13 +18,15 @@ class MapView(game: Game) extends Pane {
   var offsetY = -100d
   val scaleStep = 1.5
 
-  def planetSize: Double =
+  def planetDiameter: Double =
     if (scale < 0.2) 2
     else if (scale < 0.5) 5
     else 8
 
-  def shipCircleSize: Double =
-    planetSize + 4
+  def shipCircleDiameter: Double = planetDiameter + 4
+  def shipCircleThickness: Double = 1
+
+  def crossSize = planetDiameter + 8
 
   var movingStartedPoint = (0d, 0d)
   var initialOffset = (0d, 0d)
@@ -53,15 +53,39 @@ class MapView(game: Game) extends Pane {
         redraw()
       }
     }
+
+    onMouseClicked = (e: MouseEvent) => {
+      if(e.button == MouseButton.Primary && e.isStillSincePress) {
+        val coords = mapCoords(e.x, e.y)
+        val closestObject = closestObjectTo(coords)
+        selectMapObject(closestObject)
+      }
+    }
   }
 
   children = Seq(canvas)
 
   redraw()
 
+  private def closestObjectTo(coords: Coords): MapObject = {
+    //planets
+    val closestPlanet = game.map.planets.reduce((p1, p2) => if(distSqr(coords, Coords(p1.x, p1.y)) < distSqr(coords, Coords(p2.x, p2.y))) p1 else p2)
+    //ships
+    //minefields
+    //explosions
+    //ionstroms
+
+    MapObject(MapObjectType.Planet, closestPlanet.id, Coords(closestPlanet.x, closestPlanet.y))
+  }
+
+  private def selectMapObject(it: MapObject): Unit = {
+    viewModel.objectSelected = Some(it)
+    redraw()
+  }
+
 
   def zoom(scaleStep: Double, zoomPoint: Coords) = {
-    val mapCoordsZoomPoint = Coords((zoomPoint.x - offsetX) / scale, (zoomPoint.y - offsetY) / scale)
+    val mapCoordsZoomPoint = mapCoords(zoomPoint)
 
     scale = scale * scaleStep
     offsetX = zoomPoint.x - mapCoordsZoomPoint.x * scale
@@ -69,6 +93,10 @@ class MapView(game: Game) extends Pane {
 
     redraw()
   }
+
+  def distSqr(point1: Coords, point2: Coords): Double =
+    (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)
+
 
   def zoomIn(): Unit = {
     zoom(scaleStep, Coords(width.toDouble/2, height.toDouble/2))
@@ -82,13 +110,32 @@ class MapView(game: Game) extends Pane {
     Coords(mapCoord.x * scale + offsetX, mapCoord.y * scale + offsetY)
   }
 
-  def canvasCoord(x: Int, y: Int): Coords = canvasCoord(Coords(x, y))
+  def canvasCoord(x: Double, y: Double): Coords = canvasCoord(Coords(x, y))
+
+  def mapCoords(canvasCoords: Coords): Coords = mapCoords(canvasCoords.x, canvasCoords.y)
+
+  def mapCoords(canvasX: Double, canvasY: Double): Coords = Coords(
+    (canvasX - offsetX) / scale,
+    (canvasY - offsetY) / scale
+  )
+
 
   def redraw(): Unit = {
     val gc = canvas.graphicsContext2D
 
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
     drawPlanets(gc)
+    drawSelectedCross(gc)
+  }
+
+  private def drawSelectedCross(gc: GraphicsContext) = {
+    viewModel.objectSelected.foreach { it =>
+      val graphicCoords = canvasCoord(it.coords)
+      gc.setStroke(Color.White)
+      gc.setLineWidth(1)
+      gc.strokeLine(graphicCoords.x - crossSize/2, graphicCoords.y, graphicCoords.x + crossSize/2, graphicCoords.y)
+      gc.strokeLine(graphicCoords.x, graphicCoords.y - crossSize/2, graphicCoords.x, graphicCoords.y + crossSize/2)
+    }
   }
 
   private def drawPlanets(gc: GraphicsContext) = {
@@ -110,7 +157,7 @@ class MapView(game: Game) extends Pane {
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
-      gc.fillOval(coord.x - planetSize/2, coord.y - planetSize/2, planetSize, planetSize)
+      gc.fillOval(coord.x - planetDiameter/2, coord.y - planetDiameter/2, planetDiameter, planetDiameter)
 
       val orbitingShips = shipsOrbitingPlanet(planetCoords)
       if(orbitingShips.nonEmpty) {
@@ -119,8 +166,8 @@ class MapView(game: Game) extends Pane {
           else if(orbitingShips.forall(_.owner == game.playingRace)) Color.Red
           else Color.Orange
         gc.setStroke(color)
-        gc.setLineWidth(2)
-        gc.strokeOval(coord.x - shipCircleSize/2.0, coord.y - shipCircleSize/2.0, shipCircleSize, shipCircleSize)
+        gc.setLineWidth(shipCircleThickness)
+        gc.strokeOval(coord.x - shipCircleDiameter/2.0, coord.y - shipCircleDiameter/2.0, shipCircleDiameter, shipCircleDiameter)
       }
     }
   }

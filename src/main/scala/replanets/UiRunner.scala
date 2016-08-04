@@ -3,7 +3,7 @@ package replanets
 import java.nio.file.{Path, Paths}
 
 import replanets.model.Game
-import replanets.ui.ReplanetsPrimaryStage
+import replanets.ui.{ReplanetsPrimaryStage, ViewModel}
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -23,7 +23,10 @@ object UiRunner extends JFXApp {
   val game = Game.initFromDirectory(absolutePath)
   game.processRstFile(absolutePath.resolve("Player1.RST"))
 
-  stage = new ReplanetsPrimaryStage(game)
+  val viewModel = ViewModel(game.turns.last.serverReceiveState.rstFiles(game.playingRace).generalInfo.turnNumber, None)
+  viewModel.selectedObjectChaged += { () => println(s"Selected: ${viewModel.objectSelected}") }
+
+  stage = new ReplanetsPrimaryStage(game, viewModel)
 
   override def main(args: Array[String]): Unit = {
     if(args.length == 1 && args(0) == "console")
