@@ -5,6 +5,14 @@ import replanets.recipes._
 /**
   * Created by mgirkin on 26/07/2016.
   */
+
+case class Minerals(
+  neutronium: Int,
+  tritanium: Int,
+  duranium: Int,
+  molybdenium: Int
+)
+
 case class PlanetRecord(
   ownerId: Short,
   planetId: Short,
@@ -12,21 +20,12 @@ case class PlanetRecord(
   minesNumber: Short,
   factoriesNumber: Short,
   defencesNumber: Short,
-  neutroniumMined: Int,
-  tritaniumMined: Int,
-  duraniumMined: Int,
-  molybdeniumMined: Int,
+  surfaceMinerals: Minerals,
   colonistClans: Int,
   supplies: Int,
   money: Int,
-  netroniumGround: Int,
-  tritaniumGround: Int,
-  duraniumGround: Int,
-  molybdeniumGround: Int,
-  neutroniumDensity: Short,
-  tritaniumDensity: Short,
-  duraniumDensity: Short,
-  molybdeniumDensity: Short,
+  coreMinerals: Minerals,
+  densityMinerals: Minerals,
   colonistTax: Short,
   nativeTax: Short,
   colonistHappiness: Short,
@@ -50,21 +49,27 @@ object PlanetsReader {
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
+      Minerals(
+        DWORD.read(it),
+        DWORD.read(it),
+        DWORD.read(it),
+        DWORD.read(it)
+      ),
       DWORD.read(it),
       DWORD.read(it),
       DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      DWORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
+      Minerals(
+        DWORD.read(it),
+        DWORD.read(it),
+        DWORD.read(it),
+        DWORD.read(it)
+      ),
+      Minerals(
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it)
+      ),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),

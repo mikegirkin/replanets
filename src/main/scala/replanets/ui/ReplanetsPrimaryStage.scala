@@ -15,7 +15,7 @@ class ReplanetsPrimaryStage(game: Game) extends PrimaryStage {
     minWidth = 600
   }
 
-  private val messageView = new MessagesView(game.turns.last.serverReceiveState.messages)
+  private val messageView = new MessagesView(game.turns.last.serverReceiveState.rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game)
 
   scene = new Scene {

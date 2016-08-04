@@ -19,13 +19,7 @@ case class RstFile(
   messages: IndexedSeq[MessageInfo],
   shipCoords: IndexedSeq[ShipCoordsRecord],
   generalInfo: GeneralTurnInformation
-) {
-  def receivedState(): ReceivedState = {
-    ReceivedState(
-      messages.map(x => replanets.model.MessageInfo(x.messageText))
-    )
-  }
-}
+)
 
 object RstFileReader {
 

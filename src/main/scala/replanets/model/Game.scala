@@ -13,6 +13,7 @@ import scala.collection.mutable.ArrayBuffer
 case class Game(
   name: String,
   dataPath: Path,
+  playingRace: Int,
   races: IndexedSeq[RacenmItem],
   map: ClusterMap,
   specs: Specs
@@ -27,8 +28,8 @@ case class Game(
   }
 
   def processRstFile(rstFile: Path): Game = {
-    val rawData = RstFileReader.read(rstFile)
-    val ti = TurnInfo(rawData.receivedState())
+    val rst = RstFileReader.read(rstFile)
+    val ti = TurnInfo(ReceivedState(Map(rst.generalInfo.playerId.toInt -> rst)))
     turns.append(ti)
     this
   }
@@ -41,6 +42,6 @@ object Game {
     val specs = Specs.fromDirectory(directory)
     val races = RacenmItem.fromFile(directory.resolve(Constants.racenmFilename))
 
-    Game("Test game", directory, races, map, specs)
+    Game("Test game", directory, 1, races, map, specs)
   }
 }

@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.model.MessageInfo
+import replanets.common.MessageInfo
 
 import scalafx.Includes._
 import scalafx.event.ActionEvent
@@ -41,7 +41,7 @@ class MessagesView(
 
   private def showMessage(index: Int) = {
     messageArea.children = new Label {
-      text = messages(index).text
+      text = messages(index).messageText
     }
   }
 }
