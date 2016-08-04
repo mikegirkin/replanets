@@ -34,9 +34,7 @@ case class BaseRecord(
 
 object BasesReader {
 
-  val fieldSize = 156
   val basesRecipe = RecordRecipe(
-    fieldSize,
     it => BaseRecord(
       WORD.read(it),
       WORD.read(it),

@@ -18,10 +18,13 @@ case class RstFile(
   bases: IndexedSeq[BaseRecord],
   messages: IndexedSeq[MessageInfo],
   shipCoords: IndexedSeq[ShipCoordsRecord],
-  generalInfo: GeneralTurnInformation
+  generalInfo: GeneralTurnInformation,
+  ionStorms: IndexedSeq[IonStorm]
 )
 
 object RstFileReader {
+
+  import replanets.recipes.IteratorExtensions._
 
   def read(file: Path) = {
     val buffer = Files.readAllBytes(file)
@@ -39,10 +42,13 @@ object RstFileReader {
     val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
     val shipCoords = ShipCoordsReader.read(buffer.iterator.drop(pointers(5) - 1))
-    val generalInfo = GeneralDataReader.read(buffer.view.drop(pointers(6) - 1))
+    val generalInfo = GeneralDataReader.read(buffer.iterator.drop(pointers(6) - 1))
     //vcrs
 
-    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases, messages, shipCoords, generalInfo)
+    val winplanDataPointer = buffer.iterator.drop(40).read(DWORD)
+    val ionStorms = IonStormReader.read(buffer.iterator.drop(winplanDataPointer - 1 + 500 * 8))
+
+    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases, messages, shipCoords, generalInfo, ionStorms)
   }
 
 }

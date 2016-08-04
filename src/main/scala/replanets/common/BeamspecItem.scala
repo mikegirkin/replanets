@@ -32,6 +32,6 @@ object BeamspecItem {
   )(BeamspecItem.apply)
 
   def fromFile(file: Path): IndexedSeq[BeamspecItem] = {
-    recipe.readFromFile(file)
+    recipe.readFromFile(file, Constants.BeamsInBeamspec)
   }
 }

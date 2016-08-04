@@ -9,11 +9,10 @@ case class HullAssignment(
 )
 
 object HullAssignment {
-  val recipe = WORD
   val numberOfHullsPerRace = 20
 
   def fromFile(file: Path): HullAssignment = {
-    val assignments = recipe.readFromFile(file)
+    val assignments = WORD.readFromFile(file, Constants.NumberOfRaces * numberOfHullsPerRace)
       .grouped(numberOfHullsPerRace)
       .take(Constants.NumberOfRaces)
       .map { raceArray =>

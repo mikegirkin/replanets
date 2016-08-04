@@ -13,4 +13,24 @@ object IteratorExtensions {
     }
 
   }
+
+  implicit class ByteIteratorExt(val it: Iterator[Byte]) extends AnyVal {
+    def read[T](recipe: BinaryReadRecipe[T]): T = {
+      recipe.read(it)
+    }
+
+    def read[T](recipe:BinaryReadRecipe[T], amount: Int): IndexedSeq[T] = {
+      recipe.readSome(it, amount)
+    }
+  }
+}
+
+object NumberExtensions {
+  implicit class IntExt(val it: Int) extends AnyVal {
+    def between(low: Int, hi: Int) = if(it > low && it < hi) true else false
+  }
+
+  implicit class ShortExt(val it: Short) extends AnyVal {
+    def between(low: Short, hi: Short) = if(it > low && it < hi) true else false
+  }
 }

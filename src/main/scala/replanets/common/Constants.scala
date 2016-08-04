@@ -1,9 +1,12 @@
 package replanets.common
 
 object Constants {
-
+  val HullsInHullspec: Int = 105
+  val BeamsInBeamspec: Int = 10
   val TorpspecRecordsNumber = 10
+
   val NumberOfRaces = 11
+  val NumberOfPlanets: Int = 500
 
   val MapHeight = 4000
   val MapWidth = 4000

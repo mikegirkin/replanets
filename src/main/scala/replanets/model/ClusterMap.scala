@@ -12,6 +12,8 @@ case class ClusterMap(
 
 object ClusterMap {
 
+	import replanets.recipes.IteratorExtensions._
+
 	def fromDirectory(path: Path): ClusterMap = {
 		val xyplanData = readFromXyplan(path.resolve(Constants.xyplanFilename))
 		val planetNames = PlanetnmItem.fromFile(path.resolve(Constants.planetnmFilename))
@@ -27,12 +29,9 @@ object ClusterMap {
 		)
 	}
 
-	def readFromXyplan(path: Path): Array[XyplandatItem] = {
+	def readFromXyplan(path: Path): IndexedSeq[XyplandatItem] = {
 		val byteArray = java.nio.file.Files.readAllBytes(path)
-		byteArray.grouped(XyplandatItem.recipe.size).map { record =>
-			val iter = record.iterator
-			XyplandatItem.recipe.read(iter)
-		}.toArray
+		byteArray.iterator.read(XyplandatItem.recipe, Constants.NumberOfPlanets)
 	}
 
 }

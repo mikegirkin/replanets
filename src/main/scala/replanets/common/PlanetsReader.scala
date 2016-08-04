@@ -38,10 +38,7 @@ case class PlanetRecord(
 )
 
 object PlanetsReader {
-  val planetRecordsFieldSize = 85
-
   val planetRecipe = RecordRecipe(
-    planetRecordsFieldSize,
     it => PlanetRecord(
       WORD.read(it),
       WORD.read(it),

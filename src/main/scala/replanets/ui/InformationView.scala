@@ -33,7 +33,7 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
 
     def knownViewItems(p: PlanetRecord): Seq[Control] = {
       Seq(
-        new Label(s"Race: ${game.races(p.ownerId).shortname}"),
+        new Label(s"Race: ${game.races(p.ownerId - 1).shortname}"),
         new Label(s"FCode: ${p.fcode}"),
         new Label(s"Climate: ${p.temperature}"),
         new Label(s"Natives:"),

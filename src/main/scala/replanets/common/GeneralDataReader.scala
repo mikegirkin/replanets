@@ -29,17 +29,18 @@ case class GeneralTurnInformation(
 
 
 object GeneralDataReader {
-  def read(section: Iterable[Byte]): GeneralTurnInformation = {
-    val it = section.iterator
+  def read(it: Iterator[Byte]): GeneralTurnInformation = {
     GeneralTurnInformation(
       SpacePaddedString(18).read(it),
       ScoreInfo(
-        ArrayRecipe(11, RecordRecipe(8, int => RaceScore(
-          WORD.read(int),
-          WORD.read(int),
-          WORD.read(int),
-          WORD.read(int)
-        ))).read(it)
+        ArrayRecipe(11,
+          RecordRecipe(int => RaceScore(
+            WORD.read(int),
+            WORD.read(int),
+            WORD.read(int),
+            WORD.read(int)
+          ))
+        ).read(it)
       ),
       WORD.read(it),
       ArrayRecipe(20, BYTE).read(it),

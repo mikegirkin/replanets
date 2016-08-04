@@ -15,7 +15,7 @@ object PlanetnmItem {
   )(PlanetnmItem.apply)
 
   def fromFile(path: Path) = {
-    recipe.readFromFile(path)
+    recipe.readFromFile(path, Constants.NumberOfPlanets)
   }
 }
 

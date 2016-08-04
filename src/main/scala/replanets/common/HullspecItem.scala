@@ -47,5 +47,5 @@ object HullspecItem {
   )(HullspecItem.apply)
 
   def fromFile(file: Path): IndexedSeq[HullspecItem] =
-    recipe.readFromFile(file)
+    recipe.readFromFile(file, Constants.HullsInHullspec)
 }

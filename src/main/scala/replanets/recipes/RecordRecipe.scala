@@ -2,16 +2,12 @@ package replanets.recipes
 
 object RecordRecipe {
 
-  def apply[R](fieldSize: Int, reader: Iterator[Byte] => R) = new BinaryReadRecipe[R] {
-    override val size: Int = fieldSize
-
+  def apply[R](reader: Iterator[Byte] => R) = new BinaryReadRecipe[R] {
     override def read(source: Iterator[Byte]): R = reader(source)
   }
 
   def apply[R, A1](a1: BinaryReadRecipe[A1])(apply: (A1) => R) =
     new BinaryReadRecipe[R] {
-      val size = a1.size
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source)
@@ -20,8 +16,6 @@ object RecordRecipe {
 
   def apply[R, A1, A2](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2])(apply: (A1, A2) => R) =
     new BinaryReadRecipe[R] {
-      val size = a1.size + a2.size
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source),
@@ -31,8 +25,6 @@ object RecordRecipe {
 
   def apply[R, A1, A2, A3](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2], a3: BinaryReadRecipe[A3])(apply: (A1, A2, A3) => R) =
     new BinaryReadRecipe[R] {
-      val size = a1.size + a2.size + a3.size
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source),
@@ -43,8 +35,6 @@ object RecordRecipe {
 
   def apply[R, A1, A2, A3, A4](a1: BinaryReadRecipe[A1], a2: BinaryReadRecipe[A2], a3: BinaryReadRecipe[A3], a4: BinaryReadRecipe[A4])(apply: (A1, A2, A3, A4) => R) =
     new BinaryReadRecipe[R] {
-      val size = a1.size + a2.size + a3.size + a4.size
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source),
@@ -59,8 +49,6 @@ object RecordRecipe {
     a4: BinaryReadRecipe[A4], a5: BinaryReadRecipe[A5], a6: BinaryReadRecipe[A6],
     a7: BinaryReadRecipe[A7])(apply: (A1, A2, A3, A4, A5, A6, A7) => R) =
     new BinaryReadRecipe[R] {
-      val size = List(a1, a2, a3, a4, a5, a6, a7).map(_.size).sum
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source),
@@ -78,8 +66,6 @@ object RecordRecipe {
       a4: BinaryReadRecipe[A4], a5: BinaryReadRecipe[A5], a6: BinaryReadRecipe[A6],
       a7: BinaryReadRecipe[A7], a8: BinaryReadRecipe[A8], a9: BinaryReadRecipe[A9]
     )(apply: (A1, A2, A3, A4, A5, A6, A7, A8, A9) => R) = new BinaryReadRecipe[R] {
-      val size = List(a1, a2, a3, a4, a5, a6, a7, a8, a9).map(_.size).sum
-
       override def read(source: Iterator[Byte]): R =
         apply(
           a1.read(source),
@@ -100,8 +86,6 @@ object RecordRecipe {
       a7: BinaryReadRecipe[A7], a8: BinaryReadRecipe[A8], a9: BinaryReadRecipe[A9],
       a10: BinaryReadRecipe[A10]
     )(apply: (A1, A2, A3, A4, A5, A6, A7, A8, A9, A10) => R) = new BinaryReadRecipe[R] {
-    val size = List(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10).map(_.size).sum
-
     override def read(source: Iterator[Byte]): R =
       apply(
         a1.read(source),
@@ -125,8 +109,6 @@ object RecordRecipe {
     a13: BinaryReadRecipe[A13], a14: BinaryReadRecipe[A14], a15: BinaryReadRecipe[A15],
     a16: BinaryReadRecipe[A16]
     )(apply: (A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16) => R) = new BinaryReadRecipe[R] {
-    val size = List(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16).map(_.size).sum
-
     override def read(source: Iterator[Byte]): R =
       apply(
         a1.read(source),

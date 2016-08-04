@@ -125,6 +125,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
     drawPlanets(gc)
+    drawIonStorms(gc)
     drawSelectedCross(gc)
   }
 
@@ -170,6 +171,36 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
         gc.strokeOval(coord.x - shipCircleDiameter/2.0, coord.y - shipCircleDiameter/2.0, shipCircleDiameter, shipCircleDiameter)
       }
     }
+  }
+
+  private def drawIonStorms(gc: GraphicsContext) = {
+    val storms = game.turns.last.serverReceiveState.rstFiles(game.playingRace).ionStorms
+    storms.filter(_.category > 0).foreach { s =>
+      val color = s.category match {
+        case 1 => Color.LightGreen
+        case 2 => Color.Green
+        case 3 => Color.Yellow
+        case 4 => Color.Orange
+        case 5 => Color.Red
+      }
+      gc.setStroke(color)
+      gc.setLineWidth(1)
+      val mapCoords = Coords(s.x, s.y)
+      val crds = canvasCoord(s.x, s.y)
+      val canvasRadius = s.radius * scale
+      gc.strokeOval(crds.x - canvasRadius, crds.y - canvasRadius, canvasRadius * 2, canvasRadius * 2)
+      drawMovementVector(mapCoords, s.heading, s.warp)(gc)
+    }
+  }
+
+  private def drawMovementVector(mapCoords: Coords, heading: Int, warp: Int)(gc: GraphicsContext) = {
+    gc.setStroke(Color.Purple)
+    gc.setLineWidth(1)
+    val crds = canvasCoord(mapCoords)
+    val length = warp * warp * scale
+    val dx = length * Math.sin(2 * Math.PI * heading / 360)
+    val dy = length * Math.cos(2 * Math.PI * heading / 360)
+    gc.strokeLine(crds.x, crds.y, crds.x + dx, crds.y + dy)
   }
 
 }
