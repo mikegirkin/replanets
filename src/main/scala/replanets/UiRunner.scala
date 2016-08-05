@@ -23,7 +23,8 @@ object UiRunner extends JFXApp {
   val game = Game.initFromDirectory(absolutePath)
   game.processRstFile(absolutePath.resolve("Player1.RST"))
 
-  val viewModel = ViewModel(game.turns.last.serverReceiveState.rstFiles(game.playingRace).generalInfo.turnNumber, None)
+  val lastTurnNumber = game.turns.keys.max
+  val viewModel = ViewModel(lastTurnNumber, None)
   viewModel.selectedObjectChaged += { () => println(s"Selected: ${viewModel.objectSelected}") }
 
   stage = new ReplanetsPrimaryStage(game, viewModel)

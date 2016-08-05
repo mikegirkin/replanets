@@ -3,7 +3,6 @@ package replanets.common
 import java.nio.file.Paths
 
 import org.scalatest.{Matchers, WordSpec}
-import replanets.common.{Constants, HullAssignment, HullspecItem, TorpspecItem}
 
 class StaticFilesReadSpec extends WordSpec with Matchers {
 

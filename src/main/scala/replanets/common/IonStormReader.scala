@@ -7,6 +7,7 @@ import replanets.recipes.NumberExtensions._
   * Created by mgirkin on 04/08/2016.
   */
 case class IonStorm(
+  id: Int,
   x: Short,
   y: Short,
   radius: Short,
@@ -27,18 +28,23 @@ case class IonStorm(
 object IonStormReader {
   import replanets.recipes.IteratorExtensions._
 
+  val maxNumberOfStorms = 50
+
   def read(it: Iterator[Byte]): IndexedSeq[IonStorm] = {
-    it.read(new BinaryReadRecipe[IonStorm] {
-      override def read(source: Iterator[Byte]): IonStorm = {
-        IonStorm(
-          it.read(WORD),
-          it.read(WORD),
-          it.read(WORD),
-          it.read(WORD),
-          it.read(WORD),
-          it.read(WORD)
-        )
-      }
-    }, 50).filter(_.voltage > 0)
+    (1 to 50).map { idx =>
+      it.read(new BinaryReadRecipe[IonStorm] {
+        override def read(source: Iterator[Byte]): IonStorm = {
+          IonStorm(
+            idx,
+            it.read(WORD),
+            it.read(WORD),
+            it.read(WORD),
+            it.read(WORD),
+            it.read(WORD),
+            it.read(WORD)
+          )
+        }
+      })
+    }.filter(_.voltage > 0)
   }
 }

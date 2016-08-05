@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane fx:controller="replanets.ui.IonStormInformationView" gridLinesVisible="true"
+          maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65">
+  <columnConstraints>
+    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="34.0" minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="27.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" text="Radius" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" text="Voltage" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" text="Id">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" text="Speed" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="17.0" text="Heading" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets right="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="lblId" text="Label" GridPane.columnIndex="1">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="lblVoltage" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="lblRadius" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="lblSpeed" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="lblHeading" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="10.0" />
+         </GridPane.margin>
+      </Label>
+   </children>
+</GridPane>

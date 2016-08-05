@@ -4,7 +4,7 @@ import java.nio.file.Path
 
 import replanets.common.{Constants, RacenmItem, RstFileReader}
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
 
 /**
   * Created by mgirkin on 27/07/2016.
@@ -19,7 +19,7 @@ case class Game(
   specs: Specs
 ) {
 
-  val turns = ArrayBuffer[TurnInfo]()
+  val turns = mutable.Map[Int, TurnInfo]()
 
   override def toString: String = {
     String.join(
@@ -30,7 +30,7 @@ case class Game(
   def processRstFile(rstFile: Path): Game = {
     val rst = RstFileReader.read(rstFile)
     val ti = TurnInfo(ReceivedState(Map(rst.generalInfo.playerId.toInt -> rst)))
-    turns.append(ti)
+    turns += (rst.generalInfo.turnNumber.toInt -> ti)
     this
   }
 

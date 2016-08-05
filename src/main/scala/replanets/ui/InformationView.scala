@@ -3,8 +3,10 @@ package replanets.ui
 import replanets.common.{Constants, PlanetRecord}
 import replanets.model.Game
 
+import scalafx.Includes._
 import scalafx.scene.control.{Control, Label}
-import scalafx.scene.layout.VBox
+import scalafx.scene.layout.{GridPane, VBox}
+import scalafxml.core.{FXMLView, NoDependencyResolver}
 
 /**
   * Created by mgirkin on 04/08/2016.
@@ -17,9 +19,15 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
     new Label("Infomation view")
   )
 
+  val ionStormInfoView: GridPane =
+    FXMLView(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver).asInstanceOf[javafx.scene.layout.GridPane]
+
+
+
   def showInfoAbout(mapObject: MapObject) = {
     mapObject.objectType match {
       case MapObjectType.Planet => showInfoAboutPlanet(mapObject)
+      case MapObjectType.IonStorm => showInfoAboutIonStorm(mapObject)
       case _ => children = Seq(Label("Not implemented yet"))
     }
   }
@@ -56,8 +64,12 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
       )
     }
 
-    val planetInfo = game.turns.last.serverReceiveState.rstFiles(1).planets.find(_.planetId == mapObject.id)
+    val planetInfo = game.turns(viewModel.turnShown).serverReceiveState.rstFiles(1).planets.find(_.planetId == mapObject.id)
 
     children = commonViewItems ++ planetInfo.map {p => knownViewItems(p)}.getOrElse(Seq())
+  }
+
+  private def showInfoAboutIonStorm(mapObject: MapObject): Unit = {
+    children = Seq(ionStormInfoView)
   }
 }

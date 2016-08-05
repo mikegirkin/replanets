@@ -6,7 +6,7 @@ import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Button
-import scalafx.scene.layout.{BorderPane, HBox, VBox}
+import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.{Node, Scene}
 
 class ReplanetsPrimaryStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
@@ -15,7 +15,7 @@ class ReplanetsPrimaryStage(game: Game, viewModel: ViewModel) extends PrimarySta
     minWidth = 600
   }
 
-  private val messageView = new MessagesView(game.turns.last.serverReceiveState.rstFiles(game.playingRace).messages)
+  private val messageView = new MessagesView(game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game, viewModel)
   private val informationView = new InformationView(game, viewModel)
 
