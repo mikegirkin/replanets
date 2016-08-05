@@ -26,11 +26,8 @@ object IteratorExtensions {
 }
 
 object NumberExtensions {
-  implicit class IntExt(val it: Int) extends AnyVal {
-    def between(low: Int, hi: Int) = if(it > low && it < hi) true else false
-  }
-
-  implicit class ShortExt(val it: Short) extends AnyVal {
-    def between(low: Short, hi: Short) = if(it > low && it < hi) true else false
+  implicit class NumberExt[T : Numeric](val it: T) {
+    def between(low: T, hi: T) =
+      if(implicitly[Numeric[T]].lteq(low, it) && implicitly[Numeric[T]].lteq(it, hi)) true else false
   }
 }

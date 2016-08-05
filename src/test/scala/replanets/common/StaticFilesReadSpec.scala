@@ -1,4 +1,4 @@
-package replanets.tests
+package replanets.common
 
 import java.nio.file.Paths
 

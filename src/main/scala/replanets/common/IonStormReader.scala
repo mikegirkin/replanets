@@ -15,10 +15,10 @@ case class IonStorm(
   heading: Short
 ) {
   def category = {
-    if(voltage.between(0, 50)) 1
-    else if (voltage.between(49, 100)) 2
-    else if (voltage.between(99, 150)) 3
-    else if (voltage.between(149, 200)) 4
+    if(voltage.between(1, 49)) 1
+    else if (voltage.between(50, 99)) 2
+    else if (voltage.between(100, 149)) 3
+    else if (voltage.between(150, 199)) 4
     else if (voltage >= 200) 5
     else 0
   }
