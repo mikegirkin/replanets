@@ -7,7 +7,7 @@
 
 <GridPane fx:id="rootPane" fx:controller="replanets.ui.IonStormInformationView"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65"
-          maxWidth="Infinity" minWidth="100" stylesheets="styles.css">
+          maxWidth="Infinity" minWidth="100" stylesheets="styles.css" styleClass="ionStormInfo">
   <columnConstraints>
     <ColumnConstraints percentWidth="50" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
     <ColumnConstraints percentWidth="50" halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />

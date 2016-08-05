@@ -25,7 +25,6 @@ object UiRunner extends JFXApp {
 
   val lastTurnNumber = game.turns.keys.max
   val viewModel = ViewModel(lastTurnNumber, None)
-  viewModel.selectedObjectChaged += { () => println(s"Selected: ${viewModel.objectSelected}") }
 
   stage = new MainStage(game, viewModel)
 

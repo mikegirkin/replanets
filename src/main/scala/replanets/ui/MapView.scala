@@ -13,14 +13,15 @@ import scalafx.scene.paint.Color
 class MapView(game: Game, viewModel: ViewModel) extends Pane {
   self: Node =>
 
-  var scale = 0.2
-  var offsetX = -100d
-  var offsetY = -100d
+  var scale = 0.4
+  var offsetX = -350d
+  var offsetY = -350d
   val scaleStep = 1.5
 
   def planetDiameter: Double =
     if (scale < 0.2) 2
-    else if (scale < 0.5) 5
+    else if(scale < 0.4) 3
+    else if (scale < 0.7) 5
     else 8
 
   def shipCircleDiameter: Double = planetDiameter + 4
@@ -37,6 +38,9 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   val canvas = new Canvas {
     height <== self.height
     width <== self.width
+
+    width.onChange(redraw())
+    height.onChange(redraw())
 
     onMousePressed = (e: MouseEvent) => {
       if(e.button == MouseButton.Primary) {
