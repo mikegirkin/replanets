@@ -34,6 +34,10 @@ case class Game(
     this
   }
 
+  def turnSeverData(turn: Int) = {
+    turns(turn).serverReceiveState.rstFiles(playingRace)
+  }
+
 }
 
 object Game {

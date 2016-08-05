@@ -9,7 +9,7 @@ import scalafx.scene.control.Button
 import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.{Node, Scene}
 
-class ReplanetsPrimaryStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
+class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   private val mainLayout = new BorderPane {
     minWidth = 600
@@ -20,6 +20,7 @@ class ReplanetsPrimaryStage(game: Game, viewModel: ViewModel) extends PrimarySta
   private val informationView = new InformationView(game, viewModel)
 
   scene = new Scene {
+    stylesheets += getClass.getResource("/styles.css").toExternalForm
     minWidth = 600
     root = mainLayout
   }

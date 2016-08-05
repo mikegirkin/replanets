@@ -3,7 +3,7 @@ package replanets
 import java.nio.file.{Path, Paths}
 
 import replanets.model.Game
-import replanets.ui.{ReplanetsPrimaryStage, ViewModel}
+import replanets.ui.{MainStage, ViewModel}
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
@@ -27,7 +27,7 @@ object UiRunner extends JFXApp {
   val viewModel = ViewModel(lastTurnNumber, None)
   viewModel.selectedObjectChaged += { () => println(s"Selected: ${viewModel.objectSelected}") }
 
-  stage = new ReplanetsPrimaryStage(game, viewModel)
+  stage = new MainStage(game, viewModel)
 
   override def main(args: Array[String]): Unit = {
     if(args.length == 1 && args(0) == "console")

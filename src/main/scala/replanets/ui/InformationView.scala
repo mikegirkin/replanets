@@ -1,12 +1,11 @@
 package replanets.ui
 
-import replanets.common.{Constants, PlanetRecord}
+import replanets.common.{Constants, IonStorm, PlanetRecord}
 import replanets.model.Game
 
-import scalafx.Includes._
-import scalafx.scene.control.{Control, Label}
-import scalafx.scene.layout.{GridPane, VBox}
-import scalafxml.core.{FXMLView, NoDependencyResolver}
+import scalafx.scene.control.{Button, Control, Label}
+import scalafx.scene.layout.VBox
+import scalafxml.core.{DependenciesByType, FXMLLoader}
 
 /**
   * Created by mgirkin on 04/08/2016.
@@ -14,20 +13,26 @@ import scalafxml.core.{FXMLView, NoDependencyResolver}
 class InformationView(game: Game, viewModel: ViewModel) extends VBox {
 
   minWidth = 300
+  fillWidth = true
 
   children = Seq(
-    new Label("Infomation view")
+    new Label("Infomation view"),
+    new Button("sdf;kjsdfsdf") {
+      maxWidth = Double.MaxValue
+    }
+
   )
 
-  val ionStormInfoView: GridPane =
-    FXMLView(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver).asInstanceOf[javafx.scene.layout.GridPane]
-
-
+  val ionStormInfoView = {
+    val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), new DependenciesByType(Map()))
+    loader.load()
+    loader.getController[IIonStormInformationView]
+  }
 
   def showInfoAbout(mapObject: MapObject) = {
     mapObject.objectType match {
       case MapObjectType.Planet => showInfoAboutPlanet(mapObject)
-      case MapObjectType.IonStorm => showInfoAboutIonStorm(mapObject)
+      case MapObjectType.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
       case _ => children = Seq(Label("Not implemented yet"))
     }
   }
@@ -69,7 +74,8 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
     children = commonViewItems ++ planetInfo.map {p => knownViewItems(p)}.getOrElse(Seq())
   }
 
-  private def showInfoAboutIonStorm(mapObject: MapObject): Unit = {
-    children = Seq(ionStormInfoView)
+  private def showInfoAboutIonStorm(storm: IonStorm): Unit = {
+    ionStormInfoView.setData(storm)
+    children = Seq(ionStormInfoView.rootPane)
   }
 }
