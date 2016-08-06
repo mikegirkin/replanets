@@ -3,11 +3,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView">
@@ -18,16 +16,6 @@
             <ColumnConstraints percentWidth="50" halignment="RIGHT" minWidth="10.0" />
             <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
         </columnConstraints>
-        <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-        </rowConstraints>
         <children>
             <Label text="Owner:" GridPane.rowIndex="0"/>
             <Label fx:id="lblOwner" text="owner" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -38,8 +26,42 @@
             <Label fx:id="lblFcode" text="fcode" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label text="Climate:" GridPane.rowIndex="2"/>
             <Label fx:id="lblClimate" text="climate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <VBox fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
-            <VBox fx:id="pnColonists" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+            <VBox fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2" prefHeight="120" minHeight="120">
+                <GridPane fx:id="gridNatives" visible="false">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+                        <ColumnConstraints percentWidth="50" halignment="LEFT"/>
+                    </columnConstraints>
+                    <children>
+                        <Label text="Natives:" GridPane.halignment="LEFT" GridPane.columnSpan="2" GridPane.rowIndex="0"/>
+                        <Label fx:id="lblNatives" GridPane.halignment="LEFT" text="nation" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+                        <Label fx:id="lblGovernment" GridPane.halignment="LEFT" text="government" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+                        <Label text="Population:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <Label fx:id="lblPopulation" text="pop" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="Taxes:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <Label fx:id="lblTax" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                        <Label text="Happiness:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <Label fx:id="lblHappiness" text="happiness" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    </children>
+                </GridPane>
+            </VBox>
+            <VBox fx:id="pnColonists" GridPane.rowIndex="4" GridPane.columnSpan="2" prefHeight="200" minHeight="200">
+                <GridPane fx:id="gridColonists">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <children>
+                        <Label text="Colonists" GridPane.halignment="LEFT" GridPane.columnSpan="2" />
+                        <Label text="Population:" GridPane.rowIndex="1"/>
+                        <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Label text="Tax:" GridPane.rowIndex="2"/>
+                        <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <Label text="Happiness:" GridPane.rowIndex="3"/>
+                        <Label fx:id="lblColonistHappiness" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                    </children>
+                </GridPane>
+            </VBox>
         </children>
     </GridPane>
 </VBox>
