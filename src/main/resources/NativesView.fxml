@@ -2,7 +2,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.Label?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-          stylesheets="styles.css" styleClass="infoGrid" fx:controller="replanets.ui.NativesViewController"
+          stylesheets="styles.css" styleClass="infoGrid" fx:controller="replanets.ui.NativesView"
           fx:id="root">
     <columnConstraints>
         <ColumnConstraints percentWidth="50" halignment="RIGHT"/>

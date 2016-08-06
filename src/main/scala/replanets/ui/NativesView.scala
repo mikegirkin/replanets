@@ -10,20 +10,20 @@ import scalafxml.core.macros.sfxml
   * Created by mgirkin on 06/08/2016.
   */
 
-trait INativesViewController {
+trait INativesView {
   def root: GridPane
   def setData(data: PlanetRecord): Unit
 }
 
 @sfxml
-class NativesViewController(
+class NativesView(
   val root: GridPane,
   private val lblNatives: Label,
   private val lblGovernment: Label,
   private val lblPopulation: Label,
   private val lblTax: Label,
   private val lblHappiness: Label
-) extends INativesViewController {
+) extends INativesView {
 
   lblNatives.text = "dlfkjhsdlfkjhsf"
 

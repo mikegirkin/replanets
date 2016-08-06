@@ -38,7 +38,8 @@
             <Label fx:id="lblFcode" text="fcode" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label text="Climate:" GridPane.rowIndex="2"/>
             <Label fx:id="lblClimate" text="climate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <Pane fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+            <VBox fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+            <VBox fx:id="pnColonists" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
         </children>
     </GridPane>
 </VBox>

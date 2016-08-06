@@ -1,0 +1,20 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          maxWidth="Infinity" stylesheets="styles.css" styleClass="infoGrid" fx:controller="replanets.ui.ColonistsView"
+          fx:id="root">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+    <children>
+        <Label text="Colonists" GridPane.halignment="LEFT" GridPane.columnSpan="2" />
+        <Label text="Population:" GridPane.rowIndex="1"/>
+        <Label fx:id="lblPopulation" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Tax:" GridPane.rowIndex="2"/>
+        <Label fx:id="lblTax" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Happiness:" GridPane.rowIndex="3"/>
+        <Label fx:id="lblHappiness" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </children>
+</GridPane>

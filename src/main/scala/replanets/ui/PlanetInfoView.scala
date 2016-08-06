@@ -1,14 +1,11 @@
 package replanets.ui
 
 import replanets.model.Game
+import replanets.ui.ScalafxHelpers.loadController
 
-import scalafx.Includes._
 import scalafx.scene.control.Label
 import scalafx.scene.layout.{Pane, VBox}
 import scalafxml.core.macros.sfxml
-import scalafxml.core.{FXMLLoader, NoDependencyResolver}
-
-import ScalafxHelpers.loadController
 /**
   * Created by mgirkin on 06/08/2016.
   */
@@ -26,14 +23,17 @@ class PlanetInfoView(
   private val lblOwner: Label,
   private val lblFcode: Label,
   private val lblClimate: Label,
-  private val pnNatives: Pane
+  private val pnNatives: Pane,
+  private val pnColonists: Pane
 ) extends IPlanetInfoView {
 
   var game:Game = null
 
-  private val nativesView = loadController[INativesViewController]("/NativesView.fxml")
+  private val nativesView = loadController[INativesView]("/NativesView.fxml")
+  private val colonistsView = loadController[IColonistsView]("/ColonistsView.fxml")
 
   pnNatives.children = nativesView.root
+  pnColonists.children = colonistsView.root
 
   override def setGameModel(model: Game): IPlanetInfoView ={
     this.game = model
@@ -49,6 +49,7 @@ class PlanetInfoView(
       lblFcode.text = p.fcode
       lblClimate.text = p.temperature.toString
       nativesView.setData(p)
+      colonistsView.setData(p)
     })
   }
 }
