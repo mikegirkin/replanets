@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView">
+    <Label fx:id="lblName" text="name" />
+    <Label fx:id="lblWhen" text="when" />
+    <GridPane maxWidth="Infinity">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50" halignment="RIGHT" minWidth="10.0" />
+            <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+        <children>
+            <Label text="Owner:" GridPane.rowIndex="0"/>
+            <Label fx:id="lblOwner" text="owner" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <HBox GridPane.rowIndex="1" maxWidth="Infinity" alignment="CENTER_RIGHT">
+                <Label styleClass="actionSymbol" text="F"/>
+                <Label text="Code:"/>
+            </HBox>
+            <Label fx:id="lblFcode" text="fcode" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Climate:" GridPane.rowIndex="2"/>
+            <Label fx:id="lblClimate" text="climate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Pane fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+        </children>
+    </GridPane>
+</VBox>

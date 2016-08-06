@@ -1,0 +1,22 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          stylesheets="styles.css" styleClass="infoGrid" fx:controller="replanets.ui.NativesViewController"
+          fx:id="root">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+        <ColumnConstraints percentWidth="50" halignment="LEFT"/>
+    </columnConstraints>
+    <children>
+        <Label text="Natives:" GridPane.halignment="LEFT" GridPane.columnSpan="2" GridPane.rowIndex="0"/>
+        <Label fx:id="lblNatives" GridPane.halignment="LEFT" text="nation" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+        <Label fx:id="lblGovernment" GridPane.halignment="LEFT" text="government" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+        <Label text="Population:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="lblPopulation" text="pop" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Taxes:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <Label fx:id="lblTax" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Happiness:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <Label fx:id="lblHappiness" text="happiness" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </children>
+</GridPane>
