@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
+<VBox fx:id="rootPane" styleClass="baseInfo" stylesheets="styles.css" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="replanets.ui.BaseInfoView">
+    <HBox>
+        <Label text="Starbase" />
+        <Label fx:id="lblStarbaseId" text="???" />
+    </HBox>
+    <GridPane styleClass="infoGrid">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" percentWidth="50" />
+            <ColumnConstraints halignment="LEFT" percentWidth="50" />
+        </columnConstraints>
+        <children>
+            <TextFlow>
+                <Text text="D" styleClass="actionSymbol"/>
+                <Text text="efense:"/>
+            </TextFlow>
+            <Label fx:id="lblDefense" text="???" GridPane.columnIndex="1" />
+            <Label text="Damage:" GridPane.rowIndex="1" />
+            <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Fighters:" GridPane.rowIndex="2" />
+            <Label fx:id="lblFighters" text="???" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        </children>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+    </GridPane>
+    <TextFlow>
+        <Text text="Primary "/>
+        <Text text="o" styleClass="actionSymbol"/>
+        <Text text="rder" />
+    </TextFlow>
+    <HBox alignment="CENTER_RIGHT">
+        <Label fx:id="lblPrimaryOrder" text="???" />
+    </HBox>
+    <TextFlow>
+        <Text text="T" styleClass="actionSymbol"/>
+        <Text text="ech levels:"/>
+    </TextFlow>
+    <GridPane styleClass="infoGrid">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" percentWidth="50"/>
+            <ColumnConstraints halignment="LEFT" percentWidth="50"/>
+        </columnConstraints>
+        <children>
+            <Label text="Engines:"/>
+            <Label fx:id="lblEngines" text="???" GridPane.columnIndex="1"/>
+            <Label text="Hulls:" GridPane.rowIndex="1"/>
+            <Label fx:id="lblHulls" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Beams:" GridPane.rowIndex="2"/>
+            <Label fx:id="lblBeams" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Torpedoes" GridPane.rowIndex="3"/>
+            <Label fx:id="lblTorpedoes" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        </children>
+    </GridPane>
+    <Label text="Base storage:"/>
+    <ListView fx:id="lvHulls" minHeight="-Infinity" prefHeight="10"></ListView>
+    <ListView fx:id="lvDrives" minHeight="-Infinity" prefHeight="10"></ListView>
+    <ListView fx:id="lvBeams" minHeight="-Infinity" prefHeight="10"></ListView>
+    <ListView fx:id="lvLaunchers" minHeight="-Infinity" prefHeight="10"></ListView>
+    <GridPane hgap="5" vgap="5">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50" fillWidth="true"/>
+            <ColumnConstraints percentWidth="50" fillWidth="true"/>
+        </columnConstraints>
+        <children>
+            <Button styleClass="gridButton">
+                <graphic>
+                    <TextFlow textAlignment="CENTER">
+                        <Text text="B" styleClass="actionSymbol"/>
+                        <Text text="uild ship"/>
+                    </TextFlow>
+                </graphic>
+            </Button>
+            <Button styleClass="gridButton" GridPane.columnIndex="1">
+                <graphic>
+                    <TextFlow>
+                        <Text text="C" styleClass="actionSymbol"/>
+                        <Text text="lone"/>
+                    </TextFlow>
+                </graphic>
+            </Button>
+            <Button styleClass="gridButton" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                <graphic>
+                    <TextFlow>
+                        <Text text="Bu"/>
+                        <Text text="y" styleClass="actionSymbol"/>
+                        <Text text=" torps/fighters"/>
+                    </TextFlow>
+                </graphic>
+            </Button>
+            <Button styleClass="gridButton" GridPane.rowIndex="2">
+                <graphic>
+                    <TextFlow>
+                        <Text text="F" styleClass="actionSymbol"/>
+                        <Text text="ix ship" />
+                    </TextFlow>
+                </graphic>
+            </Button>
+            <Button styleClass="gridButton" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                <graphic>
+                    <TextFlow>
+                        <Text text="R" styleClass="actionSymbol"/>
+                        <Text text="ecycle" />
+                    </TextFlow>
+                </graphic>
+            </Button>
+        </children>
+    </GridPane>
+    <HBox alignment="CENTER_RIGHT">
+        <Button styleClass="commandButton">
+            <graphic>
+                <TextFlow>
+                    <Text text="P" styleClass="actionSymbol"/>
+                    <Text text="lanet"/>
+                </TextFlow>
+            </graphic>
+        </Button>
+    </HBox>
+</VBox>

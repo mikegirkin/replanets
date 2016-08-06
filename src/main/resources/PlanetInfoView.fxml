@@ -120,7 +120,7 @@
         </GridPane>
     </VBox>
     <HBox alignment="CENTER_RIGHT">
-        <Button fx:id="btnStarbase" prefWidth="100" prefHeight="20" onAction="#onBaseButton">
+        <Button fx:id="btnStarbase" styleClass="commandButton" prefWidth="100" onAction="#onBaseButton">
             <graphic>
                 <TextFlow textAlignment="CENTER">
                     <Text styleClass="actionSymbol" text="B"/>
