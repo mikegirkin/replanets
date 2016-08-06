@@ -1,9 +1,9 @@
 package replanets.ui
 
-import replanets.common.{Constants, IonStorm, PlanetRecord}
+import replanets.common.IonStorm
 import replanets.model.Game
 
-import scalafx.scene.control.{Button, Control, Label}
+import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.VBox
 import scalafxml.core.{DependenciesByType, FXMLLoader, NoDependencyResolver}
 
@@ -44,7 +44,7 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {
-    planetInfoView.setPlanetId(viewModel.turnShown, mapObject.id)
+    planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
     children = Seq(planetInfoView.rootPane)
   }
 

@@ -13,7 +13,7 @@ import scalafxml.core.macros.sfxml
 trait IPlanetInfoView {
   def rootPane: VBox
   def setGameModel(model: Game): IPlanetInfoView
-  def setPlanetId(turnId: Int, planetId: Int)
+  def setPlanet(turnId: Int, planetId: Int)
 }
 
 @sfxml
@@ -24,8 +24,6 @@ class PlanetInfoView(
   private val lblOwner: Label,
   private val lblFcode: Label,
   private val lblClimate: Label,
-  private val pnNatives: Pane,
-  private val pnColonists: Pane,
   val lblColonistPopulation: Label,
   val lblColonistTax: Label,
   val lblColonistHappiness: Label,
@@ -34,9 +32,28 @@ class PlanetInfoView(
   val lblPopulation: Label,
   val lblTax: Label,
   val lblHappiness: Label,
+  val lblMines: Label,
+  val lblFactories: Label,
+  val lblDefenses: Label,
 
-  val gridColonists: GridPane,
-  val gridNatives: GridPane
+  val lblNeuMined: Label,
+  val lblNeuCore: Label,
+  val lblNeuDensity: Label,
+  val lblTriMined: Label,
+  val lblTriCore: Label,
+  val lblTriDensity: Label,
+  val lblDurMined: Label,
+  val lblDurCore: Label,
+  val lblDurDensity: Label,
+  val lblMolMined: Label,
+  val lblMolCore: Label,
+  val lblMolDensity: Label,
+
+  val pnColonists: Pane,
+  val pnNatives: Pane,
+  val pnGeneralInfo: Pane,
+  val pnStructures: Pane,
+  val pnMinerals: Pane
 ) extends IPlanetInfoView {
 
   var game:Game = null
@@ -46,9 +63,12 @@ class PlanetInfoView(
     this
   }
 
-  override def setPlanetId(turnId: Int, planetId: Int): Unit = {
-    gridNatives.visible = false
-    gridColonists.visible = false
+  override def setPlanet(turnId: Int, planetId: Int): Unit = {
+    pnNatives.visible = false
+    pnColonists.visible = false
+    pnGeneralInfo.visible = false
+    pnStructures.visible = false
+    pnMinerals.visible = false
 
     val data = game.turnSeverData(turnId)
     lblName.text = s"${game.map.planets(planetId).name} ($planetId)"
@@ -57,6 +77,7 @@ class PlanetInfoView(
       lblOwner.text = game.races(p.ownerId - 1).shortname
       lblFcode.text = p.fcode
       lblClimate.text = p.temperature.toString
+      pnGeneralInfo.visible = true
 
       if(p.nativeRace != 0) {
         lblNatives.text = Constants.natives(p.nativeRace)
@@ -64,13 +85,32 @@ class PlanetInfoView(
         lblPopulation.text = s"${p.nativeClans} cl"
         lblTax.text = s"${p.nativeTax} %"
         lblHappiness.text = s"${p.nativeHappiness} %"
-        gridNatives.visible = true
+        pnNatives.visible = true
       }
 
       lblColonistPopulation.text = s"${p.colonistClans} cl"
       lblColonistTax.text = s"${p.colonistTax} %"
       lblColonistHappiness.text = s"${p.colonistHappiness} %"
-      gridColonists.visible = true
+      pnColonists.visible = true
+
+      lblMines.text = s"${p.minesNumber}/???"
+      lblFactories.text = s"${p.factoriesNumber}/???"
+      lblDefenses.text = s"${p.defencesNumber}/???"
+      pnStructures.visible = true
+
+      lblNeuMined.text = p.surfaceMinerals.neutronium.toString
+      lblNeuCore.text = p.coreMinerals.neutronium.toString
+      lblNeuDensity.text = s"${p.densityMinerals.neutronium} / ???"
+      lblTriMined.text = p.surfaceMinerals.tritanium.toString
+      lblTriCore.text = p.coreMinerals.tritanium.toString
+      lblTriDensity.text = s"${p.densityMinerals.tritanium} / ???"
+      lblDurMined.text = p.surfaceMinerals.duranium.toString
+      lblDurCore.text = p.coreMinerals.duranium.toString
+      lblDurDensity.text = s"${p.densityMinerals.duranium} / ???"
+      lblMolMined.text = p.surfaceMinerals.molybdenium.toString
+      lblMolCore.text = p.coreMinerals.molybdenium.toString
+      lblMolDensity.text = s"${p.densityMinerals.molybdenium} / ???"
+      pnMinerals.visible = true
     })
   }
 }

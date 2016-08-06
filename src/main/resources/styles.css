@@ -5,7 +5,7 @@
 .actionSymbol {
     -fx-font-weight: bold;
     -fx-underline: true;
-    -fx-text-fill: darkgreen;
+    -fx-fill: darkgreen;
 }
 
 .infoGrid Label {

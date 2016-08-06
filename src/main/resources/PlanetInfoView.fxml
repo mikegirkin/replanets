@@ -6,62 +6,116 @@
 
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView">
     <Label fx:id="lblName" text="name" />
     <Label fx:id="lblWhen" text="when" />
-    <GridPane maxWidth="Infinity">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="50" halignment="RIGHT" minWidth="10.0" />
-            <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
-        </columnConstraints>
-        <children>
-            <Label text="Owner:" GridPane.rowIndex="0"/>
-            <Label fx:id="lblOwner" text="owner" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-            <HBox GridPane.rowIndex="1" maxWidth="Infinity" alignment="CENTER_RIGHT">
-                <Label styleClass="actionSymbol" text="F"/>
-                <Label text="Code:"/>
-            </HBox>
-            <Label fx:id="lblFcode" text="fcode" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <Label text="Climate:" GridPane.rowIndex="2"/>
-            <Label fx:id="lblClimate" text="climate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <VBox fx:id="pnNatives" GridPane.rowIndex="3" GridPane.columnSpan="2" prefHeight="120" minHeight="120">
-                <GridPane fx:id="gridNatives" visible="false">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
-                        <ColumnConstraints percentWidth="50" halignment="LEFT"/>
-                    </columnConstraints>
-                    <children>
-                        <Label text="Natives:" GridPane.halignment="LEFT" GridPane.columnSpan="2" GridPane.rowIndex="0"/>
-                        <Label fx:id="lblNatives" GridPane.halignment="LEFT" text="nation" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
-                        <Label fx:id="lblGovernment" GridPane.halignment="LEFT" text="government" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
-                        <Label text="Population:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <Label fx:id="lblPopulation" text="pop" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                        <Label text="Taxes:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                        <Label fx:id="lblTax" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                        <Label text="Happiness:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                        <Label fx:id="lblHappiness" text="happiness" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                    </children>
-                </GridPane>
-            </VBox>
-            <VBox fx:id="pnColonists" GridPane.rowIndex="4" GridPane.columnSpan="2" prefHeight="200" minHeight="200">
-                <GridPane fx:id="gridColonists">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
-                        <ColumnConstraints percentWidth="50"/>
-                    </columnConstraints>
-                    <children>
-                        <Label text="Colonists" GridPane.halignment="LEFT" GridPane.columnSpan="2" />
-                        <Label text="Population:" GridPane.rowIndex="1"/>
-                        <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        <Label text="Tax:" GridPane.rowIndex="2"/>
-                        <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                        <Label text="Happiness:" GridPane.rowIndex="3"/>
-                        <Label fx:id="lblColonistHappiness" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                    </children>
-                </GridPane>
-            </VBox>
-        </children>
-    </GridPane>
+    <VBox fx:id="pnGeneralInfo">
+        <GridPane maxWidth="Infinity" styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" halignment="RIGHT" minWidth="10.0" />
+                <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
+            </columnConstraints>
+            <children>
+                <Label text="Owner:" GridPane.rowIndex="0"/>
+                <Label fx:id="lblOwner" text="owner" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <TextFlow GridPane.rowIndex="1" maxWidth="Infinity" textAlignment="RIGHT">
+                    <Text styleClass="actionSymbol" text="F"/>
+                    <Text text="Code:"/>
+                </TextFlow>
+                <Label fx:id="lblFcode" text="fcode" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Climate:" GridPane.rowIndex="2"/>
+                <Label fx:id="lblClimate" text="climate" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            </children>
+        </GridPane>
+    </VBox>
+    <VBox fx:id="pnNatives">
+        <Label text="Natives:" />
+        <Label fx:id="lblNatives" />
+        <Label fx:id="lblGovernment" />
+        <GridPane visible="false"  styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="50" halignment="LEFT"/>
+            </columnConstraints>
+            <children>
+                <Label text="Population:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="lblPopulation" text="pop"  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Taxes:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="lblTax" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Happiness:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="lblHappiness" text="happiness" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </VBox>
+    <VBox fx:id="pnColonists">
+        <Label text="Colonists" />
+        <GridPane styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <children>
+                <Label text="Population:" GridPane.rowIndex="0"/>
+                <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Tax:" GridPane.rowIndex="1"/>
+                <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Happiness:" GridPane.rowIndex="2"/>
+                <Label fx:id="lblColonistHappiness" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </VBox>
+    <VBox fx:id="pnStructures">
+        <Label text="Strгctures"/>
+        <GridPane styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+            <children>
+                <Label text="Mines:" GridPane.rowIndex="0"/>
+                <Label fx:id="lblMines" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Factories:" GridPane.rowIndex="1"/>
+                <Label fx:id="lblFactories" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Defenses:" GridPane.rowIndex="2"/>
+                <Label fx:id="lblDefenses" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </VBox>
+    <VBox fx:id="pnMinerals">
+        <Label text="Minerals"/>
+        <GridPane gridLinesVisible="true" styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="16" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="28" halignment="CENTER"/>
+                <ColumnConstraints percentWidth="28" halignment="CENTER"/>
+                <ColumnConstraints percentWidth="28" halignment="CENTER"/>
+            </columnConstraints>
+            <children>
+                <Label text="Surface" GridPane.columnIndex="1"/>
+                <Label text="Core" GridPane.columnIndex="2"/>
+                <Label text="Density" GridPane.columnIndex="3"/>
+                <Label text="Neu" GridPane.rowIndex="1"/>
+                <Label fx:id="lblNeuMined" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label fx:id="lblNeuCore" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+                <Label fx:id="lblNeuDensity" text="???" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+                <Label text="Tri" GridPane.rowIndex="2"/>
+                <Label fx:id="lblTriMined" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblTriCore" text="???" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+                <Label fx:id="lblTriDensity" text="???" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                <Label text="Dur" GridPane.rowIndex="3"/>
+                <Label fx:id="lblDurMined" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label fx:id="lblDurCore" text="???" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+                <Label fx:id="lblDurDensity" text="???" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
+                <Label text="Mol" GridPane.rowIndex="4"/>
+                <Label fx:id="lblMolMined" text="???" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label fx:id="lblMolCore" text="???" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+                <Label fx:id="lblMolDensity" text="???" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
+            </children>
+        </GridPane>
+    </VBox>
 </VBox>
