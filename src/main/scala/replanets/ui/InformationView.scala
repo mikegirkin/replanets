@@ -6,11 +6,12 @@ import replanets.model.Game
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.VBox
 import scalafxml.core.{DependenciesByType, FXMLLoader, NoDependencyResolver}
+import scala.reflect.runtime.universe._
 
 /**
   * Created by mgirkin on 04/08/2016.
   */
-class InformationView(game: Game, viewModel: ViewModel) extends VBox {
+class InformationView(game: Game, viewModel: ViewModel, commands: Commands) extends VBox {
 
   minWidth = 300
   fillWidth = true
@@ -24,13 +25,18 @@ class InformationView(game: Game, viewModel: ViewModel) extends VBox {
   )
 
   val ionStormInfoView = {
-    val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), new DependenciesByType(Map()))
+    val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver)
     loader.load()
     loader.getController[IIonStormInformationView]
   }
 
   val planetInfoView = {
-    val loader = new FXMLLoader(getClass.getResource("/PlanetInfoView.fxml"), NoDependencyResolver)
+    val loader = new FXMLLoader(
+      getClass.getResource("/PlanetInfoView.fxml"),
+      new DependenciesByType(Map(
+        typeOf[Commands] -> commands
+      ))
+    )
     loader.load()
     loader.getController[IPlanetInfoView].setGameModel(game)
   }

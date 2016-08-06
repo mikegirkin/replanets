@@ -6,6 +6,7 @@ import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Button
+import scalafx.scene.input.KeyEvent
 import scalafx.scene.layout.{BorderPane, HBox}
 import scalafx.scene.{Node, Scene}
 
@@ -15,14 +16,19 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     minWidth = 600
   }
 
+  private val commands = new Commands(
+    new SwitchToBaseViewCommand(game, viewModel)
+  )
   private val messageView = new MessagesView(game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game, viewModel)
-  private val informationView = new InformationView(game, viewModel)
+  private val informationView = new InformationView(game, viewModel, commands)
 
   scene = new Scene {
     stylesheets += getClass.getResource("/styles.css").toExternalForm
     minWidth = 600
     root = mainLayout
+
+    onKeyPressed = (e:KeyEvent) => handleKeyPressed(e)
   }
   title = "rePlanets"
   width = 1280
@@ -32,6 +38,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     override def onMessages(e: ActionEvent): Unit = setMainView(messageView)
     override def onMap(e: ActionEvent): Unit = setMainView(mapView)
   }
+
   mainLayout.right = informationView
   mainLayout.top = new HBox {
     children = Seq(
@@ -53,6 +60,14 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   private def setMainView(view: Node) = {
     mainLayout.center = view
   }
+
+  private def handleKeyPressed(e: KeyEvent): Unit = {
+    e.code.name match {
+      case "B" => commands.switchToBaseViewCommand.execute()
+      case _ =>
+    }
+  }
+
 
 }
 

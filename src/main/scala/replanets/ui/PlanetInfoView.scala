@@ -3,6 +3,7 @@ package replanets.ui
 import replanets.common.Constants
 import replanets.model.Game
 
+import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{Pane, VBox}
 import scalafxml.core.macros.sfxml
@@ -54,7 +55,9 @@ class PlanetInfoView(
   val pnNatives: Pane,
   val pnGeneralInfo: Pane,
   val pnStructures: Pane,
-  val pnMinerals: Pane
+  val pnMinerals: Pane,
+
+  val commands: Commands
 ) extends IPlanetInfoView {
 
   var game:Game = null
@@ -120,4 +123,6 @@ class PlanetInfoView(
       btnStarbase.visible = true
     }
   }
+
+  def onBaseButton(e: ActionEvent) = commands.switchToBaseViewCommand.execute()
 }

@@ -9,6 +9,7 @@ case class Coords(x: Double, y: Double) {
 sealed trait MapObjectType {}
 object MapObjectType {
   case object Ship extends MapObjectType
+  case object Base extends MapObjectType
   case object Planet extends MapObjectType
   case object IonStorm extends MapObjectType
 }
