@@ -6,10 +6,6 @@ import replanets.common.{Constants, RacenmItem, RstFileReader}
 
 import scala.collection.mutable
 
-/**
-  * Created by mgirkin on 27/07/2016.
-  */
-
 case class Game(
   name: String,
   dataPath: Path,
@@ -19,6 +15,7 @@ case class Game(
   specs: Specs
 ) {
 
+  val formulas: Formulas = THostFormulas
   val turns = mutable.Map[Int, TurnInfo]()
 
   override def toString: String = {

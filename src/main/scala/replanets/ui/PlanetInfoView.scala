@@ -2,10 +2,9 @@ package replanets.ui
 
 import replanets.common.Constants
 import replanets.model.Game
-import replanets.ui.ScalafxHelpers.loadController
 
-import scalafx.scene.control.Label
-import scalafx.scene.layout.{GridPane, Pane, VBox}
+import scalafx.scene.control.{Button, Label}
+import scalafx.scene.layout.{Pane, VBox}
 import scalafxml.core.macros.sfxml
 /**
   * Created by mgirkin on 06/08/2016.
@@ -49,6 +48,8 @@ class PlanetInfoView(
   val lblMolCore: Label,
   val lblMolDensity: Label,
 
+  val btnStarbase: Button,
+
   val pnColonists: Pane,
   val pnNatives: Pane,
   val pnGeneralInfo: Pane,
@@ -69,6 +70,7 @@ class PlanetInfoView(
     pnGeneralInfo.visible = false
     pnStructures.visible = false
     pnMinerals.visible = false
+    btnStarbase.visible = false
 
     val data = game.turnSeverData(turnId)
     lblName.text = s"${game.map.planets(planetId).name} ($planetId)"
@@ -93,24 +95,29 @@ class PlanetInfoView(
       lblColonistHappiness.text = s"${p.colonistHappiness} %"
       pnColonists.visible = true
 
-      lblMines.text = s"${p.minesNumber}/???"
-      lblFactories.text = s"${p.factoriesNumber}/???"
-      lblDefenses.text = s"${p.defencesNumber}/???"
+      lblMines.text = s"${p.minesNumber} / ${game.formulas.maxMines(p.colonistClans)}"
+      lblFactories.text = s"${p.factoriesNumber} / ${game.formulas.maxFactories(p.colonistClans)}"
+      lblDefenses.text = s"${p.defencesNumber} / ${game.formulas.maxDefences(p.colonistClans)}"
       pnStructures.visible = true
+
+      val miningRate = (density: Int) => game.formulas.miningRate(density, p.minesNumber, game.playingRace, p.nativeRace)
 
       lblNeuMined.text = p.surfaceMinerals.neutronium.toString
       lblNeuCore.text = p.coreMinerals.neutronium.toString
-      lblNeuDensity.text = s"${p.densityMinerals.neutronium} / ???"
+      lblNeuDensity.text = s"${miningRate(p.densityMinerals.neutronium)} / ${p.densityMinerals.neutronium}"
       lblTriMined.text = p.surfaceMinerals.tritanium.toString
       lblTriCore.text = p.coreMinerals.tritanium.toString
-      lblTriDensity.text = s"${p.densityMinerals.tritanium} / ???"
+      lblTriDensity.text = s"${miningRate(p.densityMinerals.tritanium)} / ${p.densityMinerals.tritanium}"
       lblDurMined.text = p.surfaceMinerals.duranium.toString
       lblDurCore.text = p.coreMinerals.duranium.toString
-      lblDurDensity.text = s"${p.densityMinerals.duranium} / ???"
+      lblDurDensity.text = s"${miningRate(p.densityMinerals.duranium)} / ${p.densityMinerals.duranium}"
       lblMolMined.text = p.surfaceMinerals.molybdenium.toString
       lblMolCore.text = p.coreMinerals.molybdenium.toString
-      lblMolDensity.text = s"${p.densityMinerals.molybdenium} / ???"
+      lblMolDensity.text = s"${miningRate(p.densityMinerals.molybdenium)} / ${p.densityMinerals.molybdenium}"
       pnMinerals.visible = true
     })
+    data.bases.find(_.baseId == planetId).foreach{ _ =>
+      btnStarbase.visible = true
+    }
   }
 }
