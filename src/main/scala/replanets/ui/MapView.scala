@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common.ShipCoordsRecord
+import replanets.common.{Constants, ShipCoordsRecord}
 import replanets.model.Game
 
 import scalafx.Includes._
@@ -95,7 +95,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
 
-  def zoom(scaleStep: Double, zoomPoint: Coords) = {
+  private def zoom(scaleStep: Double, zoomPoint: Coords) = {
     val mapCoordsZoomPoint = mapCoords(zoomPoint)
 
     scale = scale * scaleStep
@@ -105,7 +105,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     redraw()
   }
 
-  def distSqr(point1: Coords, point2: Coords): Double =
+  private def distSqr(point1: Coords, point2: Coords): Double =
     (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)
 
 
@@ -118,7 +118,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   def canvasCoord(mapCoord: Coords): Coords = {
-    Coords(mapCoord.x * scale + offsetX, mapCoord.y * scale + offsetY)
+    Coords(mapCoord.x * scale + offsetX, (Constants.MapHeight - mapCoord.y) * scale + offsetY)
   }
 
   def canvasCoord(x: Double, y: Double): Coords = canvasCoord(Coords(x, y))
@@ -127,7 +127,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
   def mapCoords(canvasX: Double, canvasY: Double): Coords = Coords(
     (canvasX - offsetX) / scale,
-    (canvasY - offsetY) / scale
+    Constants.MapHeight - (canvasY - offsetY) / scale
   )
 
 
@@ -207,11 +207,11 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def drawMovementVector(mapCoords: Coords, heading: Int, warp: Int)(gc: GraphicsContext) = {
     gc.setStroke(Color.Purple)
     gc.setLineWidth(1)
-    val crds = canvasCoord(mapCoords)
-    val length = warp * warp * scale
-    val dx = length * Math.sin(2 * Math.PI * heading / 360)
-    val dy = length * Math.cos(2 * Math.PI * heading / 360)
-    gc.strokeLine(crds.x, crds.y, crds.x + dx, crds.y + dy)
+    val startPoint = canvasCoord(mapCoords)
+    val dx = warp * warp * Math.sin(2 * Math.PI * heading / 360)
+    val dy = warp * warp * Math.cos(2 * Math.PI * heading / 360)
+    val endPoint = canvasCoord(mapCoords.shift(dx, dy))
+    gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y)
   }
 
 }

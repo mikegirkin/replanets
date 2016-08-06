@@ -8,27 +8,34 @@
 <GridPane fx:id="rootPane" fx:controller="replanets.ui.IonStormInformationView"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65"
           maxWidth="Infinity" minWidth="100" stylesheets="styles.css" styleClass="ionStormInfo">
-  <columnConstraints>
-    <ColumnConstraints percentWidth="50" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
-    <ColumnConstraints percentWidth="50" halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints />
-    <RowConstraints />
-    <RowConstraints />
-    <RowConstraints />
-    <RowConstraints />
-  </rowConstraints>
-   <children>
-      <Label text="Radius:" styleClass="gridLabel" GridPane.rowIndex="2" />
-      <Label text="Voltage:" styleClass="gridLabel" GridPane.rowIndex="1"/>
-      <Label text="Id:" styleClass="gridLabel"/>
-      <Label text="Speed:" styleClass="gridLabel" GridPane.rowIndex="3"/>
-      <Label text="Heading:" styleClass="gridLabel" GridPane.rowIndex="4"/>
-      <Label fx:id="lblId" styleClass="gridLabel" text="Label" GridPane.columnIndex="1"/>
-      <Label fx:id="lblVoltage" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-      <Label fx:id="lblRadius" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-      <Label fx:id="lblSpeed" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-      <Label fx:id="lblHeading" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-   </children>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50" halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+        <ColumnConstraints percentWidth="50" halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <Label text="Id:" styleClass="gridLabel"/>
+        <Label text="Center:" styleClass="gridLabel" GridPane.rowIndex="1"/>
+        <Label text="Voltage:" styleClass="gridLabel" GridPane.rowIndex="2"/>
+        <Label text="Radius:" styleClass="gridLabel" GridPane.rowIndex="5" />
+        <Label text="Warp:" styleClass="gridLabel" GridPane.rowIndex="6"/>
+        <Label text="Heading:" styleClass="gridLabel" GridPane.rowIndex="7"/>
+        <Label fx:id="lblId" styleClass="gridLabel" GridPane.columnIndex="1"/>
+        <Label fx:id="lblCenter" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label fx:id="lblVoltage" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label fx:id="lblClass" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label fx:id="lblDynamic" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <Label fx:id="lblRadius" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        <Label fx:id="lblSpeed" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <Label fx:id="lblHeading" styleClass="gridLabel" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+    </children>
 </GridPane>

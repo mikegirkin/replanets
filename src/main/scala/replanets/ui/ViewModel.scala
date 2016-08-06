@@ -1,6 +1,10 @@
 package replanets.ui
 
-case class Coords(x: Double, y: Double)
+case class Coords(x: Double, y: Double) {
+  def shift(dx: Double, dy: Double) = {
+    Coords(x + dx, y + dy)
+  }
+}
 
 sealed trait MapObjectType {}
 object MapObjectType {

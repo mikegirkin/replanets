@@ -46,4 +46,12 @@ object Constants {
     9 -> "Unity"
   )
 
+  val StormCategoryText = Map[Int, String](
+    0 -> "Inexistent",
+    1 -> "Harmless",
+    2 -> "Moderate",
+    3 -> "Strong",
+    4 -> "Dangerous",
+    5 -> "Very dangerous"
+  )
 }

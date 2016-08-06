@@ -23,6 +23,10 @@ case class IonStorm(
     else if (voltage >= 200) 5
     else 0
   }
+
+  def isGrowing: Boolean = {
+    voltage % 2 == 1
+  }
 }
 
 object IonStormReader {
