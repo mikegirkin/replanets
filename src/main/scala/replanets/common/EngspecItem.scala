@@ -2,33 +2,7 @@ package replanets.common
 
 import java.nio.file.Path
 
-import replanets.recipes.{DWORD, RecordRecipe, SpacePaddedString, WORD}
-
-case class FuelConsumption(
-  level1consumption: Int,
-  level2consumption: Int,
-  level3consumption: Int,
-  level4consumption: Int,
-  level5consumption: Int,
-  level6consumption: Int,
-  level7consumption: Int,
-  level8consumption: Int,
-  level9consumption: Int
-)
-
-object FuelConsumption {
-  val recipe = RecordRecipe(
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD,
-    DWORD
-  )(FuelConsumption.apply)
-}
+import replanets.recipes._
 
 case class EngspecItem(
   name: String,
@@ -37,7 +11,7 @@ case class EngspecItem(
   durCost: Short,
   molCost: Short,
   techLevel: Short,
-  fuel: FuelConsumption
+  fuel: IndexedSeq[Int]
 )
 
 object EngspecItem {
@@ -50,7 +24,7 @@ object EngspecItem {
     WORD,
     WORD,
     WORD,
-    FuelConsumption.recipe
+    ArrayRecipe(9, DWORD)
   )(EngspecItem.apply)
 
   def fromFile(file: Path) = {

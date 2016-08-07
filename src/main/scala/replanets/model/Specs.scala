@@ -18,6 +18,10 @@ case class Specs(
     val hullId = raceHulls.getRaceHullIds(raceId)(raceHullId)
     hullSpecs(hullId)
   }
+
+  def isGravitonic(hullId: Int): Boolean = {
+    Seq(43, 44, 45).contains(hullId) //TODO: hardcoded bells and whistles!!!
+  }
 }
 
 object Specs {

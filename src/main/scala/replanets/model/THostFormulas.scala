@@ -1,5 +1,7 @@
 package replanets.model
 
+import replanets.common.EngspecItem
+
 /**
   * Created by mgirkin on 06/08/2016.
   */
@@ -35,5 +37,16 @@ object THostFormulas extends Formulas{
     val raceFactor = if(raceId == 2) 2 else 1 //Lizards
     val nativeFactor = if(nativeId ==3) 2 else 1 //Reptilians
     erndDiv(erndDiv(mines * density, 100) * miningRateConfig, 100) * raceFactor * nativeFactor
+  }
+
+  def fuelBurn(engSpecs:IndexedSeq[EngspecItem], engineId: Int, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int = {
+    //TODO: This formula has to be validated
+    //TODO: This formula is not completely adhere to THost calculation, ref http://www.phost.de/~stefan/fuelusage.html
+    val fuelUsage = engSpecs(engineId).fuel(warp)
+    val distance = Math.sqrt(dx * dx + dy * dy)
+    val gf = if(isGravitonic) 2 else 1
+    val way = warp * warp * gf
+    val usageDouble = (fuelUsage * (mass / 10) * distance.toInt).toDouble / (10000 * way)
+    usageDouble.toInt
   }
 }

@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.model.Game
+import replanets.model.{Formulas, Game}
 
 import scalafx.scene.control.Label
 import scalafx.scene.layout.Pane
@@ -61,7 +61,10 @@ class ShipDetailsView(
       lblDestination.text = s"(${ship.xPosition + ship.xDistanceToWaypoint}, ${ship.yPosition + ship.yDistanceToWaypoint})"
       lblWarp.text = ship.warp.toString
       lblFuel.text = s"${ship.neutronium} / ${hull.fuelTankSize}"
-      lblBurn.text = "???" //TODO: Formula for fuel burning
+      val fuelBurn = game.formulas.fuelBurn(
+        game.specs.engineSpecs, ship.engineTypeId, ship.warp, ship.loadedMass,
+        ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hullTypeId))
+      lblBurn.text = fuelBurn.toString //TODO: Formula for fuel burning
       lblMass.text = s"${hull.mass + ship.loadedMass}"
       lblFcode.text = ship.fcode
       lblCrew.text = s"${ship.crew} / ${hull.crewSize}"
