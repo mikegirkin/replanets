@@ -14,15 +14,15 @@ case class TransferRecord(
 
 case class ShipRecord(
   shipId: Short,
-  playerId: Short,
+  ownerId: Short,
   fcode: String,
   warp: Short,
   xDistanceToWaypoint: Short,
   yDistanceToWaypoint: Short,
   xPosition: Short,
   yPosition: Short,
-  engineType: Short,
-  hullType: Short,
+  engineTypeId: Short,
+  hullTypeId: Short,
   beamType: Short,
   numberOfBeams: Short,
   fighterBays: Short,
@@ -30,7 +30,7 @@ case class ShipRecord(
   torpsFightersLoaded: Short,
   numberOfTorpLaunchers: Short,
   mission: Short,
-  primaryEnemyId: Short,
+  primaryEnemy: Short,
   towShipId: Short,
   damage: Short,
   crew: Short,
@@ -45,7 +45,9 @@ case class ShipRecord(
   transferToEnemyShip: TransferRecord,
   secondMissionArgument: Short,
   money: Short
-)
+) {
+  def loadedMass = neutronium + tritanium + duranium + molybdenium + colonistClans + supplies + torpsFightersLoaded
+}
 
 
 object ShipsReader {

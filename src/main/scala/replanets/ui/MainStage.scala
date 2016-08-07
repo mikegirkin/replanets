@@ -35,7 +35,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   }
   title = "rePlanets"
   width = 1280
-  height = 960
+  height = 700
 
   mainLayout.center = mapView
   mainLayout.bottom = new Toolbar {

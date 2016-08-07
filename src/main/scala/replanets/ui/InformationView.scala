@@ -4,13 +4,12 @@ import replanets.common.IonStorm
 import replanets.model.Game
 import replanets.ui.commands.Commands
 
+import scala.reflect.runtime.universe._
 import scalafx.Includes._
+import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.{Label, ListCell, ListView}
 import scalafx.scene.layout.{Pane, Priority, VBox}
-import scalafxml.core.{DependenciesByType, FXMLLoader, NoDependencyResolver}
-import scala.reflect.runtime.universe._
-import scalafx.beans.value.ObservableValue
-import scalafx.collections.ObservableBuffer
+import scalafxml.core.{DependenciesByType, FXMLLoader}
 
 /**
   * Created by mgirkin on 04/08/2016.
@@ -97,7 +96,7 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
   }
 
   private def showInfoAboutShip(shipId: Int) = {
-    val ship = game.turnSeverData(viewModel.turnShown).ships.find(_.shipId == shipId)
+    shipDetailsView.setData(shipId)
     setDetailsView(Some(shipDetailsView.rootPane))
   }
 

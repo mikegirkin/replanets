@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
 <VBox fx:id="rootPane" styleClass="shipInfo" stylesheets="styles.css"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="replanets.ui.ShipDetailsView">
@@ -60,4 +61,45 @@
             <Label fx:id="lblEnemy" text="???" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
         </children>
     </GridPane>
+    <Label text="Equipment:"/>
+    <Label fx:id="lblEquipEngines" text="???"/>
+    <Label fx:id="lblEquipBeams" text="???"/>
+    <Label fx:id="lblEquipLaunchers" text="???"/>
+    <HBox>
+        <TextFlow>
+            <Text text="C" styleClass="actionSymbol"/>
+            <Text text="argo:"/>
+        </TextFlow>
+        <Label fx:id="lblCargo" text="???"/>
+    </HBox>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="20" halignment="RIGHT"/>
+            <ColumnConstraints percentWidth="80" halignment="LEFT"/>
+        </columnConstraints>
+        <Label text="Neu:"/>
+        <Label fx:id="lblNeu" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Tri:" GridPane.rowIndex="1"/>
+        <Label fx:id="lblTri" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Dur:" GridPane.rowIndex="2"/>
+        <Label fx:id="lblDur" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Mol:" GridPane.rowIndex="3"/>
+        <Label fx:id="lblMol" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        <Label text="Sup:" GridPane.rowIndex="4"/>
+        <Label fx:id="lblSupplies" text="???" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <Label text="Cln:" GridPane.rowIndex="5"/>
+        <Label fx:id="lblClans" text="???" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="\$$$:" GridPane.rowIndex="6"/>
+        <Label fx:id="lblMoney" text="???" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        <Label text="Trp:" GridPane.rowIndex="7"/>
+        <Label fx:id="lblTorps" text="???" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+    </GridPane>
+    <Button styleClass="commandButton">
+        <graphic>
+            <TextFlow>
+                <Text text="T" styleClass="actionSymbol"/>
+                <Text text="ransfer"/>
+            </TextFlow>
+        </graphic>
+    </Button>
 </VBox>

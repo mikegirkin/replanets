@@ -9,7 +9,10 @@
 }
 
 .commandButton {
-    -fx-pref-height: 20;
+    -fx-pref-height: 25;
+    -fx-min-height: 25;
+    -fx-max-height: 25;
+    -fx-pref-width: 100;
 }
 
 .gridButton {
@@ -19,8 +22,8 @@
 
 Label, TextFlow, Text {
     -fx-font-weight: 100;
-    -fx-font-size: 10pt;
-    -fx-padding: 1 3 1 3;
+    -fx-font-size: 9pt;
+    -fx-padding: 0 3 0 3;
     -fx-fill: lime;
     -fx-text-fill: lime;
 }
