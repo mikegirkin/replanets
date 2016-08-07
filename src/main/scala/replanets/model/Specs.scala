@@ -13,7 +13,12 @@ case class Specs(
   engineSpecs: IndexedSeq[EngspecItem],
   hullSpecs: IndexedSeq[HullspecItem],
   raceHulls: HullAssignment
-)
+) {
+  def getHull(raceId: Int, raceHullId: Int): HullspecItem = {
+    val hullId = raceHulls.getRaceHullIds(raceId)(raceHullId)
+    hullSpecs(hullId)
+  }
+}
 
 object Specs {
   def fromDirectory(path: Path): Specs = {

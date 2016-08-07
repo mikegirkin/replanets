@@ -2,7 +2,7 @@ package replanets.model
 
 import java.nio.file.Path
 
-import replanets.common.{Constants, RacenmItem, RstFileReader}
+import replanets.common.{Constants, HullspecItem, RacenmItem, RstFileReader}
 
 import scala.collection.mutable
 
@@ -35,6 +35,7 @@ case class Game(
     turns(turn).serverReceiveState.rstFiles(playingRace)
   }
 
+  def playingRaceId = playingRace - 1
 }
 
 object Game {

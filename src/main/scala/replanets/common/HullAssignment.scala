@@ -6,7 +6,11 @@ import replanets.recipes.WORD
 
 case class HullAssignment(
   availableHulls: IndexedSeq[IndexedSeq[Short]]
-)
+) {
+  def getRaceHullIds(raceId: Int): IndexedSeq[Short] = {
+    availableHulls(raceId)
+  }
+}
 
 object HullAssignment {
   val numberOfHullsPerRace = 20

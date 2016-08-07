@@ -15,9 +15,6 @@ import scala.reflect.runtime.universe._
   */
 class InformationView(game: Game, viewModel: ViewModel, commands: Commands) extends VBox {
 
-  minWidth = 300
-  fillWidth = true
-
   children = Seq(
     new Label("Infomation view"),
     new Button("sdf;kjsdfsdf") {

@@ -69,10 +69,10 @@
         </children>
     </GridPane>
     <Label text="Base storage:"/>
-    <ListView fx:id="lvHulls" minHeight="-Infinity" prefHeight="10"></ListView>
-    <ListView fx:id="lvDrives" minHeight="-Infinity" prefHeight="10"></ListView>
-    <ListView fx:id="lvBeams" minHeight="-Infinity" prefHeight="10"></ListView>
-    <ListView fx:id="lvLaunchers" minHeight="-Infinity" prefHeight="10"></ListView>
+    <ListView fx:id="lvHulls" styleClass="storageList"/>
+    <ListView fx:id="lvDrives" styleClass="storageList"/>
+    <ListView fx:id="lvBeams" styleClass="storageList"/>
+    <ListView fx:id="lvLaunchers" styleClass="storageList"/>
     <GridPane hgap="5" vgap="5">
         <columnConstraints>
             <ColumnConstraints percentWidth="50" fillWidth="true"/>
