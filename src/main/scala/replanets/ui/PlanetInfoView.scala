@@ -13,7 +13,6 @@ import scalafxml.core.macros.sfxml
   */
 trait IPlanetInfoView {
   def rootPane: VBox
-  def setGameModel(model: Game): IPlanetInfoView
   def setPlanet(turnId: Int, planetId: Int)
 }
 
@@ -58,15 +57,9 @@ class PlanetInfoView(
   val pnStructures: Pane,
   val pnMinerals: Pane,
 
+  val game: Game,
   val commands: Commands
 ) extends IPlanetInfoView {
-
-  var game:Game = null
-
-  override def setGameModel(model: Game): IPlanetInfoView ={
-    this.game = model
-    this
-  }
 
   override def setPlanet(turnId: Int, planetId: Int): Unit = {
     pnNatives.visible = false

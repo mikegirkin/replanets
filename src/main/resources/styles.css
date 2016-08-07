@@ -52,6 +52,11 @@ Button TextFlow {
     -fx-text-fill: royalblue;
 }
 
+.shipInfo Label, .shipInfo Text{
+    -fx-fill: #55ffff;
+    -fx-text-fill: #55ffff;
+}
+
 .actionSymbol {
     -fx-font-weight: bold;
     -fx-underline: true;
@@ -70,8 +75,8 @@ ListView ListCell {
 }
 
 .objectsListCell {
-    -fx-text-fill: aqua;
-    -fx-fill: aqua;
+    -fx-text-fill: #55ffff;
+    -fx-fill: #55ffff;
 }
 
 .objectsListCell:selected {

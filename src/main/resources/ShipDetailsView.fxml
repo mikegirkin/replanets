@@ -1,0 +1,63 @@
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
+<VBox fx:id="rootPane" styleClass="shipInfo" stylesheets="styles.css"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="replanets.ui.ShipDetailsView">
+    <HBox>
+        <Label text="Ship: "/>
+        <Label fx:id="lblShipId" text="???"/>
+    </HBox>
+    <HBox>
+        <Label text="Race: "/>
+        <Label fx:id="lblShipOwningRace" text="???"/>
+    </HBox>
+    <Label fx:id="lblHullName" text="???"/>
+    <Label fx:id="lblShipName" text="???"/>
+    <Label fx:id="lblShipCoords" text="???"/>
+    <GridPane styleClass="infoGrid">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
+            <ColumnConstraints percentWidth="50" halignment="LEFT"/>
+        </columnConstraints>
+        <children>
+            <Label text="Destination:"/>
+            <Label fx:id="lblDestination" text="???" GridPane.columnIndex="1"/>
+            <TextFlow GridPane.rowIndex="1" textAlignment="RIGHT">
+                <Text text="W" styleClass="actionSymbol"/>
+                <Text text="arp:"/>
+            </TextFlow>
+            <Label fx:id="lblWarp" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Fuel:" GridPane.rowIndex="2"/>
+            <Label fx:id="lblFuel" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Burn:" GridPane.rowIndex="3"/>
+            <Label fx:id="lblBurn" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Mass:" GridPane.rowIndex="4"/>
+            <Label fx:id="lblMass" text="???" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <TextFlow textAlignment="RIGHT" GridPane.rowIndex="5">
+                <Text text="F" styleClass="actionSymbol"/>
+                <Text text="Code:"/>
+            </TextFlow>
+            <Label fx:id="lblFcode" text="???" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Crew:" GridPane.rowIndex="6"/>
+            <Label fx:id="lblCrew" text="???" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Damage:" GridPane.rowIndex="7"/>
+            <Label fx:id="lblDamage" text="???" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            <TextFlow textAlignment="RIGHT" GridPane.rowIndex="8">
+                <Text text="M" styleClass="actionSymbol"/>
+                <Text text="ission:"/>
+            </TextFlow>
+            <Label fx:id="lblMission" text="???" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+            <TextFlow textAlignment="RIGHT" GridPane.rowIndex="9">
+                <Text text="E" styleClass="actionSymbol"/>
+                <Text text="nemy:"/>
+            </TextFlow>
+            <Label fx:id="lblEnemy" text="???" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        </children>
+    </GridPane>
+</VBox>

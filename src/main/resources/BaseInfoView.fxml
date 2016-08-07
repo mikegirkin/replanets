@@ -12,7 +12,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
 <VBox fx:id="rootPane" styleClass="baseInfo" stylesheets="styles.css"
-      xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="replanets.ui.BaseInfoView">
     <HBox>
         <Label text="Starbase" />

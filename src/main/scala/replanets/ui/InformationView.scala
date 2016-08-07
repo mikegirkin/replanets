@@ -48,35 +48,32 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
     objectListView
   )
 
-  val ionStormInfoView = {
-    val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver)
-    loader.load()
-    loader.getController[IIonStormInformationView]
-  }
-
-  val planetInfoView = {
+  private def loadFxml[TController](resouce: String, dependencies: Map[Type, Any] = Map()): TController = {
     val loader = new FXMLLoader(
-      getClass.getResource("/PlanetInfoView.fxml"),
-      new DependenciesByType(Map(
-        typeOf[Commands] -> commands
-      ))
+      getClass.getResource(resouce),
+      new DependenciesByType(dependencies)
     )
     loader.load()
-    loader.getController[IPlanetInfoView].setGameModel(game)
+    loader.getController[TController]
   }
 
-  val baseInfoView = {
-    val loader = new FXMLLoader(
-      getClass.getResource("/BaseInfoView.fxml"),
-      new DependenciesByType(Map(
-        typeOf[Commands] -> commands,
-        typeOf[Game] -> game,
-        typeOf[ViewModel] -> viewModel
-      ))
-    )
-    loader.load()
-    loader.getController[IBaseInfoView]
-  }
+  val ionStormInfoView = loadFxml[IIonStormInformationView]("/IonStormInfoView.fxml")
+
+  val planetInfoView = loadFxml[IPlanetInfoView]("/PlanetInfoView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[Commands] -> commands
+  ))
+
+  val baseInfoView = loadFxml[IBaseInfoView]("/BaseInfoView.fxml", Map(
+    typeOf[Commands] -> commands,
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
+
+  val shipDetailsView = loadFxml[IShipDetailsView]("/ShipDetailsView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
 
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showInfoAbout(selectedObject)
@@ -101,7 +98,7 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
 
   private def showInfoAboutShip(shipId: Int) = {
     val ship = game.turnSeverData(viewModel.turnShown).ships.find(_.shipId == shipId)
-    println(ship)
+    setDetailsView(Some(shipDetailsView.rootPane))
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {
