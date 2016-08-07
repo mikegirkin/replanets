@@ -13,7 +13,7 @@ case class BaseRecord(
   damage: Short,
   engineTech: Short,
   hullsTech: Short,
-  weaponTech: Short,
+  beamTech: Short,
   torpedoTech: Short,
   storedEngines: IndexedSeq[Short],
   storedHulls: IndexedSeq[Short],

@@ -1,6 +1,7 @@
 package replanets.ui
 
 import replanets.model.Game
+import replanets.ui.commands.{Commands, SwitchToBaseViewCommand, SwitchToPlanetViewCommand}
 
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
@@ -17,7 +18,8 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   }
 
   private val commands = new Commands(
-    new SwitchToBaseViewCommand(game, viewModel)
+    new SwitchToBaseViewCommand(game, viewModel),
+    new SwitchToPlanetViewCommand(game, viewModel)
   )
   private val messageView = new MessagesView(game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game, viewModel)
@@ -64,6 +66,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   private def handleKeyPressed(e: KeyEvent): Unit = {
     e.code.name match {
       case "B" => commands.switchToBaseViewCommand.execute()
+      case "P" => commands.switchToPlanetViewCommand.execute()
       case _ =>
     }
   }

@@ -6,6 +6,8 @@ case class Coords(x: Double, y: Double) {
   }
 }
 
+case class IntCoords(x: Int, y: Int)
+
 sealed trait MapObjectType {}
 object MapObjectType {
   case object Ship extends MapObjectType
@@ -17,7 +19,7 @@ object MapObjectType {
 case class MapObject(
   objectType: MapObjectType,
   id: Int,
-  coords: Coords
+  coords: IntCoords
 )
 
 case class ViewModel (

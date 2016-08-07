@@ -2,6 +2,7 @@ package replanets.ui
 
 import replanets.common.Constants
 import replanets.model.Game
+import replanets.ui.commands.Commands
 
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, Label}

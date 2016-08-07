@@ -2,6 +2,7 @@ package replanets.ui
 
 import replanets.common.IonStorm
 import replanets.model.Game
+import replanets.ui.commands.Commands
 
 import scalafx.Includes._
 import scalafx.scene.control.{Button, Label}
@@ -22,8 +23,8 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
     new Button("sdf;kjsdfsdf") {
       maxWidth = Double.MaxValue
     }
-
   )
+  styleClass = Seq("informationView")
 
   val ionStormInfoView = {
     val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver)
@@ -47,7 +48,8 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
       getClass.getResource("/BaseInfoView.fxml"),
       new DependenciesByType(Map(
         typeOf[Commands] -> commands,
-        typeOf[Game] -> game
+        typeOf[Game] -> game,
+        typeOf[ViewModel] -> viewModel
       ))
     )
     loader.load()
@@ -74,6 +76,7 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
   }
 
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
+    baseInfoView.setData(mapObject.id)
     children = Seq(baseInfoView.rootPane)
   }
 

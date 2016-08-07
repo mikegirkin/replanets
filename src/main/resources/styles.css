@@ -1,11 +1,7 @@
-.gridLabel {
-    -fx-padding: 1 3 1 3;
-}
-
 .actionSymbol {
     -fx-font-weight: bold;
     -fx-underline: true;
-    -fx-fill: darkgreen;
+    -fx-fill: white;
 }
 
 .infoGrid Label {
@@ -25,4 +21,45 @@
 .gridButton {
     -fx-pref-height: 20;
     -fx-max-width: Infinity;
+}
+
+Label, TextFlow, Text {
+    -fx-font-weight: 100;
+    -fx-font-size: 10pt;
+    -fx-padding: 1 3 1 3;
+    -fx-fill: lime;
+    -fx-text-fill: lime;
+}
+
+Button {
+    -fx-background-color: #222;
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+    -fx-fill: lime;
+    -fx-text-fill: lime;
+    -fx-text-alignment: center;
+    -fx-alignment: baseline-center;
+}
+
+Button:hover {
+    -fx-background-color: #333;
+}
+
+Button:pressed {
+    -fx-background-color: #444;
+}
+
+Button TextFlow {
+    -fx-text-alignment: center;
+}
+
+.baseInfo Label, .baseInfo Text{
+    -fx-fill: royalblue;
+    -fx-text-fill: royalblue;
+}
+
+.informationView {
+    -fx-background-color: black;
+    -fx-border-width: 0 0 0 5;
+    -fx-border-color: gray;
 }

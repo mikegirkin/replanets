@@ -61,7 +61,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     onMouseClicked = (e: MouseEvent) => {
       if(e.button == MouseButton.Primary && e.isStillSincePress) {
         val coords = mapCoords(e.x, e.y)
-        val closestObject = closestObjectTo(coords)
+        val closestObject = closestObjectTo(IntCoords(Math.round(coords.x).toInt, Math.round(coords.y).toInt))
         selectMapObject(closestObject)
       }
     }
@@ -74,18 +74,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def currentTurn = game.turns(viewModel.turnShown)
   private def currentTurnServerData = currentTurn.serverReceiveState.rstFiles(game.playingRace)
 
-  private def closestObjectTo(coords: Coords): MapObject = {
+  private def closestObjectTo(coords: IntCoords): MapObject = {
     //planets
-    val closestPlanet = game.map.planets.reduce((p1, p2) => if(distSqr(coords, Coords(p1.x, p1.y)) < distSqr(coords, Coords(p2.x, p2.y))) p1 else p2)
+    val closestPlanet = game.map.planets.reduce((p1, p2) => if(distSqr(coords, IntCoords(p1.x, p1.y)) < distSqr(coords, IntCoords(p2.x, p2.y))) p1 else p2)
     //ships
     //minefields
     //explosions
     //ionstroms
-    val closestStorm = currentTurnServerData.ionStorms.reduce((is1, is2) => if(distSqr(coords, Coords(is1.x, is1.y)) < distSqr(coords, Coords(is2.x, is2.y))) is1 else is2)
+    val closestStorm = currentTurnServerData.ionStorms.reduce((is1, is2) => if(distSqr(coords, IntCoords(is1.x, is1.y)) < distSqr(coords, IntCoords(is2.x, is2.y))) is1 else is2)
 
     Seq(
-      MapObject(MapObjectType.Planet, closestPlanet.id, Coords(closestPlanet.x, closestPlanet.y)),
-      MapObject(MapObjectType.IonStorm, closestStorm.id, Coords(closestStorm.x, closestStorm.y))
+      MapObject(MapObjectType.Planet, closestPlanet.id, IntCoords(closestPlanet.x, closestPlanet.y)),
+      MapObject(MapObjectType.IonStorm, closestStorm.id, IntCoords(closestStorm.x, closestStorm.y))
     ).reduce((x1, x2) => if(distSqr(coords, x1.coords) < distSqr(coords, x2.coords)) x1 else x2)
   }
 
@@ -108,6 +108,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def distSqr(point1: Coords, point2: Coords): Double =
     (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)
 
+  private def distSqr(point1: IntCoords, point2: IntCoords): Double =
+    (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y)
 
   def zoomIn(): Unit = {
     zoom(scaleStep, Coords(width.toDouble/2, height.toDouble/2))
@@ -122,6 +124,10 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   def canvasCoord(x: Double, y: Double): Coords = canvasCoord(Coords(x, y))
+
+  def canvasCoord(mapCoord: IntCoords): Coords = {
+    canvasCoord(mapCoord.x, mapCoord.y)
+  }
 
   def mapCoords(canvasCoords: Coords): Coords = mapCoords(canvasCoords.x, canvasCoords.y)
 
