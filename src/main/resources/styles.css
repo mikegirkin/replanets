@@ -69,6 +69,15 @@ ListView ListCell {
     -fx-pref-height: 20;
 }
 
+.objectsListCell {
+    -fx-text-fill: aqua;
+    -fx-fill: aqua;
+}
+
+.objectsListCell:selected {
+    -fx-background-color: #004d4d;
+}
+
 .storageList {
     -fx-pref-height: 50;
 }
@@ -85,4 +94,5 @@ ListView ListCell {
     -fx-border-color: gray;
     -fx-padding: 3;
     -fx-min-width: 300;
+    -fx-min-height: 700;
 }

@@ -28,6 +28,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   scene = new Scene {
     stylesheets += getClass.getResource("/styles.css").toExternalForm
     minWidth = 600
+    minHeight = 600
     root = mainLayout
 
     onKeyPressed = (e:KeyEvent) => handleKeyPressed(e)
@@ -35,6 +36,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   title = "rePlanets"
   width = 1280
   height = 960
+
   mainLayout.center = mapView
   mainLayout.bottom = new Toolbar {
     override def onMessages(e: ActionEvent): Unit = setMainView(messageView)
@@ -56,7 +58,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
   }
 
   viewModel.selectedObjectChaged += { () =>
-    viewModel.objectSelected.foreach(x => informationView.showInfoAbout(x))
+    viewModel.objectSelected.foreach(x => informationView.onSelectedObjectChanged(x))
   }
 
   private def setMainView(view: Node) = {

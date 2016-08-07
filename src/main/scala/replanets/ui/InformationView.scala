@@ -5,23 +5,44 @@ import replanets.model.Game
 import replanets.ui.commands.Commands
 
 import scalafx.Includes._
-import scalafx.scene.control.{Button, Label}
-import scalafx.scene.layout.VBox
+import scalafx.scene.control.{Label, ListCell, ListView}
+import scalafx.scene.layout.{Pane, Priority, VBox}
 import scalafxml.core.{DependenciesByType, FXMLLoader, NoDependencyResolver}
 import scala.reflect.runtime.universe._
+import scalafx.collections.ObservableBuffer
 
 /**
   * Created by mgirkin on 04/08/2016.
   */
 class InformationView(game: Game, viewModel: ViewModel, commands: Commands) extends VBox {
 
-  children = Seq(
-    new Label("Infomation view"),
-    new Button("sdf;kjsdfsdf") {
-      maxWidth = Double.MaxValue
-    }
-  )
+
   styleClass = Seq("informationView")
+
+  val objectDetailsView = new VBox {
+    minHeight = 550
+    maxHeight = 550
+  }
+
+  val objectListView = new ListView[(MapObject, String)] {
+    maxHeight = Double.MaxValue
+    minHeight = 100
+    vgrow = Priority.Always
+    cellFactory = { _ =>
+      new ListCell[(MapObject, String)] {
+        styleClass = Seq("objectsListCell")
+        item.onChange { (_, _, item) =>
+          if(item == null) text = null
+          else text = item._2
+        }
+      }
+    }
+  }
+
+  children = Seq(
+    objectDetailsView,
+    objectListView
+  )
 
   val ionStormInfoView = {
     val loader = new FXMLLoader(getClass.getResource("/IonStormInfoView.fxml"), NoDependencyResolver)
@@ -53,7 +74,12 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
     loader.getController[IBaseInfoView]
   }
 
-  def showInfoAbout(mapObject: MapObject) = {
+  def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
+    showInfoAbout(selectedObject)
+    showListInfoForPoint(selectedObject.coords)
+  }
+
+  private def showInfoAbout(mapObject: MapObject) = {
     mapObject.objectType match {
       case MapObjectType.Planet => showInfoAboutPlanet(mapObject)
       case MapObjectType.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
@@ -62,19 +88,30 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
     }
   }
 
+  def showListInfoForPoint(coords: IntCoords): Unit = {
+    val items = MapObject.findAtCoords(game, viewModel.turnShown)(coords)
+    val viewItems = ObservableBuffer[(MapObject, String)](items)
+    objectListView.items = viewItems
+  }
+
+
   private def showInfoAboutPlanet(mapObject: MapObject) = {
     planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
-    children = Seq(planetInfoView.rootPane)
+    setDetailsView(Some(planetInfoView.rootPane))
   }
 
   private def showInfoAboutIonStorm(storm: IonStorm): Unit = {
     ionStormInfoView.setData(storm)
-    children = Seq(ionStormInfoView.rootPane)
+    setDetailsView(Some(ionStormInfoView.rootPane))
   }
 
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
     baseInfoView.setData(mapObject.id)
-    children = Seq(baseInfoView.rootPane)
+    setDetailsView(Some(baseInfoView.rootPane))
+  }
+
+  private def setDetailsView(view: Option[Pane]): Unit = {
+    objectDetailsView.children = view.toSeq
   }
 
 }

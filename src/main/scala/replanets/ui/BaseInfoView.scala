@@ -3,10 +3,8 @@ package replanets.ui
 import replanets.model.Game
 import replanets.ui.commands.Commands
 
-import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.geometry.Insets
 import scalafx.scene.control.{Label, ListCell, ListView}
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafxml.core.macros.sfxml
