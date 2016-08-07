@@ -125,5 +125,5 @@ class PlanetInfoView(
     }
   }
 
-  def onBaseButton(e: ActionEvent) = commands.switchToBaseViewCommand.execute()
+  def onBaseButton(e: ActionEvent) = commands.selectStarbase.execute()
 }

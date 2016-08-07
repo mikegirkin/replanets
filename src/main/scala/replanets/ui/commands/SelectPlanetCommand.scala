@@ -6,7 +6,7 @@ import replanets.ui.{IntCoords, MapObject, MapObjectType, ViewModel}
 /**
   * Created by mgirkin on 07/08/2016.
   */
-class SwitchToPlanetViewCommand(
+class SelectPlanetCommand(
   game: Game,
   viewModel: ViewModel
 ) extends Command {

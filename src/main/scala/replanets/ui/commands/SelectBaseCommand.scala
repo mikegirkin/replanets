@@ -3,7 +3,7 @@ package replanets.ui.commands
 import replanets.model.Game
 import replanets.ui.{MapObject, MapObjectType, ViewModel}
 
-class SwitchToBaseViewCommand(
+class SelectBaseCommand(
   game: Game,
   viewModel: ViewModel
 ) extends Command {

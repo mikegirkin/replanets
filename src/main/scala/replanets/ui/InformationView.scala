@@ -9,6 +9,7 @@ import scalafx.scene.control.{Label, ListCell, ListView}
 import scalafx.scene.layout.{Pane, Priority, VBox}
 import scalafxml.core.{DependenciesByType, FXMLLoader, NoDependencyResolver}
 import scala.reflect.runtime.universe._
+import scalafx.beans.value.ObservableValue
 import scalafx.collections.ObservableBuffer
 
 /**
@@ -36,6 +37,9 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
           else text = item._2
         }
       }
+    }
+    selectionModel().selectedItem.onChange { (mo, _, _) =>
+      if(mo.value != null) viewModel.objectSelected = Some(mo.value._1)
     }
   }
 
@@ -84,6 +88,7 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
       case MapObjectType.Planet => showInfoAboutPlanet(mapObject)
       case MapObjectType.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
       case MapObjectType.Base => showInfoAboutBase(mapObject)
+      case MapObjectType.Ship => showInfoAboutShip(mapObject.id)
       case _ => children = Seq(Label("Not implemented yet"))
     }
   }
@@ -94,6 +99,10 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
     objectListView.items = viewItems
   }
 
+  private def showInfoAboutShip(shipId: Int) = {
+    val ship = game.turnSeverData(viewModel.turnShown).ships.find(_.shipId == shipId)
+    println(ship)
+  }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {
     planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)

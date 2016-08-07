@@ -98,5 +98,5 @@ class BaseInfoView(
     }
   }
 
-  def handlePlanetButton(e: ActionEvent) = commands.switchToPlanetViewCommand.execute()
+  def handlePlanetButton(e: ActionEvent) = commands.selectPlanet.execute()
 }
