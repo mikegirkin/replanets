@@ -8,15 +8,11 @@ import replanets.model.Game
 object ConsoleRunner {
   def run = {
     val testFilesDirectory = "/Users/mgirkin/proj/gmil/replanets/testfiles"
-    val raceNamesFilename = "race.nm"
-    val rstFilename = "Player1.RST"
+    val path = Paths.get(testFilesDirectory)
 
-    val game = Game.initFromDirectory(Paths.get(testFilesDirectory))
+    val db = new GameDatabase(path)
+    val game = Game(path)(db)
     println(game)
-    println
-
-    val rstReadResult = RstFileReader.read(Paths.get(testFilesDirectory, rstFilename))
-    println(rstReadResult)
     println
   }
 }

@@ -21,7 +21,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     new SelectBaseCommand(game, viewModel),
     new SelectPlanetCommand(game, viewModel)
   )
-  private val messageView = new MessagesView(game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).messages)
+  private val messageView = new MessagesView(game.turns(viewModel.turnShown).rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game, viewModel)
   private val informationView = new InformationView(game, viewModel, commands)
 

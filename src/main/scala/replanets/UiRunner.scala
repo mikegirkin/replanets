@@ -1,17 +1,13 @@
 package replanets
 
-import java.nio.file.{Path, Paths}
+import java.nio.file._
 
+import replanets.common.GameDatabase
 import replanets.model.Game
 import replanets.ui.{MainStage, ViewModel}
 
+import scala.collection.JavaConversions._
 import scalafx.application.JFXApp
-import scalafx.application.JFXApp.PrimaryStage
-import scalafx.geometry.Insets
-import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label}
-import scalafx.scene.layout.{BorderPane, HBox}
-
 
 object UiRunner extends JFXApp {
   val gamePath: Path = Paths.get(
@@ -19,9 +15,15 @@ object UiRunner extends JFXApp {
     else "."
   )
   val absolutePath = gamePath.toAbsolutePath
+  val gameDb = new GameDatabase(absolutePath)
 
-  val game = Game.initFromDirectory(absolutePath)
-  game.processRstFile(absolutePath.resolve("Player1.RST"))
+  val rstFiles = rstFilesInGameDirectory(absolutePath)
+  rstFiles.foreach { file =>
+    val result = gameDb.importRstFile(file)
+    if(result) Files.delete(file)
+  }
+
+  val game = Game(absolutePath)(gameDb)
 
   val lastTurnNumber = game.turns.keys.max
   val viewModel = ViewModel(lastTurnNumber, None)
@@ -33,4 +35,13 @@ object UiRunner extends JFXApp {
       ConsoleRunner.run
     else super.main(args)
   }
+
+  private def rstFilesInGameDirectory(dir: Path): Iterable[Path] = {
+    Files.newDirectoryStream(dir)
+      .filter(path => {
+        val filename = path.getFileName.toString.toLowerCase
+        filename.startsWith("player") && filename.endsWith("rst")
+      })
+  }
+
 }

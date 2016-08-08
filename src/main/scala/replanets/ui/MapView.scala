@@ -72,7 +72,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   redraw()
 
   private def currentTurn = game.turns(viewModel.turnShown)
-  private def currentTurnServerData = currentTurn.serverReceiveState.rstFiles(game.playingRace)
+  private def currentTurnServerData = currentTurn.rstFiles(game.playingRace)
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
     //planets
@@ -165,13 +165,13 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     }
 
     def shipsOrbitingPlanet(planetCoords: Coords): Seq[ShipCoordsRecord] =
-      game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).shipCoords
+      game.turns(viewModel.turnShown).rstFiles(game.playingRace).shipCoords
         .filter(sc => sc.x == planetCoords.x && sc.y == planetCoords.y)
 
     (0 until 500).foreach { idx =>
       val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
-      val planetInfo = game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).planets.find(_.planetId == idx + 1)
-      val baseInfo = game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).bases.find(_.baseId == idx + 1)
+      val planetInfo = game.turns(viewModel.turnShown).rstFiles(game.playingRace).planets.find(_.planetId == idx + 1)
+      val baseInfo = game.turns(viewModel.turnShown).rstFiles(game.playingRace).bases.find(_.baseId == idx + 1)
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
@@ -191,7 +191,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def drawIonStorms(gc: GraphicsContext) = {
-    val storms = game.turns(viewModel.turnShown).serverReceiveState.rstFiles(game.playingRace).ionStorms
+    val storms = game.turns(viewModel.turnShown).rstFiles(game.playingRace).ionStorms
     storms.filter(_.category > 0).foreach { s =>
       val color = s.category match {
         case 1 => Color.LightGreen

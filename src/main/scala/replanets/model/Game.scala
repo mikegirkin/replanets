@@ -2,9 +2,7 @@ package replanets.model
 
 import java.nio.file.Path
 
-import replanets.common.{Constants, HullspecItem, RacenmItem, RstFileReader}
-
-import scala.collection.mutable
+import replanets.common._
 
 case class Game(
   name: String,
@@ -12,38 +10,31 @@ case class Game(
   playingRace: Int,
   races: IndexedSeq[RacenmItem],
   map: ClusterMap,
-  specs: Specs
+  specs: Specs,
+  turns:Map[Int, TurnInfo],
+  formulas: Formulas = THostFormulas
 ) {
-
-  val formulas: Formulas = THostFormulas
-  val turns = mutable.Map[Int, TurnInfo]()
-
   override def toString: String = {
     String.join(
       sys.props("line.separator") + sys.props("line.separator"),
       name.toString, dataPath.toString, races.toString, map.toString, specs.toString)
   }
 
-  def processRstFile(rstFile: Path): Game = {
-    val rst = RstFileReader.read(rstFile)
-    val ti = TurnInfo(ReceivedState(Map(rst.generalInfo.playerId.toInt -> rst)))
-    turns += (rst.generalInfo.turnNumber.toInt -> ti)
-    this
-  }
-
   def turnSeverData(turn: Int) = {
-    turns(turn).serverReceiveState.rstFiles(playingRace)
+    turns(turn).rstFiles(playingRace)
   }
 
   def playingRaceId = playingRace - 1
 }
 
 object Game {
-  def initFromDirectory(directory: Path): Game = {
-    val map = ClusterMap.fromDirectory(directory)
-    val specs = Specs.fromDirectory(directory)
-    val races = RacenmItem.fromFile(directory.resolve(Constants.racenmFilename))
+  def apply(gameDirectory: Path)(gameDb: GameDatabase): Game = {
+    val map = ClusterMap.fromDirectory(gameDirectory)
+    val specs = Specs.fromDirectory(gameDirectory)
+    val races = RacenmItem.fromFile(gameDirectory.resolve(Constants.racenmFilename))
 
-    Game("Test game", directory, 1, races, map, specs)
+    val turns = gameDb.loadDb()
+
+    Game("Test game", gameDirectory, 1, races, map, specs, turns)
   }
 }
