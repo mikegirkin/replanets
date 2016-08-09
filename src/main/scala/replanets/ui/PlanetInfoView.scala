@@ -84,8 +84,8 @@ class PlanetInfoView(
       val vm = new PlanetInfoVM(game, viewModel.turnShown, p.planetId)
 
       lblOwner.text = game.races(vm.ownerId - 1).shortname
-      lblFcode.text = vm.fcode.asString
-      edFcode.text = vm.fcode.asString
+      lblFcode.text = vm.fcode.value
+      edFcode.text = vm.fcode.value
       lblClimate.text = vm.temperature.toString
       pnGeneralInfo.visible = true
 

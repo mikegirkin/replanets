@@ -6,26 +6,24 @@ import scala.util.Random
   */
 class ImpossibleFcode extends Exception
 
-case class Fcode(chars: Iterable[Char]) {
-  def asString = new String(chars.toArray)
+case class Fcode(value: String) {
+  if(!Fcode.isValid(value)) throw new ImpossibleFcode
 }
 
 object Fcode {
   import replanets.recipes.NumberExtensions._
 
-  def apply(string: String) = {
-    tryConvert(string).getOrElse {
-      throw new ImpossibleFcode
-    }
+  def isValid(string: String): Boolean = {
+    string.length == 3 && string.forall(c => c.toInt.between(32, 122))
   }
 
   def tryConvert(string: String): Option[Fcode] = {
-    if(string.length == 3 && string.forall(c => c.toInt.between(32, 122))) Some(new Fcode(string.toCharArray))
+    if(isValid(string)) Some(Fcode(string))
     else None
   }
 
   def random(): Fcode = {
     val randomChars = Random.alphanumeric
-    Fcode(randomChars.take(3).toArray)
+    Fcode(new String(randomChars.take(3).toArray))
   }
 }

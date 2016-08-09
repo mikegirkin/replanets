@@ -2,7 +2,6 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.ReceivedState
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class RstFile(

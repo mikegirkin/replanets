@@ -26,7 +26,7 @@ case class SetPlanetFcode(
       turn <- game.turns.get(turn);
       rst <- turn.rstFiles.get(race);
       planet <- rst.planets.find(_.planetId == planetId)
-    ) yield planet.fcode != newFcode
+    ) yield planet.fcode.value != newFcode.value
     changed.getOrElse(false)
   }
 }

@@ -55,6 +55,10 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
       new Button {
         text = "Zoom out"
         onAction = (e: ActionEvent) => mapView.zoomOut()
+      },
+      new Button {
+        text = "Save"
+        onAction = (e: ActionEvent) => handleSave()
       }
     )
   }
@@ -73,6 +77,10 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
       case "P" => actions.selectPlanet.execute()
       case _ =>
     }
+  }
+
+  private def handleSave() = {
+    game.saveCommands()
   }
 
 

@@ -10,7 +10,7 @@ object ConsoleRunner {
     val testFilesDirectory = "/Users/mgirkin/proj/gmil/replanets/testfiles"
     val path = Paths.get(testFilesDirectory)
 
-    val db = new GameDatabase(path)
+    val db = new GameDatabase(path, 1)
     val game = Game(path)(db)
     println(game)
     println

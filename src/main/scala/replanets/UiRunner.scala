@@ -16,7 +16,7 @@ object UiRunner extends JFXApp {
     else "."
   )
   val absolutePath = gamePath.toAbsolutePath
-  val gameDb = new GameDatabase(absolutePath)
+  val gameDb = new GameDatabase(absolutePath, 1)
 
   val rstFiles = rstFilesInGameDirectory(absolutePath)
   rstFiles.foreach { file =>

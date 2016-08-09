@@ -11,7 +11,9 @@ lazy val root = (project in file(".")).
 unmanagedJars in Compile += Attributed.blank(file(System.getenv("JAVA_HOME") + "/jre/lib/ext/jfxrt.jar"))
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
   "org.scalafx" %% "scalafx" % "8.0.92-R10",
-  "org.scalafx" %% "scalafxml-core-sfx8" % "0.2.2"
+  "org.scalafx" %% "scalafxml-core-sfx8" % "0.2.2",
+  "com.typesafe.play" %% "play-json" % "2.5.4",
+
+  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 )
