@@ -1,13 +1,11 @@
 package replanets.common
 
-import java.nio.ByteBuffer
-import java.nio.charset.Charset
 import java.nio.file.{Files, Path}
 
-import replanets.model.{PlayerCommand, TurnInfo}
 import replanets.model.JsonUtils._
-import play.api.libs.json._
 import play.api.libs.json.Json._
+import play.api.libs.json._
+import replanets.model.{PlayerCommand, TurnInfo}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer

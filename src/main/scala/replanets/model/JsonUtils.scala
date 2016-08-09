@@ -1,14 +1,24 @@
 package replanets.model
 
 import play.api.libs.json.Json._
-import play.api.libs.json.{Format, JsObject, Reads, Writes}
+import play.api.libs.json._
 import replanets.common.Fcode
 /**
   * Created by mgirkin on 09/08/2016.
   */
 object JsonUtils {
 
-  implicit val fcodeFormat = format[Fcode]
+  implicit val fcodeWrites = Writes[Fcode] { fcode =>
+    JsString(fcode.value)
+  }
+
+  implicit val fcodeReads = Reads[Fcode] { json =>
+    json.validate[String].map(v => Fcode(v))
+  }
+
+  implicit val fcodeFormat = Format(fcodeReads, fcodeWrites)
+
+
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]
 
