@@ -7,6 +7,7 @@ import replanets.common.Fcode
   */
 trait PlayerCommand {
   def isReplacableBy(other: PlayerCommand): Boolean
+  def changesSomething(game: Game, turn: Int, race: Int): Boolean
 }
 
 case class SetPlanetFcode(
@@ -18,6 +19,15 @@ case class SetPlanetFcode(
       case SetPlanetFcode(otherPlanetId, _) if planetId == otherPlanetId => true
       case _ => false
     }
+  }
+
+  override def changesSomething(game: Game, turn: Int, race: Int): Boolean = {
+    val changed = for(
+      turn <- game.turns.get(turn);
+      rst <- turn.rstFiles.get(race);
+      planet <- rst.planets.find(_.planetId == planetId)
+    ) yield planet.fcode != newFcode
+    changed.getOrElse(false)
   }
 }
 
@@ -31,4 +41,7 @@ case class SetShipFcode(
       case _ => false
     }
   }
+
+  override def changesSomething(game: Game, turn: Int, race: Int): Boolean = true
+
 }

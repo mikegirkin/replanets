@@ -30,9 +30,14 @@ case class Game(
 
   def addCommand(cmd: PlayerCommand) = {
     val commands = turns(lastTurn).playerCommands
-    val replaceIndex = commands.indexWhere(p => p.isReplacableBy(cmd))
-    if(replaceIndex>=0) commands(replaceIndex) = cmd
-    else commands.append(cmd)
+    val oldCommandIndex = commands.indexWhere(p => p.isReplacableBy(cmd))
+    val changesSomething = cmd.changesSomething(this, lastTurn, playingRaceId)
+    if(oldCommandIndex >= 0 && changesSomething)
+      commands(oldCommandIndex) = cmd
+    else if (oldCommandIndex >= 0 && !changesSomething)
+      commands.remove(oldCommandIndex)
+    else if (changesSomething)
+      commands.append(cmd)
   }
 }
 
