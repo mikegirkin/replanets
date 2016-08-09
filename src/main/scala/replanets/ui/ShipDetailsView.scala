@@ -1,6 +1,7 @@
 package replanets.ui
 
 import replanets.model.{Formulas, Game}
+import replanets.ui.viewmodels.ViewModel
 
 import scalafx.scene.control.Label
 import scalafx.scene.layout.Pane

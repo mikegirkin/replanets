@@ -1,7 +1,8 @@
 package replanets.ui
 
 import replanets.model.Game
-import replanets.ui.commands.Commands
+import replanets.ui.actions.Actions
+import replanets.ui.viewmodels.ViewModel
 
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
@@ -32,7 +33,7 @@ class BaseInfoView(
   val lvBeams: ListView[(Short, String)],
   val lvLaunchers: ListView[(Short, String)],
 
-  val commands: Commands,
+  val actions: Actions,
   val game: Game,
   val viewModel: ViewModel
 ) extends IBaseInfoView {
@@ -98,5 +99,5 @@ class BaseInfoView(
     }
   }
 
-  def handlePlanetButton(e: ActionEvent) = commands.selectPlanet.execute()
+  def handlePlanetButton(e: ActionEvent) = actions.selectPlanet.execute()
 }

@@ -1,7 +1,8 @@
 package replanets.ui
 
 import replanets.model.Game
-import replanets.ui.commands.{Commands, SelectBaseCommand, SelectPlanetCommand}
+import replanets.ui.actions.{Actions, SelectBase, SelectPlanet, SetFcode}
+import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
@@ -17,13 +18,14 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     minWidth = 600
   }
 
-  private val commands = new Commands(
-    new SelectBaseCommand(game, viewModel),
-    new SelectPlanetCommand(game, viewModel)
+  private val actions = new Actions(
+    new SelectBase(game, viewModel),
+    new SelectPlanet(game, viewModel),
+    new SetFcode(game, viewModel)
   )
   private val messageView = new MessagesView(game.turns(viewModel.turnShown).rstFiles(game.playingRace).messages)
   private val mapView = new MapView(game, viewModel)
-  private val informationView = new InformationView(game, viewModel, commands)
+  private val informationView = new InformationView(game, viewModel, actions)
 
   scene = new Scene {
     stylesheets += getClass.getResource("/styles.css").toExternalForm
@@ -57,8 +59,8 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     )
   }
 
-  viewModel.selectedObjectChaged += { () =>
-    viewModel.objectSelected.foreach(x => informationView.onSelectedObjectChanged(x))
+  viewModel.selectedObjectChaged += { (Unit) =>
+    viewModel.selectedObject.foreach(x => informationView.onSelectedObjectChanged(x))
   }
 
   private def setMainView(view: Node) = {
@@ -67,8 +69,8 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   private def handleKeyPressed(e: KeyEvent): Unit = {
     e.code.name match {
-      case "B" => commands.selectStarbase.execute()
-      case "P" => commands.selectPlanet.execute()
+      case "B" => actions.selectStarbase.execute()
+      case "P" => actions.selectPlanet.execute()
       case _ =>
     }
   }

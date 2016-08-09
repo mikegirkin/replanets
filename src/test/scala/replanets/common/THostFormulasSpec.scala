@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 /**
   * Created by mgirkin on 06/08/2016.
   */
-class THostFormulasSpec extends WordSpec with Matchers{
+class THostFormulasSpec extends WordSpec with Matchers {
   import replanets.model.THostFormulas._
 
   "erndDiv implemented correctly" in {

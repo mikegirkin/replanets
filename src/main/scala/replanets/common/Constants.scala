@@ -55,3 +55,4 @@ object Constants {
     5 -> "Very dangerous"
   )
 }
+

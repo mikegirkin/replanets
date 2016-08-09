@@ -2,6 +2,7 @@ package replanets.ui
 
 import replanets.common.{Constants, ShipCoordsRecord}
 import replanets.model.Game
+import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
 import scalafx.scene.Node
@@ -90,7 +91,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def selectMapObject(it: MapObject): Unit = {
-    viewModel.objectSelected = Some(it)
+    viewModel.selectedObject = Some(it)
     redraw()
   }
 
@@ -147,7 +148,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def drawSelectedCross(gc: GraphicsContext) = {
-    viewModel.objectSelected.foreach { it =>
+    viewModel.selectedObject.foreach { it =>
       val graphicCoords = canvasCoord(it.coords)
       gc.setStroke(Color.White)
       gc.setLineWidth(1)

@@ -11,7 +11,7 @@ case class Game(
   races: IndexedSeq[RacenmItem],
   map: ClusterMap,
   specs: Specs,
-  turns:Map[Int, TurnInfo],
+  turns: Map[Int, TurnInfo],
   formulas: Formulas = THostFormulas
 ) {
   override def toString: String = {
@@ -24,7 +24,16 @@ case class Game(
     turns(turn).rstFiles(playingRace)
   }
 
+  def lastTurn = turns.keys.max
+
   def playingRaceId = playingRace - 1
+
+  def addCommand(cmd: PlayerCommand) = {
+    val commands = turns(lastTurn).playerCommands
+    val replaceIndex = commands.indexWhere(p => p.isReplacableBy(cmd))
+    if(replaceIndex>=0) commands(replaceIndex) = cmd
+    else commands.append(cmd)
+  }
 }
 
 object Game {

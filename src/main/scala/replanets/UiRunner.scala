@@ -4,7 +4,8 @@ import java.nio.file._
 
 import replanets.common.GameDatabase
 import replanets.model.Game
-import replanets.ui.{MainStage, ViewModel}
+import replanets.ui.MainStage
+import replanets.ui.viewmodels.ViewModel
 
 import scala.collection.JavaConversions._
 import scalafx.application.JFXApp
@@ -25,7 +26,7 @@ object UiRunner extends JFXApp {
 
   val game = Game(absolutePath)(gameDb)
 
-  val lastTurnNumber = game.turns.keys.max
+  val lastTurnNumber = game.lastTurn
   val viewModel = ViewModel(lastTurnNumber, None)
 
   stage = new MainStage(game, viewModel)

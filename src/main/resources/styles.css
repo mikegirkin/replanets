@@ -1,5 +1,15 @@
-.infoGrid Label {
-    -fx-padding: 1 3 1 3;
+.infoGrid Button {
+    -fx-pref-height: 20;
+    -fx-padding: 0 3 0 3;
+}
+
+.infoGrid Label, .infoGrid TextFlow {
+    -fx-max-height: 12;
+}
+
+.inGridEditor {
+    -fx-padding: 0 1 0 1;
+    -fx-max-height: 20;
 }
 
 .baseInfo ListView {
@@ -16,16 +26,18 @@
 }
 
 .gridButton {
-    -fx-pref-height: 20;
+    -fx-pref-height: 18;
+    -fx-padding: 2 0 2 0;
     -fx-max-width: Infinity;
 }
 
 Label, TextFlow, Text {
     -fx-font-weight: 100;
-    -fx-font-size: 9pt;
+    -fx-font-size:9pt;
     -fx-padding: 0 3 0 3;
     -fx-fill: lime;
     -fx-text-fill: lime;
+    -fx-alignment: baseline-center;
 }
 
 Button {
@@ -60,11 +72,6 @@ Button TextFlow {
     -fx-text-fill: #55ffff;
 }
 
-.actionSymbol {
-    -fx-font-weight: bold;
-    -fx-underline: true;
-    -fx-fill: white;
-}
 
 ListView {
     -fx-padding: 0;
@@ -103,4 +110,18 @@ ListView ListCell {
     -fx-padding: 3;
     -fx-min-width: 300;
     -fx-min-height: 700;
+}
+
+.complexLabel {
+    padding: 0;
+}
+
+.complexLabel Label {
+    padding: 0;
+}
+
+.actionSymbol {
+    -fx-font-weight: bold;
+    -fx-underline: true;
+    -fx-fill: white;
 }

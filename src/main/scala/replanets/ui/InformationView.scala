@@ -2,7 +2,8 @@ package replanets.ui
 
 import replanets.common.IonStorm
 import replanets.model.Game
-import replanets.ui.commands.Commands
+import replanets.ui.actions.Actions
+import replanets.ui.viewmodels.ViewModel
 
 import scala.reflect.runtime.universe._
 import scalafx.Includes._
@@ -14,7 +15,7 @@ import scalafxml.core.{DependenciesByType, FXMLLoader}
 /**
   * Created by mgirkin on 04/08/2016.
   */
-class InformationView(game: Game, viewModel: ViewModel, commands: Commands) extends VBox {
+class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extends VBox {
 
 
   styleClass = Seq("informationView")
@@ -38,7 +39,7 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
       }
     }
     selectionModel().selectedItem.onChange { (mo, _, _) =>
-      if(mo.value != null) viewModel.objectSelected = Some(mo.value._1)
+      if(mo.value != null) viewModel.selectedObject = Some(mo.value._1)
     }
   }
 
@@ -60,11 +61,12 @@ class InformationView(game: Game, viewModel: ViewModel, commands: Commands) exte
 
   val planetInfoView = loadFxml[IPlanetInfoView]("/PlanetInfoView.fxml", Map(
     typeOf[Game] -> game,
-    typeOf[Commands] -> commands
+    typeOf[ViewModel] -> viewModel,
+    typeOf[Actions] -> actions
   ))
 
   val baseInfoView = loadFxml[IBaseInfoView]("/BaseInfoView.fxml", Map(
-    typeOf[Commands] -> commands,
+    typeOf[Actions] -> actions,
     typeOf[Game] -> game,
     typeOf[ViewModel] -> viewModel
   ))

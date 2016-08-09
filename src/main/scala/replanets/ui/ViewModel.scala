@@ -39,17 +39,4 @@ object MapObject {
   }
 }
 
-case class ViewModel (
-  var turnShown: Int,
-  private var _objectSelected: Option[MapObject]
-) {
 
-  def objectSelected_=(value: Option[MapObject]): Unit = {
-    _objectSelected = value
-    selectedObjectChaged.fire()
-  }
-
-  def objectSelected = _objectSelected
-
-  val selectedObjectChaged = new Event()
-}

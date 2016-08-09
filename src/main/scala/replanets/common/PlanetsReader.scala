@@ -16,7 +16,7 @@ case class Minerals(
 case class PlanetRecord(
   ownerId: Short,
   planetId: Short,
-  fcode: String,
+  fcode: Fcode,
   minesNumber: Short,
   factoriesNumber: Short,
   defencesNumber: Short,
@@ -42,7 +42,7 @@ object PlanetsReader {
     it => PlanetRecord(
       WORD.read(it),
       WORD.read(it),
-      SpacePaddedString(3).read(it),
+      Fcode(FixedLengthString(3).read(it)),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
