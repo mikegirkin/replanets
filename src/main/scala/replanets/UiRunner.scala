@@ -11,12 +11,13 @@ import scala.collection.JavaConversions._
 import scalafx.application.JFXApp
 
 object UiRunner extends JFXApp {
-  val gamePath: Path = Paths.get(
-    if(parameters.unnamed.nonEmpty) parameters.unnamed.head
-    else "."
-  )
+  val raceNumber = parameters.unnamed(0).toInt
+  val gameDirectory = parameters.unnamed(1)
+
+  println(s"Starting for race $raceNumber in game directory $gameDirectory")
+  val gamePath: Path = Paths.get(gameDirectory)
   val absolutePath = gamePath.toAbsolutePath
-  val gameDb = new GameDatabase(absolutePath, 1)
+  val gameDb = new GameDatabase(absolutePath, raceNumber)
 
   val rstFiles = rstFilesInGameDirectory(absolutePath)
   rstFiles.foreach { file =>
