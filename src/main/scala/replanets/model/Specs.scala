@@ -14,8 +14,8 @@ case class Specs(
   hullSpecs: IndexedSeq[HullspecItem],
   raceHulls: HullAssignment
 ) {
-  def getHull(raceId: Int, raceHullId: Int): HullspecItem = {
-    val hullId = raceHulls.getRaceHullIds(raceId)(raceHullId)
+  def getHull(raceId: Int, raceHullIdx: Int): HullspecItem = {
+    val hullId = raceHulls.getRaceHullIds(raceId)(raceHullIdx)
     hullSpecs(hullId)
   }
 

@@ -54,12 +54,12 @@ class ShipDetailsView(
     lblShipId.text = shipId.toString
     val shipRecord = game.turnSeverData(viewModel.turnShown).ships.find(_.shipId == shipId)
     shipRecord.foreach { ship =>
-      val hull = game.specs.getHull(ship.ownerId - 1, ship.hullTypeId)
+      val hull = game.specs.hullSpecs(ship.hullTypeId - 1)
       lblShipOwningRace.text = game.races(ship.ownerId - 1).shortname
       lblShipName.text = ship.name
       lblHullName.text = hull.name
-      lblShipCoords.text = s"(${ship.xPosition}, ${ship.yPosition})"
-      lblDestination.text = s"(${ship.xPosition + ship.xDistanceToWaypoint}, ${ship.yPosition + ship.yDistanceToWaypoint})"
+      lblShipCoords.text = s"(${ship.x}, ${ship.y})"
+      lblDestination.text = s"(${ship.x + ship.xDistanceToWaypoint}, ${ship.y + ship.yDistanceToWaypoint})"
       lblWarp.text = ship.warp.toString
       lblFuel.text = s"${ship.neutronium} / ${hull.fuelTankSize}"
       val fuelBurn = game.formulas.fuelBurn(
@@ -72,7 +72,7 @@ class ShipDetailsView(
       lblDamage.text = s"${ship.damage} %"
       lblMission.text = s"${ship.mission}" //TODO: Ship mission maps
       lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
-      lblEquipEngines.text = game.specs.engineSpecs(ship.engineTypeId).name
+      lblEquipEngines.text = game.specs.engineSpecs(ship.engineTypeId.value - 1).name
       lblEquipBeams.text = s"${ship.numberOfBeams} - ${game.specs.beamSpecs(ship.beamType).name}"
       lblEquipLaunchers.text = s"${ship.numberOfTorpLaunchers} - ${game.specs.torpSpecs(ship.torpsType).name}"
       lblCargo.text = ship.loadedMass.toString

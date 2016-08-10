@@ -29,7 +29,7 @@ object MapObject {
   def findAtCoords(game: Game, turn: Int)(intCoords: IntCoords): IndexedSeq[(MapObject, String)] = {
     //ships
     val ships = game.turnSeverData(turn).ships
-      .filter(ship => ship.xPosition == intCoords.x && ship.yPosition == intCoords.y)
+      .filter(ship => ship.x == intCoords.x && ship.y == intCoords.y)
       .map(ship => (MapObject(MapObjectType.Ship, ship.shipId, intCoords), ship.name))
     //bases
     //planets

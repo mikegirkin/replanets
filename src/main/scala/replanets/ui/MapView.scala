@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.{Constants, ShipCoordsRecord}
-import replanets.model.Game
+import replanets.common.{Constants, IonStorm, ShipCoordsRecord, ShipRecord}
+import replanets.model.{Game, Planet}
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
@@ -14,6 +14,12 @@ import scalafx.scene.paint.Color
 class MapView(game: Game, viewModel: ViewModel) extends Pane {
   self: Node =>
 
+  import GraphicContextExtensions._
+
+  val ownShipColor = Color.MediumPurple
+  val enemyShipColor = Color.Red
+  val mixedShipsColor = Color.Yellow
+
   var scale = 0.4
   var offsetX = -350d
   var offsetY = -350d
@@ -23,7 +29,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     if (scale < 0.2) 2
     else if(scale < 0.4) 3
     else if (scale < 0.7) 5
-    else 8
+    else 6
 
   def shipCircleDiameter: Double = planetDiameter + 4
   def shipCircleThickness: Double = 1
@@ -76,18 +82,24 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def currentTurnServerData = currentTurn.rstFiles(game.playingRace)
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
+    def shortestDistanceReducer[T](getCoords: T => IntCoords)(p1: T, p2: T): T = {
+      if(distSqr(coords, getCoords(p1)) < distSqr(coords, getCoords(p2))) p1 else p2
+    }
+
     //planets
-    val closestPlanet = game.map.planets.reduce((p1, p2) => if(distSqr(coords, IntCoords(p1.x, p1.y)) < distSqr(coords, IntCoords(p2.x, p2.y))) p1 else p2)
+    val closestPlanet = game.map.planets.reduce(shortestDistanceReducer { p: Planet => IntCoords(p.x, p.y) })
     //ships
+    val closestShip = game.turnSeverData(viewModel.turnShown).ships.reduce(shortestDistanceReducer { s: ShipRecord => IntCoords(s.x, s.y) })
     //minefields
     //explosions
     //ionstroms
-    val closestStorm = currentTurnServerData.ionStorms.reduce((is1, is2) => if(distSqr(coords, IntCoords(is1.x, is1.y)) < distSqr(coords, IntCoords(is2.x, is2.y))) is1 else is2)
+    val closestStorm = currentTurnServerData.ionStorms.reduce(shortestDistanceReducer { s: IonStorm => IntCoords(s.x, s.y)})
 
     Seq(
       MapObject(MapObjectType.Planet, closestPlanet.id, IntCoords(closestPlanet.x, closestPlanet.y)),
+      MapObject(MapObjectType.Ship, closestShip.shipId, IntCoords(closestShip.x, closestShip.y)),
       MapObject(MapObjectType.IonStorm, closestStorm.id, IntCoords(closestStorm.x, closestStorm.y))
-    ).reduce((x1, x2) => if(distSqr(coords, x1.coords) < distSqr(coords, x2.coords)) x1 else x2)
+    ).reduce((x1, x2) => if(distSqr(coords, x1.coords) <= distSqr(coords, x2.coords)) x1 else x2)
   }
 
   private def selectMapObject(it: MapObject): Unit = {
@@ -101,7 +113,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
     scale = scale * scaleStep
     offsetX = zoomPoint.x - mapCoordsZoomPoint.x * scale
-    offsetY = zoomPoint.y - mapCoordsZoomPoint.y * scale
+    offsetY = zoomPoint.y - (Constants.MapHeight - mapCoordsZoomPoint.y) * scale
 
     redraw()
   }
@@ -143,6 +155,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
     drawPlanets(gc)
+    drawShips(gc)
     drawIonStorms(gc)
     drawSelectedCross(gc)
   }
@@ -160,7 +173,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def drawPlanets(gc: GraphicsContext) = {
     def planetColor(owner: Option[Int], hasBase: Boolean): Color = {
       owner.fold(Color.Wheat)( ow =>
-        if(ow == game.playingRace)  if(hasBase) Color.Aquamarine else Color.LightGreen
+        if(ow == game.playingRace)  if(hasBase) Color.Aqua else Color.Green
         else if(hasBase) Color.Red else Color.OrangeRed
       )
     }
@@ -181,13 +194,29 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val orbitingShips = shipsOrbitingPlanet(planetCoords)
       if(orbitingShips.nonEmpty) {
         val color =
-          if(orbitingShips.forall(_.owner == game.playingRace)) Color.MediumPurple
-          else if(orbitingShips.forall(_.owner == game.playingRace)) Color.Red
-          else Color.Orange
+          if(orbitingShips.forall(_.owner == game.playingRace)) ownShipColor
+          else if(orbitingShips.forall(_.owner == game.playingRace)) enemyShipColor
+          else mixedShipsColor
         gc.setStroke(color)
         gc.setLineWidth(shipCircleThickness)
         gc.strokeOval(coord.x - shipCircleDiameter/2.0, coord.y - shipCircleDiameter/2.0, shipCircleDiameter, shipCircleDiameter)
       }
+    }
+  }
+
+  private def drawShips(gc: GraphicsContext) = {
+    val shipCircleSize = planetDiameter / 2
+
+    def ownShipsNotOrbitingPlanet = game.turnSeverData(viewModel.turnShown).ships
+      .filter(sc => !game.map.planets.exists(p => p.x == sc.x && p.y == sc.y))
+
+    for (ship <- ownShipsNotOrbitingPlanet) {
+      val coord = canvasCoord(Coords(ship.x, ship.y))
+      val waypointCoord = canvasCoord(Coords(ship.x + ship.xDistanceToWaypoint, ship.y + ship.yDistanceToWaypoint))
+      gc.setStroke(ownShipColor)
+      gc.setFill(ownShipColor)
+      gc.fillCircle(coord, planetDiameter/2)
+      drawMovementVector(coord, waypointCoord)(gc)
     }
   }
 
@@ -211,14 +240,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     }
   }
 
-  private def drawMovementVector(mapCoords: Coords, heading: Int, warp: Int)(gc: GraphicsContext) = {
-    gc.setStroke(Color.Purple)
-    gc.setLineWidth(1)
+  private def drawMovementVector(mapCoords: Coords, heading: Int, warp: Int)(gc: GraphicsContext): Unit = {
     val startPoint = canvasCoord(mapCoords)
     val dx = warp * warp * Math.sin(2 * Math.PI * heading / 360)
     val dy = warp * warp * Math.cos(2 * Math.PI * heading / 360)
     val endPoint = canvasCoord(mapCoords.shift(dx, dy))
-    gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y)
+    drawMovementVector(startPoint, endPoint)(gc)
+  }
+
+  private def drawMovementVector(mapCoords: Coords, mapWaypoint: Coords)(gc: GraphicsContext): Unit = {
+    gc.setStroke(Color.Purple)
+    gc.setLineWidth(1)
+    gc.strokeLine(mapCoords.x, mapCoords.y, mapWaypoint.x, mapWaypoint.y)
   }
 
 }
