@@ -1,12 +1,10 @@
 package replanets.model
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path, Paths}
 
 import replanets.common._
+import replanets.model.Specs.getClass
 
-/**
-  * Created by mgirkin on 27/07/2016.
-  */
 case class Specs(
   beamSpecs: IndexedSeq[BeamspecItem],
   torpSpecs: IndexedSeq[TorpspecItem],
@@ -25,12 +23,14 @@ case class Specs(
 }
 
 object Specs {
+  import ResourcesExtension._
+
   def fromDirectory(path: Path): Specs = {
-    val beams = BeamspecItem.fromFile(path.resolve(Constants.beamspecFilename))
-    val torps = TorpspecItem.fromFile(path.resolve(Constants.torpspecFilename))
-    val engines = EngspecItem.fromFile(path.resolve(Constants.engspecFilename))
-    val hulls = HullspecItem.fromFile(path.resolve(Constants.hullspecFileName))
-    val hullAssignment = HullAssignment.fromFile(path.resolve(Constants.hullsAssignmentFilename))
+    val beams = BeamspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.beamspecFilename), "/files/beamspec.dat"))
+    val torps = TorpspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.torpspecFilename), "/files/torpspec.dat"))
+    val engines = EngspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.engspecFilename), "/files/engspec.dat"))
+    val hulls = HullspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullspecFileName), "/files/hullspec.dat"))
+    val hullAssignment = HullAssignment.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullsAssignmentFilename), "files/truehull.dat"))
 
     Specs(beams, torps, engines, hulls, hullAssignment)
   }

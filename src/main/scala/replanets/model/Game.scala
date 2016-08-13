@@ -54,10 +54,12 @@ case class Game(
 }
 
 object Game {
+  import ResourcesExtension._
+
   def apply(gameDirectory: Path)(gameDb: GameDatabase): Game = {
     val map = ClusterMap.fromDirectory(gameDirectory)
     val specs = Specs.fromDirectory(gameDirectory)
-    val races = RacenmItem.fromFile(gameDirectory.resolve(Constants.racenmFilename))
+    val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
     Game("Test game", gameDb, RaceId(gameDb.playingRace), races, map, specs)
   }

@@ -13,10 +13,11 @@ case class ClusterMap(
 object ClusterMap {
 
 	import IteratorExtensions._
+	import ResourcesExtension._
 
 	def fromDirectory(path: Path): ClusterMap = {
 		val xyplanData = readFromXyplan(path.resolve(Constants.xyplanFilename))
-		val planetNames = PlanetnmItem.fromFile(path.resolve(Constants.planetnmFilename))
+		val planetNames = PlanetnmItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.planetnmFilename), s"/files/${Constants.planetnmFilename}"))
 		ClusterMap(
 			Constants.MapHeight,
 			Constants.MapWidth,
