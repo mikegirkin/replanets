@@ -7,7 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
   */
 class IteratorExtesionTest extends WordSpec with Matchers {
 
-  import replanets.recipes.IteratorExtensions._
+  import IteratorExtensions._
 
   "readSome" should {
     "read 4 items" in {

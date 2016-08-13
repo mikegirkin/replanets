@@ -1,4 +1,6 @@
-package replanets.recipes
+package replanets.common
+
+import replanets.recipes.BinaryReadRecipe
 
 /**
   * Created by mgirkin on 26/07/2016.

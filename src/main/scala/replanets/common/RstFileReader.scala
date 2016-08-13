@@ -23,7 +23,7 @@ case class RstFile(
 
 object RstFileReader {
 
-  import replanets.recipes.IteratorExtensions._
+  import IteratorExtensions._
 
   def read(file: Path) = {
     val buffer = Files.readAllBytes(file)

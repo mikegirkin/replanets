@@ -13,7 +13,7 @@ trait Fcode {
 }
 
 object Fcode {
-  import replanets.recipes.NumberExtensions._
+  import NumberExtensions._
 
   def apply(value: String): Fcode =
     Fcode.tryConvert(value).getOrElse {

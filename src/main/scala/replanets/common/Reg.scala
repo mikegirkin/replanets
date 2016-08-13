@@ -6,7 +6,7 @@ import replanets.recipes.DWORD
 
 class Reg(directory: Path) {
 
-  import replanets.recipes.ByteExtensions._
+  import ByteExtensions._
 
   val regkey: Option[Array[Byte]] = {
     val filePath = directory.resolve("REG.KEY")

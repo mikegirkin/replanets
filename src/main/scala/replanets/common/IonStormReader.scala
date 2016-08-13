@@ -1,7 +1,7 @@
 package replanets.common
 
 import replanets.recipes.{BinaryReadRecipe, WORD}
-import replanets.recipes.NumberExtensions._
+import NumberExtensions._
 
 /**
   * Created by mgirkin on 04/08/2016.
@@ -30,7 +30,7 @@ case class IonStorm(
 }
 
 object IonStormReader {
-  import replanets.recipes.IteratorExtensions._
+  import IteratorExtensions._
 
   val maxNumberOfStorms = 50
 

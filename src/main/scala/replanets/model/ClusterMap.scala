@@ -2,7 +2,7 @@ package replanets.model
 
 import java.nio.file.{Path, Paths}
 
-import replanets.common.{Constants, PlanetnmItem, XyplandatItem}
+import replanets.common.{Constants, IteratorExtensions, PlanetnmItem, XyplandatItem}
 
 case class ClusterMap(
 	height: Int,
@@ -12,7 +12,7 @@ case class ClusterMap(
 
 object ClusterMap {
 
-	import replanets.recipes.IteratorExtensions._
+	import IteratorExtensions._
 
 	def fromDirectory(path: Path): ClusterMap = {
 		val xyplanData = readFromXyplan(path.resolve(Constants.xyplanFilename))

@@ -3,6 +3,8 @@ package replanets.recipes
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
+import replanets.common.IteratorExtensions
+
 object SpacePaddedString {
   def apply(length: Int) = new SpacePaddedString(length)
 }

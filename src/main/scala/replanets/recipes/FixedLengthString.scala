@@ -3,6 +3,8 @@ package replanets.recipes
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
+import replanets.common.IteratorExtensions
+
 /**
   * Created by mgirkin on 09/08/2016.
   */

@@ -1,8 +1,8 @@
 package replanets.model
 
-import replanets.common.{RaceId, RstFile}
+import replanets.common.RstFile
 
-import collection.mutable
+import scala.collection.mutable
 
 case class TurnInfo(
   rst: RstFile,

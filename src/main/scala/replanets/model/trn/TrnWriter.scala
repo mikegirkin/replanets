@@ -4,7 +4,7 @@ import java.nio.charset.Charset
 import java.nio.file.Paths
 import java.nio.{ByteBuffer, ByteOrder}
 
-import replanets.common.Reg
+import replanets.common.{ByteExtensions, Reg}
 import replanets.model.{Game, PlanetId, PlayerCommand}
 import replanets.recipes.{BYTE, DWORD}
 import replanets.ui.viewmodels.PlanetInfoVM
@@ -42,7 +42,7 @@ object PlanetsWriter {
 import replanets.model.trn.PlanetsWriter._
 
 class TrnWriter(game: Game) {
-  import replanets.recipes.ByteExtensions._
+  import ByteExtensions._
 
   val turn = game.lastTurn
   val race = game.playingRace

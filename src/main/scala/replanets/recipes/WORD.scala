@@ -2,6 +2,8 @@ package replanets.recipes
 
 import java.nio.{ByteBuffer, ByteOrder}
 
+import replanets.common.IteratorExtensions
+
 object WORD extends BinaryReadRecipe[Short] {
 
   import IteratorExtensions._
