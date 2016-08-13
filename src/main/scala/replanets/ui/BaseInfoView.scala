@@ -78,7 +78,7 @@ class BaseInfoView(
 
       val hulls = b.storedHulls.zipWithIndex
         .filter{ case (hullCount, idx) => hullCount > 0 }
-        .map{ case (hullCount, idx) => (hullCount, game.specs.getHull(game.playingRaceId, idx).name)} //TODO: Check if stored hulls are correctly calculated
+        .map{ case (hullCount, idx) => (hullCount, game.specs.getHull(game.playingRace.value - 1, idx).name)} //TODO: Check if stored hulls are correctly calculated
 
       val beams = b.storedBeams.zipWithIndex
         .filter { case (beamCount, idx) => beamCount > 0 }

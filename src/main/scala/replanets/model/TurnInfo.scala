@@ -1,11 +1,10 @@
 package replanets.model
 
-import replanets.common.RstFile
+import replanets.common.{RaceId, RstFile}
 
 import collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
 case class TurnInfo(
-  rstFiles: Map[Int, RstFile],
-  playerCommands: mutable.ArrayBuffer[PlayerCommand] = ArrayBuffer()
+  rst: RstFile,
+  commands: mutable.Buffer[PlayerCommand]
 )

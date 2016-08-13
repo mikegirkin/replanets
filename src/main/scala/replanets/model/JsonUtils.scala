@@ -18,6 +18,8 @@ object JsonUtils {
 
   implicit val fcodeFormat = Format(fcodeReads, fcodeWrites)
 
+  implicit val planetIdFormat = format[PlanetId]
+  implicit val shipIdFormat = format[ShipId]
 
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]

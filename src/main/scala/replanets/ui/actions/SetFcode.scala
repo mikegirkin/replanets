@@ -1,7 +1,7 @@
 package replanets.ui.actions
 
 import replanets.common.Fcode
-import replanets.model.{Game, SetPlanetFcode}
+import replanets.model.{Game, PlanetId, SetPlanetFcode}
 import replanets.ui.MapObjectType
 import replanets.ui.viewmodels.ViewModel
 
@@ -13,7 +13,7 @@ class SetFcode(game: Game, viewModel: ViewModel) {
     viewModel.selectedObject.foreach { so =>
       so.objectType match {
         case MapObjectType.Planet =>
-          val command = SetPlanetFcode(so.id, fcode)
+          val command = SetPlanetFcode(PlanetId(so.id), fcode)
           game.addCommand(command)
           viewModel.objectChanged.fire((MapObjectType.Planet, so.id))
         case _ =>

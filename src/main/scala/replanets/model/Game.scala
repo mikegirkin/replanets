@@ -1,19 +1,20 @@
 package replanets.model
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
 import replanets.common._
+import replanets.model.trn.TrnWriter
 
 case class Game(
   name: String,
   gameDb: GameDatabase,
-  playingRace: Int,
+  playingRace: RaceId,
   races: IndexedSeq[RacenmItem],
   map: ClusterMap,
   specs: Specs,
   formulas: Formulas = THostFormulas
 ) {
-  val turns = gameDb.loadDb()
+  val turns: Map[TurnId, Map[RaceId, TurnInfo]] = gameDb.loadDb()
 
   override def toString: String = {
     String.join(
@@ -21,16 +22,14 @@ case class Game(
       name.toString, races.toString, map.toString, specs.toString)
   }
 
-  def turnSeverData(turn: Int) = {
-    turns(turn).rstFiles(playingRace)
+  def turnSeverData(turn: TurnId) = {
+    turns(turn)(playingRace).rst
   }
 
-  def lastTurn = turns.keys.max
-
-  def playingRaceId = playingRace - 1
+  def lastTurn = turns.keys.maxBy(_.value)
 
   def addCommand(cmd: PlayerCommand) = {
-    val commands = turns(lastTurn).playerCommands
+    val commands = turns(lastTurn)(playingRace).commands
     val oldCommandIndex = commands.indexWhere(p => p.isReplacableBy(cmd))
     val changesSomething = cmd.changesSomething(this, lastTurn, playingRace)
     if(oldCommandIndex >= 0 && changesSomething)
@@ -42,20 +41,25 @@ case class Game(
   }
 
   def saveCommands() = {
-    gameDb.saveCommands(turns.mapValues(ti => ti.playerCommands))
+    gameDb.saveCommands(lastTurn, playingRace, turns(lastTurn)(playingRace).commands)
+  }
+
+  def writeTrnForLastTurn() = {
+    val filename = s"player${playingRace.value}.trn"
+    val trnWriter = new TrnWriter(this)
+    val trnFilepath = gameDb.dbDirectoryPath.resolve(s"${lastTurn.value}").resolve(filename)
+    Files.write(trnFilepath, trnWriter.write().toArray)
   }
 
 }
 
 object Game {
-
-
   def apply(gameDirectory: Path)(gameDb: GameDatabase): Game = {
     val map = ClusterMap.fromDirectory(gameDirectory)
     val specs = Specs.fromDirectory(gameDirectory)
     val races = RacenmItem.fromFile(gameDirectory.resolve(Constants.racenmFilename))
 
-    Game("Test game", gameDb, gameDb.playingRace, races, map, specs)
+    Game("Test game", gameDb, RaceId(gameDb.playingRace), races, map, specs)
   }
 }
 

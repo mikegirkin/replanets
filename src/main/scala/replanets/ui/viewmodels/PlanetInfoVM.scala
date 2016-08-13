@@ -1,20 +1,20 @@
 package replanets.ui.viewmodels
 
-import replanets.common.{Fcode, Minerals}
+import replanets.common.{Fcode, Minerals, TurnId}
 import replanets.model.{Game, SetPlanetFcode}
 
 /**
   * Created by mgirkin on 09/08/2016.
   */
-class PlanetInfoVM(game: Game, turn: Int, planetId: Int) {
+class PlanetInfoVM(game: Game, turn: TurnId, planetId: Int) {
   val planetRecord = game.turnSeverData(turn).planets.find(_.planetId == planetId).get
-  val commands = game.turns(turn).playerCommands
+  val commands = game.turns(turn)(game.playingRace).commands
 
   def ownerId: Short = planetRecord.ownerId
 
   def fcode: Fcode = {
     commands.find {
-      case SetPlanetFcode(pId, newFcode) if pId == planetId => true
+      case SetPlanetFcode(pId, newFcode) if pId.id == planetId => true
       case _ => false
     }.map {
       case SetPlanetFcode(pId, newFcode) => newFcode

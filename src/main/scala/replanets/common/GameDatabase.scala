@@ -8,6 +8,7 @@ import play.api.libs.json._
 import replanets.model.{PlayerCommand, TurnInfo}
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -16,26 +17,28 @@ import scala.collection.mutable.ArrayBuffer
 class GameDatabase(gamePath: Path, val playingRace: Int) {
   val dbFoldername = "db"
   val dbDirectoryPath = gamePath.resolve(dbFoldername)
-  val commandsFilePath = dbDirectoryPath.resolve(s"commands-$playingRace.json")
+  def commandsFilePath(turnId: Int, raceId: Int) =
+    dbDirectoryPath.resolve(turnId.toString).resolve(s"commands-$raceId.json")
 
   if(!Files.exists(dbDirectoryPath)) Files.createDirectory(dbDirectoryPath)
 
-  def loadDb(): Map[Int, TurnInfo] = {
+  def loadDb(): Map[TurnId, Map[RaceId, TurnInfo]] = {
     val rsts = loadRsts()
-    val commands = loadCommands()
-    val result = rsts.groupBy { case (turn, race, rst) => turn }
-      .map { case (turnNumber, content) =>
-        (turnNumber, content.map { case (_, race, rst) =>
-          race -> rst
-        })
-      }.map { case (turnNumber, raceRsts) =>
-        val cmds = commands.get(turnNumber)
-        if(cmds.isEmpty) (turnNumber, TurnInfo(raceRsts.toMap))
-        else {
-          val ti = TurnInfo(raceRsts.toMap, ArrayBuffer(cmds.get:_*))
-          (turnNumber, ti)
-        }
-      }
+
+    val result = rsts.map {
+      case (turn, race, rst) => (turn, race, rst, loadCommands(turn, race))
+    }.groupBy {
+      case (turn, race, rst, commands) => turn
+    }.map { case (turnNumber, content) =>
+      (turnNumber, content.map { case (_, race, rst, commands) =>
+        race -> (rst, commands)
+      })
+    }.map {
+      case (turnNumber, data) => TurnId(turnNumber) -> data.map {
+        case (raceId, (rst, commands)) => RaceId(raceId) -> TurnInfo(rst, ArrayBuffer(commands: _*))
+      }.toMap
+    }
+
     result
   }
 
@@ -54,20 +57,18 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
 
   }
 
-  case class commandRow(turn: Int, commands: ArrayBuffer[PlayerCommand])
-  implicit val commandRowFormat = format[commandRow]
-
-  def saveCommands(commands: Map[Int, ArrayBuffer[PlayerCommand]]) = {
-    val json = Json.stringify(Json.toJson(commands.map {x => commandRow(x._1, x._2)}))
-    Files.write(commandsFilePath, json.getBytes)
+  def saveCommands(turnId: TurnId, raceId: RaceId, commands: mutable.Buffer[PlayerCommand]) = {
+    val json = Json.stringify(Json.toJson(commands))
+    Files.write(commandsFilePath(turnId.value, raceId.value), json.getBytes)
   }
 
-  def loadCommands(): Map[Int, Seq[PlayerCommand]] = {
-    if(Files.exists(commandsFilePath)) {
-      val bytes = Files.readAllBytes(commandsFilePath)
-      Json.parse(bytes).as[Seq[commandRow]].map { x => (x.turn, x.commands) }.toMap
+  def loadCommands(turnId: Int, raceId: Int): Seq[PlayerCommand] = {
+    val commandsFile = commandsFilePath(turnId, raceId)
+    if(Files.exists(commandsFile)) {
+      val bytes = Files.readAllBytes(commandsFile)
+      Json.parse(bytes).as[Seq[PlayerCommand]]
     } else
-      Map()
+      Seq()
   }
 
   def importRstFile(rstFile: Path): Boolean = {

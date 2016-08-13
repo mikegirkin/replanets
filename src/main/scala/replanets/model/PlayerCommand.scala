@@ -1,47 +1,64 @@
 package replanets.model
 
-import replanets.common.Fcode
+import replanets.common.{Fcode, RaceId, TurnId}
 
 /**
   * Created by mgirkin on 09/08/2016.
   */
+trait ObjectId {
+  val id: Int
+}
+case class PlanetId(id: Int) extends ObjectId
+case class ShipId(id: Int) extends ObjectId
+case class BaseId(id: Int) extends ObjectId
+
 trait PlayerCommand {
+  def objectId: ObjectId
   def isReplacableBy(other: PlayerCommand): Boolean
-  def changesSomething(game: Game, turn: Int, race: Int): Boolean
+  def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean
+}
+
+trait PlanetPlayerCommand extends PlayerCommand {
+  override def objectId: PlanetId
+}
+
+trait ShipPlayerCommand extends PlayerCommand {
+  override def objectId: ShipId
 }
 
 case class SetPlanetFcode(
-  planetId: Int,
+  objectId: PlanetId,
   newFcode: Fcode
 ) extends PlayerCommand {
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case SetPlanetFcode(otherPlanetId, _) if planetId == otherPlanetId => true
+      case SetPlanetFcode(otherPlanetId, _) if objectId == otherPlanetId => true
       case _ => false
     }
   }
 
-  override def changesSomething(game: Game, turn: Int, race: Int): Boolean = {
+  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = {
     val changed = for(
       turn <- game.turns.get(turn);
-      rst <- turn.rstFiles.get(race);
-      planet <- rst.planets.find(_.planetId == planetId)
+      raceTurn <- turn.get(race);
+      rst = raceTurn.rst;
+      planet <- rst.planets.find(_.planetId == objectId.id)
     ) yield planet.fcode.value != newFcode.value
     changed.getOrElse(false)
   }
 }
 
 case class SetShipFcode(
-  shipId: Int,
+  objectId: ShipId,
   newFcode: Fcode
 ) extends PlayerCommand {
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case SetShipFcode(otherShipId, _) if shipId == otherShipId => true
+      case SetShipFcode(otherShipId, _) if objectId == otherShipId => true
       case _ => false
     }
   }
 
-  override def changesSomething(game: Game, turn: Int, race: Int): Boolean = true
+  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = true
 
 }

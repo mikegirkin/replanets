@@ -79,7 +79,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   redraw()
 
   private def currentTurn = game.turns(viewModel.turnShown)
-  private def currentTurnServerData = currentTurn.rstFiles(game.playingRace)
+  private def currentTurnServerData = currentTurn(game.playingRace).rst
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
     def shortestDistanceReducer[T](getCoords: T => IntCoords)(p1: T, p2: T): T = {
@@ -173,19 +173,19 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def drawPlanets(gc: GraphicsContext) = {
     def planetColor(owner: Option[Int], hasBase: Boolean): Color = {
       owner.fold(Color.Wheat)( ow =>
-        if(ow == game.playingRace)  if(hasBase) Color.Aqua else Color.Green
+        if(ow == game.playingRace.value)  if(hasBase) Color.Aqua else Color.Green
         else if(hasBase) Color.Red else Color.OrangeRed
       )
     }
 
     def shipsOrbitingPlanet(planetCoords: Coords): Seq[ShipCoordsRecord] =
-      game.turns(viewModel.turnShown).rstFiles(game.playingRace).shipCoords
+      currentTurnServerData.shipCoords
         .filter(sc => sc.x == planetCoords.x && sc.y == planetCoords.y)
 
     (0 until 500).foreach { idx =>
       val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
-      val planetInfo = game.turns(viewModel.turnShown).rstFiles(game.playingRace).planets.find(_.planetId == idx + 1)
-      val baseInfo = game.turns(viewModel.turnShown).rstFiles(game.playingRace).bases.find(_.baseId == idx + 1)
+      val planetInfo = currentTurnServerData.planets.find(_.planetId == idx + 1)
+      val baseInfo = currentTurnServerData.bases.find(_.baseId == idx + 1)
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
@@ -194,8 +194,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val orbitingShips = shipsOrbitingPlanet(planetCoords)
       if(orbitingShips.nonEmpty) {
         val color =
-          if(orbitingShips.forall(_.owner == game.playingRace)) ownShipColor
-          else if(orbitingShips.forall(_.owner == game.playingRace)) enemyShipColor
+          if(orbitingShips.forall(_.owner == game.playingRace.value)) ownShipColor
+          else if(orbitingShips.forall(_.owner == game.playingRace.value)) enemyShipColor
           else mixedShipsColor
         gc.setStroke(color)
         gc.setLineWidth(shipCircleThickness)
@@ -221,7 +221,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def drawIonStorms(gc: GraphicsContext) = {
-    val storms = game.turns(viewModel.turnShown).rstFiles(game.playingRace).ionStorms
+    val storms = currentTurnServerData.ionStorms
     storms.filter(_.category > 0).foreach { s =>
       val color = s.category match {
         case 1 => Color.LightGreen

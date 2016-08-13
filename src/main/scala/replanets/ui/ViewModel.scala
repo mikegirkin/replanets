@@ -1,5 +1,6 @@
 package replanets.ui
 
+import replanets.common.TurnId
 import replanets.model.Game
 
 case class Coords(x: Double, y: Double) {
@@ -26,7 +27,7 @@ case class MapObject(
 )
 
 object MapObject {
-  def findAtCoords(game: Game, turn: Int)(intCoords: IntCoords): IndexedSeq[(MapObject, String)] = {
+  def findAtCoords(game: Game, turn: TurnId)(intCoords: IntCoords): IndexedSeq[(MapObject, String)] = {
     //ships
     val ships = game.turnSeverData(turn).ships
       .filter(ship => ship.x == intCoords.x && ship.y == intCoords.y)

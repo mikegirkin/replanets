@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common.{Constants, Fcode}
+import replanets.common.{Constants, Fcode, TurnId}
 import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
@@ -15,7 +15,7 @@ import scalafxml.core.macros.sfxml
   */
 trait IPlanetInfoView {
   def rootPane: VBox
-  def setPlanet(turnId: Int, planetId: Int)
+  def setPlanet(turnId: TurnId, planetId: Int)
 }
 
 @sfxml
@@ -69,7 +69,7 @@ class PlanetInfoView(
 
   viewModel.objectChanged += { case (mapObjectType, objectId) => handleObjectChanged(mapObjectType, objectId) }
 
-  override def setPlanet(turnId: Int, planetId: Int): Unit = {
+  override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
     pnNatives.visible = false
     pnColonists.visible = false
     pnGeneralInfo.visible = false
@@ -108,7 +108,7 @@ class PlanetInfoView(
       lblDefenses.text = s"${vm.defencesNumber} / ${game.formulas.maxDefences(vm.colonistClans)}"
       pnStructures.visible = true
 
-      val miningRate = (density: Int) => game.formulas.miningRate(density, vm.minesNumber, game.playingRace, vm.nativeRace)
+      val miningRate = (density: Int) => game.formulas.miningRate(density, vm.minesNumber, game.playingRace.value, vm.nativeRace)
 
       lblNeuMined.text = vm.surfaceMinerals.neutronium.toString
       lblNeuCore.text = vm.coreMinerals.neutronium.toString

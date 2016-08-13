@@ -23,7 +23,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     new SelectPlanet(game, viewModel),
     new SetFcode(game, viewModel)
   )
-  private val messageView = new MessagesView(game.turns(viewModel.turnShown).rstFiles(game.playingRace).messages)
+  private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).rst.messages)
   private val mapView = new MapView(game, viewModel)
   private val informationView = new InformationView(game, viewModel, actions)
 
@@ -59,6 +59,10 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
       new Button {
         text = "Save"
         onAction = (e: ActionEvent) => handleSave()
+      },
+      new Button {
+        text = "Write trn"
+        onAction = (e: ActionEvent) => game.writeTrnForLastTurn()
       }
     )
   }

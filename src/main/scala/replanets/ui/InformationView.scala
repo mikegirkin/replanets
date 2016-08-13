@@ -17,7 +17,6 @@ import scalafxml.core.{DependenciesByType, FXMLLoader}
   */
 class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extends VBox {
 
-
   styleClass = Seq("informationView")
 
   val objectDetailsView = new VBox {
