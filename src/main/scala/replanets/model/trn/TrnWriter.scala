@@ -1,11 +1,11 @@
 package replanets.model.trn
 
-import java.nio.ByteBuffer
 import java.nio.charset.Charset
 import java.nio.file.Paths
+import java.nio.{ByteBuffer, ByteOrder}
 
-import replanets.common.{Fcode, RaceId, Reg}
-import replanets.model.{Game, PlanetId, PlayerCommand, SetPlanetFcode}
+import replanets.common.Reg
+import replanets.model.{Game, PlanetId, PlayerCommand}
 import replanets.recipes.{BYTE, DWORD}
 import replanets.ui.viewmodels.PlanetInfoVM
 
@@ -15,16 +15,25 @@ object PlanetsWriter {
   val encoder = Charset.forName("ASCII")
 
   implicit class WordWriter(val it: Short) extends AnyVal {
-    def toBytes: Iterable[Byte] = ByteBuffer.allocate(2).putShort(it).array()
+    def toBytes: Iterable[Byte] = ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(it).array()
   }
   implicit class DwordWriter(val it: Int) extends AnyVal {
-    def toBytes: Iterable[Byte] = ByteBuffer.allocate(4).putInt(it).array()
+    def toBytes: Iterable[Byte] = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(it).array()
   }
   implicit class StringWriter(val it: String) extends AnyVal {
+    private def padTo(maxLength: Int)(str: String) = {
+      if(str.length >= maxLength) str
+      else {
+        val bldr = new StringBuilder(str)
+        bldr.appendAll(Stream.fill[Char](maxLength - str.length)(' '))
+        bldr.toString()
+      }
+    }
+
     def toBytes(maxLength: Int): Iterable[Byte] = {
-      val strToWrite = it.padTo(maxLength, " ")
+      val strToWrite = padTo(maxLength)(it)
       ByteBuffer.allocate(maxLength)
-        .put(encoder.encode(it))
+        .put(encoder.encode(strToWrite))
         .array()
     }
   }
@@ -54,12 +63,11 @@ class TrnWriter(game: Game) {
     val commandsInBytes = generateCommandsSection(game.turns(game.lastTurn)(game.playingRace).commands)
     val commandsHeader = generateCommandsHeader(commandsInBytes: Iterable[Iterable[Byte]])
     val commandsSection = commandsHeader ++ commandsInBytes.flatten
-    val header = generateHeader(commandsSection.size)
+    val header = generateHeader(commandsInBytes.size)
     val winPlanTrailer = gererateWinPlanTrailer()
-    val dosTrailer = generateDosTrailer(header, commandsSection, winPlanTrailer)
-
-
-    val idBlock = generateIdBlock() //TODO: Id block requires all playerX.trn to be generated BEFORE id block is written
+    val csX = checksumX(header, commandsSection, winPlanTrailer)
+    val dosTrailer = generateDosTrailer(csX)
+    val idBlock = generateIdBlock(csX) //TODO: Id block requires all playerX.trn to be generated BEFORE id block is written
 
     header ++ commandsSection ++ winPlanTrailer ++ dosTrailer ++ idBlock
   }
@@ -69,9 +77,9 @@ class TrnWriter(game: Game) {
     if(commandsSection.isEmpty) Seq()
     else {
       val commandCount = commandsSection.size
-      val commandStartPosition = commandCount * 4 + 29 //29 - size of header
+      val commandStartPosition = commandCount * 4 + 29 + 1 //29 - size of header , +1 for basic pointers hack
       val commandSizes = commandsSection.map(_.size)
-      val commandPositions = commandSizes.scanLeft(commandStartPosition)(_ + _)
+      val commandPositions = commandSizes.scanLeft(commandStartPosition)(_ + _).take(commandCount)
 
       Seq(0.toByte) ++ commandPositions.flatMap { _.toBytes }
     }
@@ -132,44 +140,38 @@ class TrnWriter(game: Game) {
     Stream.fill[Byte](100)(0)
   }
 
-  def generateDosTrailer(header: Iterable[Byte], commandsSection: Iterable[Byte], winPlanTrailer: Iterable[Byte]): Iterable[Byte] = {
+  def checksumX(header: Iterable[Byte], commandsSection: Iterable[Byte], winPlanTrailer: Iterable[Byte]): Int = {
     //Checksum 'X'
     val timstampChecksum: Int = game.turnSeverData(game.lastTurn).generalInfo.timestampChecksum
     val bytesSum: Int = (header ++ commandsSection ++ winPlanTrailer).map(_.toUnsignedInt).sum
-    val checksum = bytesSum + timstampChecksum * 3 + 13
-    checksum.toBytes ++
-    //Empty DWORD
+    bytesSum + timstampChecksum * 3 + 13
+  }
+
+  def generateDosTrailer(checksumX: Int) = {
+    checksumX.toBytes ++
     0.toBytes ++
-    //Signature 104 byte
     fizzbinSignature
   }
 
   def fizzbinSignature(): Iterable[Byte] = {
-    val playableCs = game.turns(game.lastTurn).map { case (raceId, data) =>
-      val shipCs = data.rst.generalInfo.shipsChecksum + 667
-      val planetCs = data.rst.generalInfo.planetsChecksum + 1667
-      val basesCs = data.rst.generalInfo.basesChecksum + 1262
-      raceId -> (shipCs, planetCs, basesCs)
-    }
-    val checksums: Iterable[Int] = (1 to 11).map { idx => playableCs.getOrElse(RaceId(idx), (0, 0, 0)) }
-      .flatMap { case (shipCs, planetCs, basesCs) => Seq(shipCs, planetCs, basesCs) }
-
     val regstr1: Iterable[Int] = planetsRegInfo(0).zipWithIndex
-      .map { case (b, idx) => b * idx * 13 }
+      .map { case (b, idx) => b * (idx + 1) * 13 }
 
     val regstr2: Iterable[Int] = planetsRegInfo(1).zipWithIndex
-      .map { case (b, idx) => b * idx * 13 }
+      .map { case (b, idx) => b * (idx + 1) * 13 }
 
-    val data: Iterable[Int] = checksums ++ Seq(0) ++ regstr1 ++ regstr2
+    val data: Iterable[Int] = regstr1 ++ regstr2
 
     val checksum = data.sum + 668
 
     (data ++ Seq(checksum)).flatMap { _.toBytes }
   }
 
-  private def generateIdBlock(): Iterable[Byte] = {
+  private def generateIdBlock(checksumX: Int): Iterable[Byte] = {
     //Id block
-    Stream.fill[Int](11)(0).flatMap { _.toBytes }
+    val idBlock = IndexedSeq.fill[Int](11)(0)
+    idBlock.updated(game.playingRace.value - 1, checksumX)
+      .flatMap { _.toBytes }
   }
 
 }
