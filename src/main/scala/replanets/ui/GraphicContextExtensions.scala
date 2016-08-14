@@ -10,5 +10,9 @@ object GraphicContextExtensions {
     def fillCircle(center: Coords, diameter: Double) = {
       gc.fillOval(center.x - diameter/2, center.y - diameter/2, diameter, diameter)
     }
+
+    def strokeCircle(center: Coords, diameter: Double) = {
+      gc.strokeOval(center.x - diameter/2, center.y - diameter/2, diameter, diameter)
+    }
   }
 }

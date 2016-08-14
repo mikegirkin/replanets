@@ -18,6 +18,7 @@ case class RstFile(
   messages: IndexedSeq[MessageInfo],
   shipCoords: IndexedSeq[ShipCoordsRecord],
   generalInfo: GeneralTurnInformation,
+  mineFields: Seq[MineFieldRecord],
   ionStorms: IndexedSeq[IonStorm]
 )
 
@@ -45,9 +46,12 @@ object RstFileReader {
     //vcrs
 
     val winplanDataPointer = buffer.iterator.drop(40).read(DWORD)
+    val mineFields = MineFieldsSectionReader.read(buffer.iterator.drop(winplanDataPointer - 1)).filter(x => x.owner != 0)
     val ionStorms = IonStormReader.read(buffer.iterator.drop(winplanDataPointer - 1 + 500 * 8))
 
-    RstFile(pointers, signature, subversion, winplanDataPosition, leechPosition, ships, targets, planets, bases, messages, shipCoords, generalInfo, ionStorms)
+    RstFile(pointers, signature, subversion, winplanDataPosition,
+      leechPosition, ships, targets, planets, bases, messages,
+      shipCoords, generalInfo, mineFields, ionStorms)
   }
 
 }

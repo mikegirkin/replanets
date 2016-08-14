@@ -20,6 +20,9 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   val enemyShipColor = Color.Red
   val mixedShipsColor = Color.Yellow
 
+  val enemyMineFieldColor = Color.Purple
+  val ownMineFieldColor = Color.Aqua
+
   var scale = 0.4
   var offsetX = -350d
   var offsetY = -350d
@@ -158,6 +161,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     drawShips(gc)
     drawIonStorms(gc)
     drawSelectedCross(gc)
+    drawMineFields(gc)
+  }
+
+  private def drawMineFields(gc: GraphicsContext) = {
+    currentTurnServerData.mineFields.foreach { m =>
+      val color = if(m.owner == game.playingRace.value) ownMineFieldColor else enemyMineFieldColor
+      gc.setStroke(color)
+      val coords = canvasCoord(IntCoords(m.x, m.y))
+      val canvasRadius = m.radius * scale
+      gc.strokeCircle(coords, canvasRadius * 2)
+    }
+
   }
 
   private def drawSelectedCross(gc: GraphicsContext) = {
