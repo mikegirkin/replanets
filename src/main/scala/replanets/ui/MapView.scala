@@ -158,10 +158,10 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
     drawIonStorms(gc)
-    drawSelectedCross(gc)
     drawMineFields(gc)
     drawPlanets(gc)
     drawShips(gc)
+    drawSelectedCross(gc)
   }
 
   private def drawMineFields(gc: GraphicsContext) = {
@@ -232,6 +232,17 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       gc.setFill(ownShipColor)
       gc.fillCircle(coord, planetDiameter/2)
       drawMovementVector(coord, waypointCoord)(gc)
+    }
+
+    def enemyShipsNotOrbitingPlanet = game.turnSeverData(viewModel.turnShown).targets
+      .filter(ship => !game.map.planets.exists(p => p.x == ship.x && p.y == ship.y))
+
+    for(ship <- enemyShipsNotOrbitingPlanet) {
+      val coord = canvasCoord(Coords(ship.x, ship.y))
+      gc.setStroke(enemyShipColor)
+      gc.setFill(enemyShipColor)
+      gc.fillCircle(coord, planetDiameter/2)
+      drawMovementVector(coord, ship.heading, ship.warp)(gc)
     }
   }
 

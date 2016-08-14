@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{SpacePaddedString, WORD}
+import replanets.recipes.{DWORD, SpacePaddedString, WORD}
 
 /**
   * Created by mgirkin on 26/07/2016.
@@ -10,8 +10,8 @@ case class TargetRecord(
   shipId: Short,
   owner: Short,
   warp: Short,
-  xPosition: Short,
-  yPosition: Short,
+  x: Short,
+  y: Short,
   hullType: Short,
   heading: Short,
   name: String
@@ -32,8 +32,22 @@ object TargetReader {
     )
   }
 
-  def read(it: Iterator[Byte]): IndexedSeq[TargetRecord] = {
+  private def readDosRecords(rst: Array[Byte]): IndexedSeq[TargetRecord] = {
+    val pointer = DWORD.read(rst.slice(4, 8).iterator)
+    val it = rst.iterator.drop(pointer - 1)
     val recordNumber = WORD.read(it)
     for(i <- 0 until recordNumber) yield readTargetRecord(it)
+  }
+
+  private def readWinplanRecords(rst: Array[Byte]): IndexedSeq[TargetRecord] = {
+    val winplanPointer = DWORD.read(rst.iterator.slice(40, 44))
+    val it = rst.iterator.drop(winplanPointer - 1).drop(500 * 8 + 600 + 50 * 4 + 682 + 7800)
+    val signature = SpacePaddedString(4).read(it)
+    val numberOfRecords = DWORD.read(it)
+    (0 until numberOfRecords).map { idx => readTargetRecord(it) }
+  }
+
+  def readFromRst(rst: Array[Byte]): IndexedSeq[TargetRecord] = {
+    readDosRecords(rst) ++ readWinplanRecords(rst)
   }
 }
