@@ -157,11 +157,11 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     val gc = canvas.graphicsContext2D
 
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
-    drawPlanets(gc)
-    drawShips(gc)
     drawIonStorms(gc)
     drawSelectedCross(gc)
     drawMineFields(gc)
+    drawPlanets(gc)
+    drawShips(gc)
   }
 
   private def drawMineFields(gc: GraphicsContext) = {

@@ -35,31 +35,35 @@ case class BaseRecord(
 object BasesReader {
 
   val basesRecipe = RecordRecipe(
-    it => BaseRecord(
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      ArrayRecipe(9, WORD).read(it),
-      ArrayRecipe(20, WORD).read(it),
-      ArrayRecipe(10, WORD).read(it),
-      ArrayRecipe(10, WORD).read(it),
-      ArrayRecipe(10, WORD).read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it),
-      WORD.read(it)
-    )
+    it => {
+      val record = BaseRecord(
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        ArrayRecipe(9, WORD).read(it),
+        ArrayRecipe(20, WORD).read(it),
+        ArrayRecipe(10, WORD).read(it),
+        ArrayRecipe(10, WORD).read(it),
+        ArrayRecipe(10, WORD).read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it)
+      )
+      WORD.read(it)  //last value in the record should be ignored
+      record
+    }
   )
 
   def read(it: Iterator[Byte]): IndexedSeq[BaseRecord] = {
