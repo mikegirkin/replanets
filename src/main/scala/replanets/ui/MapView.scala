@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common.{Constants, IonStorm, ShipCoordsRecord, ShipRecord}
+import replanets.common._
 import replanets.model.{Game, Planet}
 import replanets.ui.viewmodels.ViewModel
 
@@ -15,6 +15,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   self: Node =>
 
   import GraphicContextExtensions._
+  import DoubleExtensions._
 
   val ownShipColor = Color.MediumPurple
   val enemyShipColor = Color.Red
@@ -205,25 +206,14 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
       gc.fillOval(coord.x - planetDiameter/2, coord.y - planetDiameter/2, planetDiameter, planetDiameter)
-
-      val orbitingShips = shipsOrbitingPlanet(planetCoords)
-      if(orbitingShips.nonEmpty) {
-        val color =
-          if(orbitingShips.forall(_.owner == game.playingRace.value)) ownShipColor
-          else if(orbitingShips.forall(_.owner == game.playingRace.value)) enemyShipColor
-          else mixedShipsColor
-        gc.setStroke(color)
-        gc.setLineWidth(shipCircleThickness)
-        gc.strokeOval(coord.x - shipCircleDiameter/2.0, coord.y - shipCircleDiameter/2.0, shipCircleDiameter, shipCircleDiameter)
-      }
     }
   }
 
   private def drawShips(gc: GraphicsContext) = {
     val shipCircleSize = planetDiameter / 2
 
-    def ownShipsNotOrbitingPlanet = game.turnSeverData(viewModel.turnShown).ships
-      .filter(sc => !game.map.planets.exists(p => p.x == sc.x && p.y == sc.y))
+    val (ownShipsOrbitingPlanet, ownShipsNotOrbitingPlanet) = game.turnSeverData(viewModel.turnShown).ships
+      .partition(sc => game.map.planets.exists(p => p.x == sc.x && p.y == sc.y))
 
     for (ship <- ownShipsNotOrbitingPlanet) {
       val coord = canvasCoord(Coords(ship.x, ship.y))
@@ -234,14 +224,37 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       drawMovementVector(coord, waypointCoord)(gc)
     }
 
-    def enemyShipsNotOrbitingPlanet = game.turnSeverData(viewModel.turnShown).targets
-      .filter(ship => !game.map.planets.exists(p => p.x == ship.x && p.y == ship.y))
+    val (enemyShipsOrbitingPlanet, enemyShipsNotOrbitingPlanet) = game.turnSeverData(viewModel.turnShown).targets
+        .partition(ship => game.map.planets.exists(p => p.x == ship.x && p.y == ship.y))
 
     for(ship <- enemyShipsNotOrbitingPlanet) {
       val coord = canvasCoord(Coords(ship.x, ship.y))
       gc.setStroke(enemyShipColor)
       gc.setFill(enemyShipColor)
       gc.fillCircle(coord, planetDiameter/2)
+      drawMovementVector(coord, ship.heading, ship.warp)(gc)
+    }
+
+    for(ship <- ownShipsOrbitingPlanet) {
+      val coord = canvasCoord(Coords(ship.x, ship.y))
+      val waypointCoord = canvasCoord(Coords(ship.x + ship.xDistanceToWaypoint, ship.y + ship.yDistanceToWaypoint))
+      if(enemyShipsOrbitingPlanet.exists(enemyShip => enemyShip.x == ship.x && enemyShip.y == ship.y))
+        gc.setStroke(mixedShipsColor)
+      else
+        gc.setStroke(ownShipColor)
+      gc.setLineWidth(shipCircleThickness)
+      gc.strokeCircle(coord, shipCircleDiameter)
+      drawMovementVector(coord, waypointCoord)(gc)
+    }
+
+    for(ship <- enemyShipsOrbitingPlanet) {
+      val coord = canvasCoord(Coords(ship.x, ship.y))
+      if(ownShipsOrbitingPlanet.exists(ownShip => ownShip.x == ship.x && ownShip.y == ship.y))
+        gc.setStroke(mixedShipsColor)
+      else
+        gc.setStroke(ownShipColor)
+      gc.setLineWidth(shipCircleThickness)
+      gc.strokeCircle(coord, shipCircleDiameter)
       drawMovementVector(coord, ship.heading, ship.warp)(gc)
     }
   }
@@ -271,13 +284,14 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     val dx = warp * warp * Math.sin(2 * Math.PI * heading / 360)
     val dy = warp * warp * Math.cos(2 * Math.PI * heading / 360)
     val endPoint = canvasCoord(mapCoords.shift(dx, dy))
-    drawMovementVector(startPoint, endPoint)(gc)
+    if(dx != 0 || dy != 0) drawMovementVector(startPoint, endPoint)(gc)
   }
 
   private def drawMovementVector(mapCoords: Coords, mapWaypoint: Coords)(gc: GraphicsContext): Unit = {
     gc.setStroke(Color.Purple)
     gc.setLineWidth(1)
-    gc.strokeLine(mapCoords.x, mapCoords.y, mapWaypoint.x, mapWaypoint.y)
+    if(!(mapCoords.x.almostEqual(mapWaypoint.x, 0.001) || !mapCoords.y.almostEqual(mapWaypoint.y, 0.001)))
+      gc.strokeLine(mapCoords.x, mapCoords.y, mapWaypoint.x, mapWaypoint.y)
   }
 
 }

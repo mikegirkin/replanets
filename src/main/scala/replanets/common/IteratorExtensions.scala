@@ -26,17 +26,3 @@ object IteratorExtensions {
     }
   }
 }
-
-object ByteExtensions {
-  implicit class ByteExt(val it: Byte) extends AnyVal {
-    def toUnsignedInt: Int =
-      it.toInt & 0x000000FF
-  }
-}
-
-object NumberExtensions {
-  implicit class NumberExt[T : Numeric](val it: T) {
-    def between(low: T, hi: T) =
-      if(implicitly[Numeric[T]].lteq(low, it) && implicitly[Numeric[T]].lteq(it, hi)) true else false
-  }
-}
