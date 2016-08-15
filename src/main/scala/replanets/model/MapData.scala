@@ -1,8 +1,10 @@
 package replanets.model
 
+import replanets.common.ObjectWithCoords
+
 case class Planet(
-	id: Int,
-	x: Int,
-	y: Int,
+	id: Short,
+	x: Short,
+	y: Short,
 	name: String
-)
+) extends ObjectWithCoords

@@ -22,7 +22,7 @@ object ClusterMap {
 			Constants.MapHeight,
 			Constants.MapWidth,
 			xyplanData.zipWithIndex.map { case (item, idx) => Planet(
-				idx + 1,
+				(idx + 1).toShort,
 				item.x,
 				item.y,
 				planetNames(idx).name
