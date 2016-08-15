@@ -76,8 +76,8 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   ))
 
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
-    showInfoAbout(selectedObject)
     showListInfoForPoint(selectedObject.coords)
+    showInfoAbout(selectedObject)
   }
 
   private def showInfoAbout(mapObject: MapObject) = {
@@ -104,6 +104,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   private def showInfoAboutPlanet(mapObject: MapObject) = {
     planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
     setDetailsView(Some(planetInfoView.rootPane))
+    objectListView.getSelectionModel.clearSelection()
   }
 
   private def showInfoAboutIonStorm(storm: IonStorm): Unit = {
@@ -114,6 +115,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
     baseInfoView.setData(mapObject.id)
     setDetailsView(Some(baseInfoView.rootPane))
+    objectListView.getSelectionModel.clearSelection()
   }
 
   private def setDetailsView(view: Option[Pane]): Unit = {
