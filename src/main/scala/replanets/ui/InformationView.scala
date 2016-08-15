@@ -26,8 +26,8 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   val mineFieldColor = Color.MediumPurple
 
   val objectDetailsView = new VBox {
-    minHeight = 550
-    maxHeight = 550
+    minHeight = 500
+    maxHeight = 500
   }
 
   val objectListView = new ListView[(MapObject, String)] {
@@ -121,7 +121,6 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   private def showInfoAboutPlanet(mapObject: MapObject) = {
     planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
     setDetailsView(Some(planetInfoView.rootPane))
-    objectListView.getSelectionModel.clearSelection()
   }
 
   private def showInfoAboutIonStorm(storm: IonStorm): Unit = {
@@ -132,7 +131,6 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
     baseInfoView.setData(mapObject.id)
     setDetailsView(Some(baseInfoView.rootPane))
-    objectListView.getSelectionModel.clearSelection()
   }
 
   private def setDetailsView(view: Option[Pane]): Unit = {

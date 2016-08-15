@@ -39,8 +39,21 @@ object MapObject {
     val contacts = game.turnSeverData(turn).targets
       .filter(t => t.coords == coords)
       .map(t => (MapObject(MapObjectType.Target, t.shipId, coords), t.name))
-    //bases
     //planets
+    val planets = game.map.planets
+      .find(p => p.coords == coords)
+      .map(p => (MapObject(MapObjectType.Planet, p.id, p.coords), s"Planet ${p.id} - ${p.name}"))
+      .toIndexedSeq
+    //bases
+    val bases = game.turnSeverData(turn).bases
+      .find(b => {
+        (for(
+          planet <- game.map.planets.find(_.id == b.baseId)
+        ) yield planet.coords == coords)
+          .getOrElse(false)
+      })
+      .map(b => (MapObject(MapObjectType.Base, b.baseId, coords), s"Starbase ${b.baseId}"))
+      .toIndexedSeq
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields
       .filter(mf => mf.coords == coords)
@@ -54,7 +67,7 @@ object MapObject {
       .filter(ex => ex.coords == coords)
       .map(ex => (MapObject(MapObjectType.Explosion, ex.id, coords), s"Explosion ${ex.id}"))
 
-    ships ++ contacts ++ mineFields ++ explosions ++ ionStorms
+    planets ++ bases ++ ships ++ contacts ++ mineFields ++ explosions ++ ionStorms
   }
 }
 
