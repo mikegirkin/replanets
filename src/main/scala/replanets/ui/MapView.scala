@@ -293,18 +293,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def drawMovementVector(mapCoords: Coords, heading: Int, warp: Int)(gc: GraphicsContext): Unit = {
-    val startPoint = canvasCoord(mapCoords)
     val dx = warp * warp * Math.sin(2 * Math.PI * heading / 360)
     val dy = warp * warp * Math.cos(2 * Math.PI * heading / 360)
-    val endPoint = canvasCoord(mapCoords.shift(dx, dy))
-    if(dx != 0 || dy != 0) drawMovementVector(startPoint, endPoint)(gc)
+    if(dx != 0 || dy != 0) drawMovementVector(mapCoords, Coords(mapCoords.x + dx, mapCoords.y + dy))(gc)
   }
 
   private def drawMovementVector(mapCoords: Coords, mapWaypoint: Coords)(gc: GraphicsContext): Unit = {
     gc.setStroke(Color.Purple)
     gc.setLineWidth(1)
-    if(!(mapCoords.x.almostEqual(mapWaypoint.x, 0.001) || !mapCoords.y.almostEqual(mapWaypoint.y, 0.001)))
-      gc.strokeLine(mapCoords.x, mapCoords.y, mapWaypoint.x, mapWaypoint.y)
+    val startPoint = canvasCoord(mapCoords)
+    val endPoint = canvasCoord(mapWaypoint)
+    if(!startPoint.x.almostEqual(endPoint.x, 0.001) || !startPoint.y.almostEqual(endPoint.y, 0.001))
+      gc.strokeLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y)
   }
 
 }
