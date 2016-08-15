@@ -12,9 +12,15 @@ case class Game(
   races: IndexedSeq[RacenmItem],
   map: ClusterMap,
   specs: Specs,
-  formulas: Formulas = THostFormulas
+  hostType: HostType
 ) {
   val turns: Map[TurnId, Map[RaceId, TurnInfo]] = gameDb.loadDb()
+  val formulas: Formulas = hostType match {
+    case THost => THostFormulas
+    case PHost3 | PHost4 => PHostFormulas
+  }
+
+  val missions = new Missions(playingRace, hostType)
 
   override def toString: String = {
     String.join(
@@ -61,7 +67,7 @@ object Game {
     val specs = Specs.fromDirectory(gameDirectory)
     val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
-    Game("Test game", gameDb, RaceId(gameDb.playingRace), races, map, specs)
+    Game("Test game", gameDb, RaceId(gameDb.playingRace), races, map, specs, THost)
   }
 }
 

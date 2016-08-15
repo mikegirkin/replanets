@@ -42,7 +42,9 @@ object THostFormulas extends Formulas{
   def fuelBurn(engSpecs:IndexedSeq[EngspecItem], engineId: OneBasedIndex, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int = {
     //TODO: This formula has to be validated
     //TODO: This formula is not completely adhere to THost calculation, ref http://www.phost.de/~stefan/fuelusage.html
-    val fuelUsage = engSpecs(engineId.value - 1).fuel(warp - 1)
+    val fuelUsage =
+      if (warp == 0) 0
+      else engSpecs(engineId.value - 1).fuel(warp - 1)
     val distance = Math.sqrt(dx * dx + dy * dy)
     val gf = if(isGravitonic) 2 else 1
     val way = warp * warp * gf

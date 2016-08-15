@@ -85,7 +85,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
-  val shipDetailsView = loadFxml[IShipDetailsView]("/ShipDetailsView.fxml", Map(
+  val shipDetailsView = loadFxml[IShipInfoView]("/ShipDetailsView.fxml", Map(
     typeOf[Game] -> game,
     typeOf[ViewModel] -> viewModel
   ))

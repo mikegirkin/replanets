@@ -10,13 +10,13 @@ import scalafxml.core.macros.sfxml
 /**
   * Created by mgirkin on 07/08/2016.
   */
-trait IShipDetailsView {
+trait IShipInfoView {
   def rootPane: Pane
   def setData(shipId: Int): Unit
 }
 
 @sfxml
-class ShipDetailsView(
+class ShipInfoView(
   val rootPane: Pane,
   val lblShipId: Label,
   val lblShipOwningRace: Label,
@@ -48,7 +48,7 @@ class ShipDetailsView(
 
   val game: Game,
   val viewModel: ViewModel
-) extends IShipDetailsView {
+) extends IShipInfoView {
 
   def setData(shipId: Int) = {
     lblShipId.text = shipId.toString
@@ -65,12 +65,12 @@ class ShipDetailsView(
       val fuelBurn = game.formulas.fuelBurn(
         game.specs.engineSpecs, ship.engineTypeId, ship.warp, ship.loadedMass,
         ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hullTypeId))
-      lblBurn.text = fuelBurn.toString //TODO: Formula for fuel burning
+      lblBurn.text = fuelBurn.toString
       lblMass.text = s"${hull.mass + ship.loadedMass}"
       lblFcode.text = ship.fcode
       lblCrew.text = s"${ship.crew} / ${hull.crewSize}"
       lblDamage.text = s"${ship.damage} %"
-      lblMission.text = s"${ship.mission}" //TODO: Ship mission maps
+      lblMission.text = game.missions.get(ship.mission)
       lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
       lblEquipEngines.text = game.specs.engineSpecs(ship.engineTypeId.value - 1).name
       lblEquipBeams.text = s"${ship.numberOfBeams} - ${game.specs.beamSpecs(ship.beamType).name}"

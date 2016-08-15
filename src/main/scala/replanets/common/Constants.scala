@@ -54,5 +54,16 @@ object Constants {
     4 -> "Dangerous",
     5 -> "Very dangerous"
   )
+
+  val baseMissions = Map[Int, String](
+    0 -> "none",
+    1 -> "Refuel",
+    2 -> "Max defence",
+    3 -> "Load torps or fighters",
+    4 -> "Unload freighters",
+    5 -> "Repair base",
+    6 -> "Force a surrender"
+  )
 }
+
 

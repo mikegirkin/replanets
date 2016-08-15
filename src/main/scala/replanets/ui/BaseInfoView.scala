@@ -1,5 +1,6 @@
 package replanets.ui
 
+import replanets.common.Constants
 import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
@@ -70,7 +71,7 @@ class BaseInfoView(
       lblDefense.text = b.defences.toString
       lblDamage.text = b.damage.toString
       lblFighters.text = b.fightersNumber.toString
-      lblPrimaryOrder.text = b.primaryOrder.toString
+      lblPrimaryOrder.text = Constants.baseMissions(b.primaryOrder)
       lblEngines.text = b.engineTech.toString
       lblHulls.text = b.hullsTech.toString
       lblBeams.text = b.beamTech.toString
