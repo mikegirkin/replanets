@@ -14,7 +14,7 @@ case class IonStorm(
   voltage: Short,
   warp: Short,
   heading: Short
-) {
+) extends ObjectWithCoords {
   def category = {
     if(voltage.between(1, 49)) 1
     else if (voltage.between(50, 99)) 2

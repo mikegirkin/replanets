@@ -44,10 +44,17 @@ object MapObject {
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields
       .filter(mf => mf.coords == coords)
-      .map(mf => (MapObject(MapObjectType.MineField, 0, coords), s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
+      .map(mf => (MapObject(MapObjectType.MineField, mf.id, coords), s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
     //ion storms
+    val ionStorms = game.turnSeverData(turn).ionStorms
+      .filter(is => is.coords == coords)
+      .map(is => (MapObject(MapObjectType.IonStorm, is.id, coords), s"Ion storm ${is.id}"))
     //explosions
-    ships ++ contacts ++ mineFields
+    val explosions = game.turnSeverData(turn).explosions
+      .filter(ex => ex.coords == coords)
+      .map(ex => (MapObject(MapObjectType.Explosion, ex.id, coords), s"Explosion ${ex.id}"))
+
+    ships ++ contacts ++ mineFields ++ explosions ++ ionStorms
   }
 }
 
