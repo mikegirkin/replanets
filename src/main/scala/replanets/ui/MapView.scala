@@ -162,6 +162,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     drawMineFields(gc)
     drawPlanets(gc)
     drawShips(gc)
+    drawExplosions(gc)
     drawSelectedCross(gc)
   }
 
@@ -276,6 +277,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val canvasRadius = s.radius * scale
       gc.strokeOval(crds.x - canvasRadius, crds.y - canvasRadius, canvasRadius * 2, canvasRadius * 2)
       drawMovementVector(mapCoords, s.heading, s.warp)(gc)
+    }
+  }
+
+  private def drawExplosions(gc: GraphicsContext) = {
+    val explosions = currentTurnServerData.explosions
+    for(e <- explosions) {
+      val coords = canvasCoord(Coords(e.x, e.y))
+      val size = planetDiameter / 2 + 1
+
+      gc.setStroke(ownShipColor)
+      gc.strokeLine(coords.x - size, coords.y - size, coords.x + size, coords.y + size)
+      gc.strokeLine(coords.x + size, coords.y - size, coords.x - size, coords.y + size)
     }
   }
 

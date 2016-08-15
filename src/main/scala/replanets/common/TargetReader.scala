@@ -43,6 +43,7 @@ object TargetReader {
     val winplanPointer = DWORD.read(rst.iterator.slice(40, 44))
     val it = rst.iterator.drop(winplanPointer - 1).drop(500 * 8 + 600 + 50 * 4 + 682 + 7800)
     val signature = SpacePaddedString(4).read(it)
+    assert(signature == "1211" || signature == "1120")
     val numberOfRecords = DWORD.read(it)
     (0 until numberOfRecords).map { idx => readTargetRecord(it) }
   }
