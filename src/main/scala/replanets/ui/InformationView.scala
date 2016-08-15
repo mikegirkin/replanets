@@ -10,6 +10,7 @@ import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.{Label, ListCell, ListView}
 import scalafx.scene.layout.{Pane, Priority, VBox}
+import scalafx.scene.paint.Color
 import scalafxml.core.{DependenciesByType, FXMLLoader}
 
 /**
@@ -18,6 +19,11 @@ import scalafxml.core.{DependenciesByType, FXMLLoader}
 class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extends VBox {
 
   styleClass = Seq("informationView")
+
+  val defaultColor = Color.LightGray
+  val ownShipColor = Color.Cyan
+  val enemyShipColor = Color.Red
+  val mineFieldColor = Color.MediumPurple
 
   val objectDetailsView = new VBox {
     minHeight = 550
@@ -33,7 +39,16 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
         styleClass = Seq("objectsListCell")
         item.onChange { (_, _, item) =>
           if(item == null) text = null
-          else text = item._2
+          else {
+            val color = item._1.objectType match {
+              case MapObjectType.Ship => ownShipColor
+              case MapObjectType.Target => enemyShipColor
+              case MapObjectType.MineField => mineFieldColor
+              case _ => defaultColor
+            }
+            textFill = color
+            text = item._2
+          }
         }
       }
     }

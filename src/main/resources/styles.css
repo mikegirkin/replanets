@@ -84,11 +84,6 @@ ListView ListCell {
     -fx-pref-height: 20;
 }
 
-.objectsListCell {
-    -fx-text-fill: #55ffff;
-    -fx-fill: #55ffff;
-}
-
 .objectsListCell:selected {
     -fx-background-color: #004d4d;
 }
