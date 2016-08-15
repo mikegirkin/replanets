@@ -91,9 +91,11 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     }
 
     //planets
-    val closestPlanet = game.map.planets.reduce(shortestDistanceReducer { p: Planet => IntCoords(p.x, p.y) })
+    val closestPlanet = game.map.planets.reduce(shortestDistanceReducer { p: Planet => p.coords })
     //ships
-    val closestShip = game.turnSeverData(viewModel.turnShown).ships.reduce(shortestDistanceReducer { s: ShipRecord => IntCoords(s.x, s.y) })
+    val closestShip = game.turnSeverData(viewModel.turnShown).ships.reduce(shortestDistanceReducer { s: ShipRecord => s.coords })
+    //contacts
+    val closestTarget = game.turnSeverData(viewModel.turnShown).targets.reduce(shortestDistanceReducer { s: TargetRecord => s.coords})
     //minefields
     //explosions
     //ionstroms
@@ -102,6 +104,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     Seq(
       MapObject(MapObjectType.Planet, closestPlanet.id, IntCoords(closestPlanet.x, closestPlanet.y)),
       MapObject(MapObjectType.Ship, closestShip.shipId, IntCoords(closestShip.x, closestShip.y)),
+      MapObject(MapObjectType.Target, closestTarget.shipId, IntCoords(closestTarget.x, closestTarget.y)),
       MapObject(MapObjectType.IonStorm, closestStorm.id, IntCoords(closestStorm.x, closestStorm.y))
     ).reduce((x1, x2) => if(distSqr(coords, x1.coords) <= distSqr(coords, x2.coords)) x1 else x2)
   }

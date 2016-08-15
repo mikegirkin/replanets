@@ -19,6 +19,7 @@ object MapObjectType {
   case object IonStorm extends MapObjectType
   case object MineField extends MapObjectType
   case object Explosion extends MapObjectType
+  case object Target extends MapObjectType
   case object Other extends MapObjectType
 }
 
@@ -34,6 +35,10 @@ object MapObject {
     val ships = game.turnSeverData(turn).ships
       .filter(ship => ship.coords == coords)
       .map(ship => (MapObject(MapObjectType.Ship, ship.shipId, coords), ship.name))
+    //targets
+    val contacts = game.turnSeverData(turn).targets
+      .filter(t => t.coords == coords)
+      .map(t => (MapObject(MapObjectType.Target, t.shipId, coords), t.name))
     //bases
     //planets
     //mine fields
@@ -42,7 +47,7 @@ object MapObject {
       .map(mf => (MapObject(MapObjectType.MineField, 0, coords), s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
     //ion storms
     //explosions
-    ships ++ mineFields
+    ships ++ contacts ++ mineFields
   }
 }
 

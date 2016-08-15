@@ -86,7 +86,9 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
       case MapObjectType.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
       case MapObjectType.Base => showInfoAboutBase(mapObject)
       case MapObjectType.Ship => showInfoAboutShip(mapObject.id)
-      case _ => children = Seq(Label("Not implemented yet"))
+      case _ => setDetailsView(Some(new VBox {
+        children = Seq(new Label("Not implemented yet"))
+      }))
     }
   }
 

@@ -15,7 +15,7 @@ case class TargetRecord(
   hullType: Short,
   heading: Short,
   name: String
-)
+) extends ObjectWithCoords
 
 
 object TargetReader {
