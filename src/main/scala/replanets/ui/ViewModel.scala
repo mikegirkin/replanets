@@ -18,6 +18,8 @@ object MapObjectType {
   case object Planet extends MapObjectType
   case object IonStorm extends MapObjectType
   case object MineField extends MapObjectType
+  case object Explosion extends MapObjectType
+  case object Other extends MapObjectType
 }
 
 case class MapObject(
@@ -27,16 +29,20 @@ case class MapObject(
 )
 
 object MapObject {
-  def findAtCoords(game: Game, turn: TurnId)(intCoords: IntCoords): IndexedSeq[(MapObject, String)] = {
+  def findAtCoords(game: Game, turn: TurnId)(coords: IntCoords): IndexedSeq[(MapObject, String)] = {
     //ships
     val ships = game.turnSeverData(turn).ships
-      .filter(ship => ship.x == intCoords.x && ship.y == intCoords.y)
-      .map(ship => (MapObject(MapObjectType.Ship, ship.shipId, intCoords), ship.name))
+      .filter(ship => ship.coords == coords)
+      .map(ship => (MapObject(MapObjectType.Ship, ship.shipId, coords), ship.name))
     //bases
     //planets
     //mine fields
+    val mineFields = game.turnSeverData(turn).mineFields
+      .filter(mf => mf.coords == coords)
+      .map(mf => (MapObject(MapObjectType.MineField, 0, coords), s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
     //ion storms
-    ships
+    //explosions
+    ships ++ mineFields
   }
 }
 

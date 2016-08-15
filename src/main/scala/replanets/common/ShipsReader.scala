@@ -45,7 +45,7 @@ case class ShipRecord(
   transferToEnemyShip: TransferRecord,
   secondMissionArgument: Short,
   money: Short
-) {
+) extends ObjectWithCoords {
   def loadedMass = neutronium + tritanium + duranium + molybdenium + colonistClans + supplies + torpsFightersLoaded
 }
 
