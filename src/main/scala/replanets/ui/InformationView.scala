@@ -100,6 +100,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
+  val minefieldInfoView = loadFxml[IMinefieldInfoView]("/MinefieldInfoView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
+
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showListInfoForPoint(selectedObject.coords)
     showInfoAbout(selectedObject)
@@ -112,6 +117,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
       case _ : MapObject.Starbase => showInfoAboutBase(mapObject)
       case _ : MapObject.OwnShip => showInfoAboutShip(mapObject.id)
       case _ : MapObject.Target => showInfoAboutShip(mapObject.id)
+      case _ : MapObject.Minefield => game.turnSeverData(viewModel.turnShown).mineFields.find(_.id == mapObject.id).foreach(showInfoAboutMinefield)
       case _ => setDetailsView(new VBox {
         children = Seq(new Label("Not implemented yet"))
       })
@@ -137,6 +143,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
         contactInfoView.setData(x)
         setDetailsView(contactInfoView.rootPane)
     }
+  }
+
+  private def showInfoAboutMinefield(mineField: MineFieldRecord) = {
+    minefieldInfoView.setData(mineField)
+    setDetailsView(minefieldInfoView.rootPane)
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {

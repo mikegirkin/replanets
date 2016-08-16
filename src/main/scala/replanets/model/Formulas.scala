@@ -7,6 +7,8 @@ import replanets.common.{EngspecItem, HullspecItem}
   */
 
 trait Formulas {
+  def minefieldUnitsNextTurn(units: Int): Int
+  def unitsInMinefieldByRadius(radius: Int): Int
   def mineHitDamage(hull: HullspecItem): Int
   def webHitDamage(hull: HullspecItem): Int
   def maxFactories(colonistClans: Int):Int

@@ -1,0 +1,30 @@
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<VBox fx:id="rootPane" styleClass="minefieldInfo" stylesheets="styles.css"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="replanets.ui.MinefieldInfoView">
+    <HBox>
+        <Label fx:id="lblRace" text="???" />
+        <Label text=" minefield " />
+        <Label fx:id="lblMinefieldId" text="???" />
+    </HBox>
+    <Label fx:id="lblTurnObserved" text="(now)" />
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40" halignment="RIGHT"/>
+            <ColumnConstraints percentWidth="60"/>
+        </columnConstraints>
+        <Label text="Center:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="lblCenter" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="Radius:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="lblRadius" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Units:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="lblUnits" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Units next turn:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="lblUnitsNextTurn" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+</VBox>

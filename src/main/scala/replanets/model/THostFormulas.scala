@@ -6,6 +6,16 @@ import replanets.common.{EngspecItem, HullspecItem}
   * Created by mgirkin on 06/08/2016.
   */
 object THostFormulas extends Formulas{
+  val minefieldDecayRatio = 5
+
+  def unitsInMinefieldByRadius(radius: Int): Int = {
+    radius * radius
+  }
+
+  override def minefieldUnitsNextTurn(units: Int): Int = {
+    (Math.round(units * (1.0 - minefieldDecayRatio/100.0)) - 1).toInt
+  }
+
   def mineHitDamage(hull: HullspecItem): Int = {
     val damage = Math.round(10000/(hull.mass + 1.0)).toInt
     if(damage > 100) 100 else damage

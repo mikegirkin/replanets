@@ -4,6 +4,10 @@ import replanets.common.{EngspecItem, HullspecItem}
 
 object PHostFormulas extends Formulas {
 
+  def unitsInMinefieldByRadius(radius: Int): Int = ???
+
+  override def minefieldUnitsNextTurn(units: Int): Int = ???
+
   override def mineHitDamage(hull: HullspecItem): Int = ???
 
   override def webHitDamage(hull: HullspecItem): Int = ???
