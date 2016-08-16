@@ -1,8 +1,13 @@
 package replanets.model
 
-import replanets.common.EngspecItem
+import replanets.common.{EngspecItem, HullspecItem}
 
 object PHostFormulas extends Formulas {
+
+  override def mineHitDamage(hull: HullspecItem): Int = ???
+
+  override def webHitDamage(hull: HullspecItem): Int = ???
+
   override def maxFactories(colonistClans: Int): Int = ???
 
   override def fuelBurn(engine: EngspecItem, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int = ???

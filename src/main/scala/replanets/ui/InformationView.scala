@@ -90,6 +90,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
+  val targetDetailsView = loadFxml[ITargetInfoView]("/TargetInfoView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
+
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showListInfoForPoint(selectedObject.coords)
     showInfoAbout(selectedObject)
@@ -101,6 +106,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
       case _ : MapObject.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
       case _ : MapObject.Starbase => showInfoAboutBase(mapObject)
       case _ : MapObject.OwnShip => showInfoAboutShip(mapObject.id)
+      case _ : MapObject.Target => showInfoAboutShip(mapObject.id)
       case _ => setDetailsView(Some(new VBox {
         children = Seq(new Label("Not implemented yet"))
       }))
@@ -120,6 +126,8 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
         shipDetailsView.setData(x)
         setDetailsView(Some(shipDetailsView.rootPane))
       case x: Target =>
+        targetDetailsView.setData(x)
+        setDetailsView(Some(targetDetailsView.rootPane))
       case x: Contact =>
     }
   }

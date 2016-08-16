@@ -1,12 +1,14 @@
 package replanets.model
 
-import replanets.common.EngspecItem
+import replanets.common.{EngspecItem, HullspecItem}
 
 /**
   * Created by mgirkin on 27/07/2016.
   */
 
 trait Formulas {
+  def mineHitDamage(hull: HullspecItem): Int
+  def webHitDamage(hull: HullspecItem): Int
   def maxFactories(colonistClans: Int):Int
   def maxMines(colonistClans: Int): Int
   def maxDefences(colonistClans: Int): Int

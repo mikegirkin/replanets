@@ -1,0 +1,45 @@
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<VBox fx:id="rootPane" styleClass="targetInfo" stylesheets="styles.css"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="replanets.ui.TargetInfoView">
+    <Label fx:id="lblShipId" text="???"/>
+    <Label fx:id="lblHull" text="???"/>
+    <Label fx:id="lblName" text="???"/>
+    <Label fx:id="lblCoords" text="???"/>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40" halignment="RIGHT"/>
+            <ColumnConstraints percentWidth="60"/>
+        </columnConstraints>
+        <children>
+            <Label text="Warp:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="lblWarp" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Ne+Cargo" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="lblLoadMass" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Mass:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label fx:id="lblFullMass" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Max crew:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Label fx:id="lblMaxCrew" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Mine hit:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <Label fx:id="lblMineHit" text="???" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Web hit:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <Label fx:id="lblWebHit" text="???" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Hull mass:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <Label fx:id="lblHullMass" text="???" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Engines:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <Label fx:id="lblEngineNumber" text="???" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            <Label text="Max beams:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <Label fx:id="lblBeamNumber" text="???" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+            <Label text="Max launchers:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <Label fx:id="lblLauncherNumber" text="???" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+            <Label text="Max cargo:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+            <Label fx:id="lblMaxCargo" text="???" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+            <Label text="Max fuel:" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+            <Label fx:id="lblMaxFuel" text="???" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        </children>
+    </GridPane>
+</VBox>

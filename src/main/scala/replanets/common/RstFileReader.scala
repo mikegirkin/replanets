@@ -109,7 +109,7 @@ object RstFileReader {
             tr.x,
             tr.y,
             sc.mass,
-            specs.hullSpecs(tr.hullType),
+            specs.hullSpecs(tr.hullType - 1),
             tr.heading,
             tr.name
           )
