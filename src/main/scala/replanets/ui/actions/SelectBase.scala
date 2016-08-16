@@ -2,7 +2,7 @@ package replanets.ui.actions
 
 import replanets.model.Game
 import replanets.ui.viewmodels.ViewModel
-import replanets.ui.{MapObject, MapObjectType}
+import replanets.ui.MapObject
 
 class SelectBase(
   game: Game,
@@ -14,7 +14,7 @@ class SelectBase(
       planet <- game.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y);
       base <- game.turnSeverData(viewModel.turnShown).bases.find(b => b.baseId == planet.id)
     ) {
-      if(base.owner == game.playingRace.value) viewModel.selectedObject = Some(MapObject(MapObjectType.Base, base.baseId, so.coords))
+      if(base.owner == game.playingRace.value) viewModel.selectedObject = Some(MapObject.forStarbase(game)(base))
     }
   }
 }

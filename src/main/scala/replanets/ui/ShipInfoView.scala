@@ -1,6 +1,7 @@
 package replanets.ui
 
-import replanets.model.{Formulas, Game}
+import replanets.common.OwnShip
+import replanets.model.Game
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.scene.control.Label
@@ -12,7 +13,7 @@ import scalafxml.core.macros.sfxml
   */
 trait IShipInfoView {
   def rootPane: Pane
-  def setData(shipId: Int): Unit
+  def setData(ship: OwnShip): Unit
 }
 
 @sfxml
@@ -50,40 +51,36 @@ class ShipInfoView(
   val viewModel: ViewModel
 ) extends IShipInfoView {
 
-  def setData(shipId: Int) = {
-    lblShipId.text = shipId.toString
-    val shipRecord = game.turnSeverData(viewModel.turnShown).ships.find(_.shipId == shipId)
-    shipRecord.foreach { ship =>
-      val hull = game.specs.hullSpecs(ship.hullTypeId - 1)
-      lblShipOwningRace.text = game.races(ship.ownerId - 1).shortname
-      lblShipName.text = ship.name
-      lblHullName.text = hull.name
-      lblShipCoords.text = s"(${ship.x}, ${ship.y})"
-      lblDestination.text = s"(${ship.x + ship.xDistanceToWaypoint}, ${ship.y + ship.yDistanceToWaypoint})"
-      lblWarp.text = ship.warp.toString
-      lblFuel.text = s"${ship.neutronium} / ${hull.fuelTankSize}"
-      val fuelBurn = game.formulas.fuelBurn(
-        game.specs.engineSpecs, ship.engineTypeId, ship.warp, ship.loadedMass,
-        ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hullTypeId))
-      lblBurn.text = fuelBurn.toString
-      lblMass.text = s"${hull.mass + ship.loadedMass}"
-      lblFcode.text = ship.fcode
-      lblCrew.text = s"${ship.crew} / ${hull.crewSize}"
-      lblDamage.text = s"${ship.damage} %"
-      lblMission.text = game.missions.get(ship.mission)
-      lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
-      lblEquipEngines.text = game.specs.engineSpecs(ship.engineTypeId.value - 1).name
-      lblEquipBeams.text = s"${ship.numberOfBeams} - ${game.specs.beamSpecs(ship.beamType).name}"
-      lblEquipLaunchers.text = s"${ship.numberOfTorpLaunchers} - ${game.specs.torpSpecs(ship.torpsType).name}"
-      lblCargo.text = ship.loadedMass.toString
-      lblNeu.text = ship.neutronium.toString
-      lblTri.text = ship.tritanium.toString
-      lblDur.text = ship.duranium.toString
-      lblMol.text = ship.molybdenium.toString
-      lblSupplies.text = ship.supplies.toString
-      lblClans.text = ship.colonistClans.toString
-      lblMoney.text = ship.money.toString
-      lblTorps.text = ship.torpsFightersLoaded.toString
-    }
+  def setData(ship: OwnShip) = {
+    lblShipId.text = ship.id.value.toString
+    lblShipOwningRace.text = game.races(ship.owner.value - 1).shortname
+    lblShipName.text = ship.name
+    lblHullName.text = ship.hull.name
+    lblShipCoords.text = s"(${ship.x}, ${ship.y})"
+    lblDestination.text = s"(${ship.x + ship.xDistanceToWaypoint}, ${ship.y + ship.yDistanceToWaypoint})"
+    lblWarp.text = ship.warp.toString
+    lblFuel.text = s"${ship.minerals.neutronium} / ${ship.hull.fuelTankSize}"
+    val fuelBurn = game.formulas.fuelBurn(
+      ship.engines, ship.warp, ship.fullMass,
+      ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hull.id))
+    lblBurn.text = fuelBurn.toString
+    lblMass.text = s"${ship.fullMass}"
+    lblFcode.text = ship.fcode
+    lblCrew.text = s"${ship.crew} / ${ship.hull.crewSize}"
+    lblDamage.text = s"${ship.damage} %"
+    lblMission.text = game.missions.get(ship.mission)
+    lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
+    lblEquipEngines.text = ship.engines.name
+    lblEquipBeams.text = ship.beams.map { b => s"${ship.numberOfBeams} - ${b.name}" }.getOrElse("")
+    lblEquipLaunchers.text = ship.torpsType.map { tt => s"${ship.numberOfTorpLaunchers} - ${tt.name}" }.getOrElse("")
+    lblCargo.text = ship.cargoMass.toString
+    lblNeu.text = ship.minerals.neutronium.toString
+    lblTri.text = ship.minerals.tritanium.toString
+    lblDur.text = ship.minerals.duranium.toString
+    lblMol.text = ship.minerals.molybdenium.toString
+    lblSupplies.text = ship.supplies.toString
+    lblClans.text = ship.colonistClans.toString
+    lblMoney.text = ship.money.toString
+    lblTorps.text = ship.torpsFightersLoaded.toString
   }
 }

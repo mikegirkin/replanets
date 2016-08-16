@@ -6,11 +6,11 @@ import replanets.common.{Fcode, RaceId, TurnId}
   * Created by mgirkin on 09/08/2016.
   */
 trait ObjectId {
-  val id: Int
+  val value: Int
 }
-case class PlanetId(id: Int) extends ObjectId
-case class ShipId(id: Int) extends ObjectId
-case class BaseId(id: Int) extends ObjectId
+case class PlanetId(value: Int) extends ObjectId
+case class ShipId(value: Int) extends ObjectId
+case class BaseId(value: Int) extends ObjectId
 
 trait PlayerCommand {
   def objectId: ObjectId
@@ -42,7 +42,7 @@ case class SetPlanetFcode(
       turn <- game.turns.get(turn);
       raceTurn <- turn.get(race);
       rst = raceTurn.rst;
-      planet <- rst.planets.find(_.planetId == objectId.id)
+      planet <- rst.planets.find(_.planetId == objectId.value)
     ) yield planet.fcode.value != newFcode.value
     changed.getOrElse(false)
   }

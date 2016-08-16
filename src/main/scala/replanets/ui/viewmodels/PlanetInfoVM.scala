@@ -14,7 +14,7 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: Int) {
 
   def fcode: Fcode = {
     commands.find {
-      case SetPlanetFcode(pId, newFcode) if pId.id == planetId => true
+      case SetPlanetFcode(pId, newFcode) if pId.value == planetId => true
       case _ => false
     }.map {
       case SetPlanetFcode(pId, newFcode) => newFcode

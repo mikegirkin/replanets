@@ -20,9 +20,12 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   val ownShipColor = Color.MediumPurple
   val enemyShipColor = Color.Red
   val mixedShipsColor = Color.Yellow
+  val contactShipColor = Color.OrangeRed
 
   val enemyMineFieldColor = Color.Purple
   val ownMineFieldColor = Color.Aqua
+
+  val unscannedPlanetColor = Color.LightGray
 
   var scale = 0.4
   var offsetX = -350d
@@ -93,19 +96,16 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     //planets
     val closestPlanet = game.map.planets.reduce(shortestDistanceReducer { p: Planet => p.coords })
     //ships
-    val closestShip = game.turnSeverData(viewModel.turnShown).ships.reduce(shortestDistanceReducer { s: ShipRecord => s.coords })
-    //contacts
-    val closestTarget = game.turnSeverData(viewModel.turnShown).targets.reduce(shortestDistanceReducer { s: TargetRecord => s.coords})
+    val closestShip = game.turnSeverData(viewModel.turnShown).ships.values.reduce(shortestDistanceReducer[Ship] { s => s.coords })
     //minefields
     //explosions
     //ionstroms
-    val closestStorm = currentTurnServerData.ionStorms.reduce(shortestDistanceReducer { s: IonStorm => IntCoords(s.x, s.y)})
+    val closestStorm = currentTurnServerData.ionStorms.reduce(shortestDistanceReducer { s: IonStorm => s.coords })
 
     Seq(
-      MapObject(MapObjectType.Planet, closestPlanet.id, IntCoords(closestPlanet.x, closestPlanet.y)),
-      MapObject(MapObjectType.Ship, closestShip.shipId, IntCoords(closestShip.x, closestShip.y)),
-      MapObject(MapObjectType.Target, closestTarget.shipId, IntCoords(closestTarget.x, closestTarget.y)),
-      MapObject(MapObjectType.IonStorm, closestStorm.id, IntCoords(closestStorm.x, closestStorm.y))
+      MapObject.forPlanet(closestPlanet),
+      MapObject.forShip(closestShip),
+      MapObject.forIonStorm(closestStorm)
     ).reduce((x1, x2) => if(distSqr(coords, x1.coords) <= distSqr(coords, x2.coords)) x1 else x2)
   }
 
@@ -163,8 +163,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     gc.clearRect(0, 0, width.toDouble, height.toDouble)
     drawIonStorms(gc)
     drawMineFields(gc)
-    drawPlanets(gc)
     drawShips(gc)
+    drawPlanets(gc)
     drawExplosions(gc)
     drawSelectedCross(gc)
   }
@@ -192,15 +192,11 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
   private def drawPlanets(gc: GraphicsContext) = {
     def planetColor(owner: Option[Int], hasBase: Boolean): Color = {
-      owner.fold(Color.Wheat)( ow =>
+      owner.fold(unscannedPlanetColor)( ow =>
         if(ow == game.playingRace.value)  if(hasBase) Color.Aqua else Color.Green
         else if(hasBase) Color.Red else Color.OrangeRed
       )
     }
-
-    def shipsOrbitingPlanet(planetCoords: Coords): Seq[ShipCoordsRecord] =
-      currentTurnServerData.shipCoords
-        .filter(sc => sc.x == planetCoords.x && sc.y == planetCoords.y)
 
     (0 until 500).foreach { idx =>
       val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
@@ -216,50 +212,59 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def drawShips(gc: GraphicsContext) = {
     val shipCircleSize = planetDiameter / 2
 
-    val (ownShipsOrbitingPlanet, ownShipsNotOrbitingPlanet) = game.turnSeverData(viewModel.turnShown).ships
-      .partition(sc => game.map.planets.exists(p => p.x == sc.x && p.y == sc.y))
+    val ships = game.turnSeverData(viewModel.turnShown).ships
 
-    for (ship <- ownShipsNotOrbitingPlanet) {
-      val coord = canvasCoord(Coords(ship.x, ship.y))
-      val waypointCoord = canvasCoord(Coords(ship.x + ship.xDistanceToWaypoint, ship.y + ship.yDistanceToWaypoint))
-      gc.setStroke(ownShipColor)
-      gc.setFill(ownShipColor)
-      gc.fillCircle(coord, planetDiameter/2)
-      drawMovementVector(coord, waypointCoord)(gc)
+    val shipsByCoords = ships.values.groupBy(_.coords)
+
+    shipsByCoords.foreach { case (coords, localShips) =>
+      if(game.map.planets.exists(_.coords == coords)) {
+        drawLocalShipsOrbitingPlanet(coords, localShips.toSeq)
+      } else {
+        drawLocalShipsNotOrbitingPlanet(coords, localShips.toSeq)
+      }
     }
 
-    val (enemyShipsOrbitingPlanet, enemyShipsNotOrbitingPlanet) = game.turnSeverData(viewModel.turnShown).targets
-        .partition(ship => game.map.planets.exists(p => p.x == ship.x && p.y == ship.y))
-
-    for(ship <- enemyShipsNotOrbitingPlanet) {
-      val coord = canvasCoord(Coords(ship.x, ship.y))
-      gc.setStroke(enemyShipColor)
-      gc.setFill(enemyShipColor)
-      gc.fillCircle(coord, planetDiameter/2)
-      drawMovementVector(coord, ship.heading, ship.warp)(gc)
+    def drawLocalShipsOrbitingPlanet(coords: IntCoords, ships: Seq[Ship]) = {
+      val beginCoords = canvasCoord(coords)
+      for(
+        ship <- ships;
+        destination <- ship.plannedDestination
+      ) {
+        val destinationCoords = canvasCoord(destination)
+        gc.setStroke(getColor(ship))
+        gc.strokeLine(beginCoords.x, beginCoords.y, destinationCoords.x, destinationCoords.y)
+      }
+      gc.setStroke(getColor(ships:_*))
+      gc.strokeCircle(beginCoords, shipCircleDiameter)
     }
 
-    for(ship <- ownShipsOrbitingPlanet) {
-      val coord = canvasCoord(Coords(ship.x, ship.y))
-      val waypointCoord = canvasCoord(Coords(ship.x + ship.xDistanceToWaypoint, ship.y + ship.yDistanceToWaypoint))
-      if(enemyShipsOrbitingPlanet.exists(enemyShip => enemyShip.x == ship.x && enemyShip.y == ship.y))
-        gc.setStroke(mixedShipsColor)
-      else
-        gc.setStroke(ownShipColor)
-      gc.setLineWidth(shipCircleThickness)
-      gc.strokeCircle(coord, shipCircleDiameter)
-      drawMovementVector(coord, waypointCoord)(gc)
+    def drawLocalShipsNotOrbitingPlanet(coords: IntCoords, ships: Seq[Ship]) = {
+      val beginCoords = canvasCoord(coords)
+      for(
+        ship <- ships;
+        destination <- ship.plannedDestination
+      ) {
+        val destinationCoords = canvasCoord(destination)
+        gc.setStroke(getColor(ship))
+        gc.strokeLine(beginCoords.x, beginCoords.y, destinationCoords.x, destinationCoords.y)
+      }
+      val color = getColor(ships:_*)
+      gc.setStroke(color)
+      gc.setFill(color)
+      gc.fillCircle(beginCoords, planetDiameter/2)
     }
 
-    for(ship <- enemyShipsOrbitingPlanet) {
-      val coord = canvasCoord(Coords(ship.x, ship.y))
-      if(ownShipsOrbitingPlanet.exists(ownShip => ownShip.x == ship.x && ownShip.y == ship.y))
-        gc.setStroke(mixedShipsColor)
-      else
-        gc.setStroke(ownShipColor)
-      gc.setLineWidth(shipCircleThickness)
-      gc.strokeCircle(coord, shipCircleDiameter)
-      drawMovementVector(coord, ship.heading, ship.warp)(gc)
+    def getColor(localShips: Ship*) = {
+      def colorOf(ship: Ship) = {
+        ship match {
+          case _: OwnShip => ownShipColor
+          case _: Target => enemyShipColor
+          case _: Contact => contactShipColor
+        }
+      }
+      localShips.map{ s => colorOf(s) }.reduce((c1, c2) => {
+        if(c1 == c2) c1 else mixedShipsColor
+      })
     }
   }
 

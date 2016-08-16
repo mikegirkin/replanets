@@ -5,7 +5,7 @@ import java.nio.file.{Files, Path}
 import replanets.model.JsonUtils._
 import play.api.libs.json.Json._
 import play.api.libs.json._
-import replanets.model.{PlayerCommand, TurnInfo}
+import replanets.model.{PlayerCommand, Specs, TurnInfo}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
@@ -22,8 +22,8 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
 
   if(!Files.exists(dbDirectoryPath)) Files.createDirectory(dbDirectoryPath)
 
-  def loadDb(): Map[TurnId, Map[RaceId, TurnInfo]] = {
-    val rsts = loadRsts()
+  def loadDb(specs: Specs): Map[TurnId, Map[RaceId, TurnInfo]] = {
+    val rsts = loadRsts(specs)
 
     val result = rsts.map {
       case (turn, race, rst) => (turn, race, rst, loadCommands(turn, race))
@@ -42,7 +42,7 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
     result
   }
 
-  def loadRsts(): Iterable[(Int, Int, RstFile)] = {
+  def loadRsts(specs: Specs): Iterable[(Int, Int, ServerData)] = {
     val fileListInDb = Files.newDirectoryStream(dbDirectoryPath)
     fileListInDb.filter(f => Files.isDirectory(f))
       .flatMap { turnDirectory =>
@@ -50,7 +50,7 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
       filesInTurnDirectory.filter { file =>
         file.getFileName.toString.toLowerCase.endsWith("rst")
       }.map { file =>
-        val rst = RstFileReader.read(file)
+        val rst = RstFileReader.read(file, specs)
         (rst.generalInfo.turnNumber.toInt, rst.generalInfo.playerId.toInt, rst)
       }
     }
@@ -74,8 +74,8 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
   def importRstFile(rstFile: Path): Boolean = {
     if(!Files.exists(rstFile)) false
     else {
-      val rst= RstFileReader.read(rstFile)
-      val turnNumber = rst.generalInfo.turnNumber
+      val rst= RstFileReader.readGeneralInfo(rstFile)
+      val turnNumber = rst.turnNumber
       val turnDurectoryPath = dbDirectoryPath.resolve(turnNumber.toString)
       val rstFileName = turnDurectoryPath.resolve(rstFile.getFileName.toString.toLowerCase())
       val dbRstFilePath = turnDurectoryPath.resolve(rstFileName)

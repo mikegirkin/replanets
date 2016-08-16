@@ -94,7 +94,7 @@ class TrnWriter(game: Game) {
   }
 
   private def generateCommandsSection(commands: Iterable[PlayerCommand]): Iterable[Iterable[Byte]] = {
-    val changedPlanetIds = commands.map(_.objectId).filter(_.isInstanceOf[PlanetId]).map(_.id).toSeq.distinct
+    val changedPlanetIds = commands.map(_.objectId).filter(_.isInstanceOf[PlanetId]).map(_.value).toSeq.distinct
 
     for (
       planetId <- changedPlanetIds;

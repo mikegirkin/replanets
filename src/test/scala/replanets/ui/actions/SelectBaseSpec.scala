@@ -3,10 +3,10 @@ package replanets.ui.actions
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
-import replanets.common.{BaseRecord, RaceId, RstFile, TurnId}
+import replanets.common.{BaseRecord, RaceId, ServerData, TurnId}
 import replanets.model.{ClusterMap, Game, Planet, TurnInfo}
 import replanets.ui.viewmodels.ViewModel
-import replanets.ui.{MapObject, MapObjectType}
+import replanets.ui.MapObject
 
 import scala.collection.mutable
 
@@ -20,7 +20,7 @@ class SelectBaseSpec extends WordSpec with Matchers with MockitoSugar {
     when(base.baseId).thenReturn(planet.id)
     when(base.owner).thenReturn(playingRace)
 
-    val rst = mock[RstFile]
+    val rst = mock[ServerData]
     when(rst.bases).thenReturn(IndexedSeq(base))
 
     val game = mock[Game]
@@ -34,12 +34,12 @@ class SelectBaseSpec extends WordSpec with Matchers with MockitoSugar {
 
     val viewModel = ViewModel(
       TurnId(turnNumber),
-      Some(MapObject(MapObjectType.Planet, planet.id, planet.coords))
+      Some(MapObject.forPlanet(planet))
     )
 
     val action = new SelectBase(game, viewModel)
     action.execute()
 
-    viewModel.selectedObject should be  (Some(MapObject(MapObjectType.Base, base.baseId, planet.coords)))
+    viewModel.selectedObject should be (Some(MapObject.forStarbase(game)(base)))
   }
 }

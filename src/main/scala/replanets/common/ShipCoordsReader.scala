@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.recipes.{ArrayRecipe, RecordRecipe, WORD}
+import replanets.recipes.WORD
 
 case class ShipCoordsRecord(
   id: Int,
@@ -8,14 +8,18 @@ case class ShipCoordsRecord(
   y: Short,
   owner: Short,
   mass: Short
-)
+) extends ObjectWithCoords
 
 object ShipCoordsReader {
   def read(it: Iterator[Byte]): IndexedSeq[ShipCoordsRecord] = {
-    ArrayRecipe(500, RecordRecipe(WORD, WORD, WORD, WORD){ case (x, y, owner, mass) => (x, y, owner, mass)})
-      .read(it)
-      .filter { case (x, y, owner, mass) => x!=0 && y!=0 }
-      .zipWithIndex
-      .map { case ((x, y, owner, mass), idx) => ShipCoordsRecord(idx + 1, x, y, owner, mass) }
+    (1 to 500).map { idx =>
+      ShipCoordsRecord(
+        idx,
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it)
+      )
+    }.filter { scr => scr.x != 0 && scr.y != 0 }
   }
 }

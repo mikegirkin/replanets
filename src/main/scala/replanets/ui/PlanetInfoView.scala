@@ -67,7 +67,7 @@ class PlanetInfoView(
   val commands: Actions
 ) extends IPlanetInfoView {
 
-  viewModel.objectChanged += { case (mapObjectType, objectId) => handleObjectChanged(mapObjectType, objectId) }
+  viewModel.objectChanged += { mapObject => handleObjectChanged(mapObject) }
 
   override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
     pnNatives.visible = false
@@ -129,9 +129,9 @@ class PlanetInfoView(
     }
   }
 
-  private def handleObjectChanged(mapObjectType: MapObjectType, objectId: Int): Unit = {
-    mapObjectType match {
-      case MapObjectType.Planet => setPlanet(viewModel.turnShown, objectId)
+  private def handleObjectChanged(mapObject: MapObject): Unit = {
+    mapObject match {
+      case MapObject.Planet(id, coords, displayName) => setPlanet(viewModel.turnShown, id)
       case _ =>
     }
   }

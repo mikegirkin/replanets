@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.TurnId
-import replanets.model.Game
+import replanets.common._
+import replanets.model.{Game, PlanetId}
 
 case class Coords(x: Double, y: Double) {
   def shift(dx: Double, dy: Double) = {
@@ -9,40 +9,54 @@ case class Coords(x: Double, y: Double) {
   }
 }
 
-case class IntCoords(x: Int, y: Int)
-
-sealed trait MapObjectType {}
-object MapObjectType {
-  case object Ship extends MapObjectType
-  case object Base extends MapObjectType
-  case object Planet extends MapObjectType
-  case object IonStorm extends MapObjectType
-  case object MineField extends MapObjectType
-  case object Explosion extends MapObjectType
-  case object Target extends MapObjectType
-  case object Other extends MapObjectType
+trait MapObject {
+  val id: Int
+  val coords: IntCoords
+  val displayName: String
 }
 
-case class MapObject(
-  objectType: MapObjectType,
-  id: Int,
-  coords: IntCoords
-)
-
 object MapObject {
-  def findAtCoords(game: Game, turn: TurnId)(coords: IntCoords): IndexedSeq[(MapObject, String)] = {
+
+  case class OwnShip(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Target(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Contact(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Planet(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Starbase(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Minefield(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Explosion(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class IonStorm(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Other(id: Int, coords: IntCoords, displayName: String) extends MapObject
+
+  def forShip(ship: Ship): MapObject = {
+    ship match {
+      case x: replanets.common.OwnShip => MapObject.OwnShip(ship.id.value, ship.coords, x.name)
+      case x: replanets.common.Target => MapObject.Target(ship.id.value, ship.coords, x.hull.name)
+      case x: replanets.common.Contact => MapObject.Contact(ship.id.value, ship.coords, s"Ship ${ship.id}")
+    }
+  }
+
+  def forStarbase(game: Game)(base: BaseRecord): MapObject = {
+    val coords = game.map.planets.find(p => p.id == base.baseId).get.coords
+    MapObject.Starbase(base.baseId, coords, s"Starbase ${base.baseId}")
+  }
+
+  def forPlanet(planet: replanets.model.Planet) = {
+    MapObject.Planet(planet.id, planet.coords, planet.name)
+  }
+
+  def forIonStorm(storm: replanets.common.IonStorm) = {
+    MapObject.IonStorm(storm.id, storm.coords, s"Ion storm ${storm.id}")
+  }
+
+  def findAtCoords(game: Game, turn: TurnId)(coords: IntCoords): IndexedSeq[MapObject] = {
     //ships
-    val ships = game.turnSeverData(turn).ships
+    val ships = game.turnSeverData(turn).ships.values
       .filter(ship => ship.coords == coords)
-      .map(ship => (MapObject(MapObjectType.Ship, ship.shipId, coords), ship.name))
-    //targets
-    val contacts = game.turnSeverData(turn).targets
-      .filter(t => t.coords == coords)
-      .map(t => (MapObject(MapObjectType.Target, t.shipId, coords), t.name))
+      .map { ship => forShip(ship) }
     //planets
     val planets = game.map.planets
       .find(p => p.coords == coords)
-      .map(p => (MapObject(MapObjectType.Planet, p.id, p.coords), s"Planet ${p.id} - ${p.name}"))
+      .map(p => forPlanet(p))
       .toIndexedSeq
     //bases
     val bases = game.turnSeverData(turn).bases
@@ -52,22 +66,22 @@ object MapObject {
         ) yield planet.coords == coords)
           .getOrElse(false)
       })
-      .map(b => (MapObject(MapObjectType.Base, b.baseId, coords), s"Starbase ${b.baseId}"))
+      .map(b => MapObject.forStarbase(game)(b))
       .toIndexedSeq
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields
       .filter(mf => mf.coords == coords)
-      .map(mf => (MapObject(MapObjectType.MineField, mf.id, coords), s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
+      .map(mf => MapObject.Minefield(mf.id, coords, s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
     //ion storms
     val ionStorms = game.turnSeverData(turn).ionStorms
       .filter(is => is.coords == coords)
-      .map(is => (MapObject(MapObjectType.IonStorm, is.id, coords), s"Ion storm ${is.id}"))
+      .map(is => MapObject.forIonStorm(is))
     //explosions
     val explosions = game.turnSeverData(turn).explosions
       .filter(ex => ex.coords == coords)
-      .map(ex => (MapObject(MapObjectType.Explosion, ex.id, coords), s"Explosion ${ex.id}"))
+      .map(ex => MapObject.Explosion(ex.id, coords, s"Explosion ${ex.id}"))
 
-    planets ++ bases ++ ships ++ contacts ++ mineFields ++ explosions ++ ionStorms
+    planets ++ bases ++ ships ++ mineFields ++ explosions ++ ionStorms
   }
 }
 

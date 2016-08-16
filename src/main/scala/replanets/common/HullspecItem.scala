@@ -1,10 +1,11 @@
 package replanets.common
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
 import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
 
 case class HullspecItem(
+  id: Int,
   name: String,
   pictureNumber: Short,
   damagedShipPictureNumber: Short,
@@ -27,25 +28,32 @@ object HullspecItem {
 
   val nameLength = 30
 
-  val recipe = RecordRecipe(
-    SpacePaddedString(nameLength),
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD
-  )(HullspecItem.apply)
+  def read(idx: Int, it: Iterator[Byte]) = {
+    HullspecItem(
+      idx,
+      SpacePaddedString(nameLength).read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it)
+    )
+  }
 
-  def fromFile(file: Path): IndexedSeq[HullspecItem] =
-    recipe.readFromFile(file, Constants.HullsInHullspec)
+  def fromFile(file: Path): IndexedSeq[HullspecItem] = {
+    val it = Files.readAllBytes(file).iterator
+    (1 to Constants.HullsInHullspec).map { idx =>
+      read(idx, it)
+    }
+  }
 }

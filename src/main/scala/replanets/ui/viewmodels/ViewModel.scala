@@ -1,7 +1,7 @@
 package replanets.ui.viewmodels
 
 import replanets.common.TurnId
-import replanets.ui.{Event, MapObject, MapObjectType}
+import replanets.ui.{Event, MapObject}
 
 /**
   * Created by mgirkin on 09/08/2016.
@@ -20,5 +20,5 @@ case class ViewModel (
 
   val selectedObjectChaged = Event[Unit]
 
-  val objectChanged = Event[(MapObjectType, Int)]
+  val objectChanged = Event[MapObject]
 }

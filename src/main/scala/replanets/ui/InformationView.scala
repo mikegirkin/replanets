@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.IonStorm
-import replanets.model.Game
+import replanets.common._
+import replanets.model.{Game, ShipId}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -30,30 +30,30 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     maxHeight = 500
   }
 
-  val objectListView = new ListView[(MapObject, String)] {
+  val objectListView = new ListView[MapObject] {
     maxHeight = Double.MaxValue
     minHeight = 100
     vgrow = Priority.Always
     cellFactory = { _ =>
-      new ListCell[(MapObject, String)] {
+      new ListCell[MapObject] {
         styleClass = Seq("objectsListCell")
         item.onChange { (_, _, item) =>
           if(item == null) text = null
           else {
-            val color = item._1.objectType match {
-              case MapObjectType.Ship => ownShipColor
-              case MapObjectType.Target => enemyShipColor
-              case MapObjectType.MineField => mineFieldColor
+            val color = item match {
+              case _ : MapObject.OwnShip => ownShipColor
+              case _ : MapObject.Target => enemyShipColor
+              case _ : MapObject.Minefield => mineFieldColor
               case _ => defaultColor
             }
             textFill = color
-            text = item._2
+            text = item.displayName
           }
         }
       }
     }
     selectionModel().selectedItem.onChange { (mo, _, _) =>
-      if(mo.value != null) viewModel.selectedObject = Some(mo.value._1)
+      if(mo.value != null) viewModel.selectedObject = Some(mo.value)
     }
   }
 
@@ -96,11 +96,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   }
 
   private def showInfoAbout(mapObject: MapObject) = {
-    mapObject.objectType match {
-      case MapObjectType.Planet => showInfoAboutPlanet(mapObject)
-      case MapObjectType.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
-      case MapObjectType.Base => showInfoAboutBase(mapObject)
-      case MapObjectType.Ship => showInfoAboutShip(mapObject.id)
+    mapObject match {
+      case _ : MapObject.Planet => showInfoAboutPlanet(mapObject)
+      case _ : MapObject.IonStorm => game.turnSeverData(viewModel.turnShown).ionStorms.find(_.id == mapObject.id).foreach(showInfoAboutIonStorm)
+      case _ : MapObject.Starbase => showInfoAboutBase(mapObject)
+      case _ : MapObject.OwnShip => showInfoAboutShip(mapObject.id)
       case _ => setDetailsView(Some(new VBox {
         children = Seq(new Label("Not implemented yet"))
       }))
@@ -109,13 +109,19 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
 
   def showListInfoForPoint(coords: IntCoords): Unit = {
     val items = MapObject.findAtCoords(game, viewModel.turnShown)(coords)
-    val viewItems = ObservableBuffer[(MapObject, String)](items)
+    val viewItems = ObservableBuffer[MapObject](items)
     objectListView.items = viewItems
   }
 
   private def showInfoAboutShip(shipId: Int) = {
-    shipDetailsView.setData(shipId)
-    setDetailsView(Some(shipDetailsView.rootPane))
+    val ship = game.turnSeverData(viewModel.turnShown).ships(ShipId(shipId))
+    ship match {
+      case x: OwnShip =>
+        shipDetailsView.setData(x)
+        setDetailsView(Some(shipDetailsView.rootPane))
+      case x: Target =>
+      case x: Contact =>
+    }
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {

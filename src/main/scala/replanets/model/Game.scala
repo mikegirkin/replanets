@@ -14,7 +14,8 @@ case class Game(
   specs: Specs,
   hostType: HostType
 ) {
-  val turns: Map[TurnId, Map[RaceId, TurnInfo]] = gameDb.loadDb()
+  val turns: Map[TurnId, Map[RaceId, TurnInfo]] = gameDb.loadDb(specs)
+
   val formulas: Formulas = hostType match {
     case THost => THostFormulas
     case PHost3 | PHost4 => PHostFormulas
