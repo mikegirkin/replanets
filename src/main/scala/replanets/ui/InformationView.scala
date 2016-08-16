@@ -85,12 +85,17 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
-  val shipDetailsView = loadFxml[IShipInfoView]("/ShipDetailsView.fxml", Map(
+  val shipInfoView = loadFxml[IShipInfoView]("/ShipDetailsView.fxml", Map(
     typeOf[Game] -> game,
     typeOf[ViewModel] -> viewModel
   ))
 
-  val targetDetailsView = loadFxml[ITargetInfoView]("/TargetInfoView.fxml", Map(
+  val targetInfoView = loadFxml[ITargetInfoView]("/TargetInfoView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
+
+  val contactInfoView = loadFxml[IContactInfoView]("/ContactInfoView.fxml", Map(
     typeOf[Game] -> game,
     typeOf[ViewModel] -> viewModel
   ))
@@ -107,9 +112,9 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
       case _ : MapObject.Starbase => showInfoAboutBase(mapObject)
       case _ : MapObject.OwnShip => showInfoAboutShip(mapObject.id)
       case _ : MapObject.Target => showInfoAboutShip(mapObject.id)
-      case _ => setDetailsView(Some(new VBox {
+      case _ => setDetailsView(new VBox {
         children = Seq(new Label("Not implemented yet"))
-      }))
+      })
     }
   }
 
@@ -123,32 +128,34 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     val ship = game.turnSeverData(viewModel.turnShown).ships(ShipId(shipId))
     ship match {
       case x: OwnShip =>
-        shipDetailsView.setData(x)
-        setDetailsView(Some(shipDetailsView.rootPane))
+        shipInfoView.setData(x)
+        setDetailsView(shipInfoView.rootPane)
       case x: Target =>
-        targetDetailsView.setData(x)
-        setDetailsView(Some(targetDetailsView.rootPane))
+        targetInfoView.setData(x)
+        setDetailsView(targetInfoView.rootPane)
       case x: Contact =>
+        contactInfoView.setData(x)
+        setDetailsView(contactInfoView.rootPane)
     }
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {
     planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
-    setDetailsView(Some(planetInfoView.rootPane))
+    setDetailsView(planetInfoView.rootPane)
   }
 
   private def showInfoAboutIonStorm(storm: IonStorm): Unit = {
     ionStormInfoView.setData(storm)
-    setDetailsView(Some(ionStormInfoView.rootPane))
+    setDetailsView(ionStormInfoView.rootPane)
   }
 
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
     baseInfoView.setData(mapObject.id)
-    setDetailsView(Some(baseInfoView.rootPane))
+    setDetailsView(baseInfoView.rootPane)
   }
 
-  private def setDetailsView(view: Option[Pane]): Unit = {
-    objectDetailsView.children = view.toSeq
+  private def setDetailsView(view: Pane): Unit = {
+    objectDetailsView.children = view
   }
 
 }
