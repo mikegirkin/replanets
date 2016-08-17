@@ -1,0 +1,13 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+
+<VBox fx:id="rootPane" styleClass="explosionInfoView" stylesheets="styles.css"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="replanets.ui.ExplosionInfoView">
+    <HBox>
+        <Label text="Explosion "/>
+        <Label fx:id="lblExplosionId" text="???"/>
+    </HBox>
+    <Label fx:id="lblCoords" text="???"/>
+</VBox>

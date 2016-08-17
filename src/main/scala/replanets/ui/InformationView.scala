@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common._
+import replanets.common.{ExplosionRecord, _}
 import replanets.model.{Game, ShipId}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
@@ -105,6 +105,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
+  val explosionInfoView = loadFxml[IExplosionInfoView]("/ExplosionInfoView.fxml", Map(
+    typeOf[Game] -> game,
+    typeOf[ViewModel] -> viewModel
+  ))
+
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showListInfoForPoint(selectedObject.coords)
     showInfoAbout(selectedObject)
@@ -118,6 +123,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
       case _ : MapObject.OwnShip => showInfoAboutShip(mapObject.id)
       case _ : MapObject.Target => showInfoAboutShip(mapObject.id)
       case _ : MapObject.Minefield => game.turnSeverData(viewModel.turnShown).mineFields.find(_.id == mapObject.id).foreach(showInfoAboutMinefield)
+      case _ : MapObject.Explosion => game.turnSeverData(viewModel.turnShown).explosions.find(_.id == mapObject.id).foreach(showInfoAboutExplosion)
       case _ => setDetailsView(new VBox {
         children = Seq(new Label("Not implemented yet"))
       })
@@ -165,8 +171,15 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     setDetailsView(baseInfoView.rootPane)
   }
 
+  def showInfoAboutExplosion(explosionRecord: ExplosionRecord): Unit = {
+    explosionInfoView.setData(explosionRecord)
+    setDetailsView(explosionInfoView.rootPane)
+  }
+
   private def setDetailsView(view: Pane): Unit = {
     objectDetailsView.children = view
   }
+
+
 
 }
