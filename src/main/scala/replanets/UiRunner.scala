@@ -1,5 +1,8 @@
 package replanets
 
+import java.io.File
+
+import com.typesafe.config.ConfigFactory
 import java.nio.file._
 
 import replanets.common.GameDatabase
@@ -10,9 +13,13 @@ import replanets.ui.viewmodels.ViewModel
 import scala.collection.JavaConversions._
 import scalafx.application.JFXApp
 
+
 object UiRunner extends JFXApp {
   val raceNumber = parameters.unnamed(0).toInt
   val gameDirectory = parameters.unnamed(1)
+
+  val conf = ConfigFactory.parseFile(new File("config/replanets.conf"))
+  val loglevel = conf.getString("loglevel")
 
   println(s"Starting for race $raceNumber in game directory $gameDirectory")
   val gamePath: Path = Paths.get(gameDirectory)
@@ -24,6 +31,7 @@ object UiRunner extends JFXApp {
     val result = gameDb.importRstFile(file)
     if(result) Files.delete(file)
   }
+
 
   val game = Game(absolutePath)(gameDb)
 

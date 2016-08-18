@@ -76,7 +76,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       if(e.button == MouseButton.Primary && e.isStillSincePress) {
         val coords = mapCoords(e.x, e.y)
         val closestObject = closestObjectTo(IntCoords(Math.round(coords.x).toInt, Math.round(coords.y).toInt))
-        selectMapObject(closestObject)
+        val objectsAtPoint = MapObject.findAtCoords(game, viewModel.turnShown)(closestObject.coords)
+        selectMapObject(objectsAtPoint(0))
       }
     }
   }

@@ -9,6 +9,7 @@ import scala.reflect.runtime.universe._
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.{Label, ListCell, ListView}
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{Pane, Priority, VBox}
 import scalafx.scene.paint.Color
 import scalafxml.core.{DependenciesByType, FXMLLoader}
@@ -50,10 +51,10 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
             text = item.displayName
           }
         }
+        onMouseClicked = (e: MouseEvent) => {
+          viewModel.selectedObject = Some(this.item.delegate.get())
+        }
       }
-    }
-    selectionModel().selectedItem.onChange { (mo, _, _) =>
-      if(mo.value != null) viewModel.selectedObject = Some(mo.value)
     }
   }
 
@@ -112,6 +113,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
 
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showListInfoForPoint(selectedObject.coords)
+    objectListView.selectionModel.delegate.get().select(selectedObject)
     showInfoAbout(selectedObject)
   }
 
