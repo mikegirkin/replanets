@@ -1,9 +1,8 @@
 package replanets.model
 
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.Path
 
 import replanets.common._
-import replanets.model.Specs.getClass
 
 case class Specs(
   beamSpecs: IndexedSeq[BeamspecItem],
@@ -15,6 +14,11 @@ case class Specs(
   def getHull(raceId: Int, raceHullIdx: Int): HullspecItem = {
     val hullId = raceHulls.getRaceHullIds(raceId)(raceHullIdx)
     hullSpecs(hullId)
+  }
+
+  def getRaceHulls(race: RaceId): IndexedSeq[HullspecItem] = {
+    val hullIndexes = raceHulls.getRaceHullIds(race.value - 1)
+    hullSpecs.filter(h => hullIndexes.contains(h.id))
   }
 
   def isGravitonic(hullId: Int): Boolean = {

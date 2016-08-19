@@ -103,8 +103,6 @@ ListView ListCell {
     -fx-border-width: 0 0 0 3;
     -fx-border-color: gray;
     -fx-padding: 3;
-    -fx-min-width: 300;
-    -fx-min-height: 700;
 }
 
 .complexLabel {
@@ -119,4 +117,13 @@ ListView ListCell {
     -fx-font-weight: bold;
     -fx-underline: true;
     -fx-fill: white;
+}
+
+.buildShipView {
+    -fx-background-color: black;
+}
+
+.buildShipView Label {
+    -fx-text-fill: darkgray;
+    -fx-fill: darkgray;
 }

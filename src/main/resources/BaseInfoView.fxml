@@ -79,7 +79,7 @@
             <ColumnConstraints percentWidth="50" fillWidth="true"/>
         </columnConstraints>
         <children>
-            <Button styleClass="gridButton">
+            <Button styleClass="gridButton" onAction="#handleBuildShipButton">
                 <graphic>
                     <TextFlow>
                         <Text text="B" styleClass="actionSymbol"/>
@@ -122,8 +122,8 @@
             </Button>
         </children>
     </GridPane>
-    <HBox alignment="CENTER_RIGHT">
-        <Button styleClass="commandButton" onAction="#handlePlanetButton">
+    <HBox>
+        <Button styleClass="commandButton" alignment="CENTER_LEFT" onAction="#handlePlanetButton">
             <graphic>
                 <TextFlow>
                     <Text text="P" styleClass="actionSymbol"/>

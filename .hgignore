@@ -1,6 +1,0 @@
-syntax: glob
-project/target
-target
-.idea
-REG.KEY
-*.trn

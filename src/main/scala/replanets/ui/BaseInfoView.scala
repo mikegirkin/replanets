@@ -101,4 +101,6 @@ class BaseInfoView(
   }
 
   def handlePlanetButton(e: ActionEvent) = actions.selectPlanet.execute()
+
+  def handleBuildShipButton(e: ActionEvent) = actions.showBuildShipView()
 }

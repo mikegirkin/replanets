@@ -48,7 +48,7 @@ object TargetReader {
     (0 until numberOfRecords).map { idx => readTargetRecord(it) }
   }
 
-  def readFromRst(rst: Array[Byte]): IndexedSeq[TargetRecord] = {
-    readDosRecords(rst) ++ readWinplanRecords(rst)
+  def readFromRst(rst: Array[Byte], isWinplan: Boolean): IndexedSeq[TargetRecord] = {
+    readDosRecords(rst) ++ (if(isWinplan) readWinplanRecords(rst) else Seq())
   }
 }

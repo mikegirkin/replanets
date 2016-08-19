@@ -12,12 +12,9 @@ import scalafx.scene.control.{Label, ListCell, ListView}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{Pane, Priority, VBox}
 import scalafx.scene.paint.Color
-import scalafxml.core.{DependenciesByType, FXMLLoader}
 
-/**
-  * Created by mgirkin on 04/08/2016.
-  */
 class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extends VBox {
+  import FXmlHelper._
 
   styleClass = Seq("informationView")
 
@@ -27,8 +24,8 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   val mineFieldColor = Color.MediumPurple
 
   val objectDetailsView = new VBox {
-    minHeight = 500
-    maxHeight = 500
+    minHeight = 400
+    //maxHeight = 400
   }
 
   val objectListView = new ListView[MapObject] {
@@ -63,14 +60,6 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     objectListView
   )
 
-  private def loadFxml[TController](resouce: String, dependencies: Map[Type, Any] = Map()): TController = {
-    val loader = new FXMLLoader(
-      getClass.getResource(resouce),
-      new DependenciesByType(dependencies)
-    )
-    loader.load()
-    loader.getController[TController]
-  }
 
   val ionStormInfoView = loadFxml[IIonStormInformationView]("/IonStormInfoView.fxml")
 

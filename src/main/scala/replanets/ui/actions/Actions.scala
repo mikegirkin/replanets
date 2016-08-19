@@ -6,5 +6,6 @@ package replanets.ui.actions
 class Actions(
   val selectStarbase: SelectBase,
   val selectPlanet: SelectPlanet,
-  val setFcode: SetFcode
+  val setFcode: SetFcode,
+  val showBuildShipView: () => Unit
 )

@@ -1,0 +1,17 @@
+Init = Default
+
+Hull = 93
+Function = 6
+RacesAllowed = +
+
+Hull = 48
+Function = 16
+RacesAllowed = - +3
+
+Hull = 80
+Function = 10
+RacesAllowed = - +9
+
+Hull = 102
+Function = 13
+RacesAllowed = - +11

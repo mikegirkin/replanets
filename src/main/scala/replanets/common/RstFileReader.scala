@@ -6,7 +6,7 @@ import replanets.model.{ShipId, Specs}
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class ServerData(
-  signature: String,
+  isWinplan: Boolean,
   subversion: String,
 
   ships: Map[ShipId, Ship],
@@ -32,12 +32,13 @@ object RstFileReader {
 
     val pointers = DWORD.readSome(it, 8)
     val signature = SpacePaddedString(6).read(it)
+    val isWinplan = signature == "VER3.5"
     val subversion = SpacePaddedString(2).read(it)
     val winplanDataPosition = DWORD.read(it)
     val leechPosition = DWORD.read(it)
 
     val shipRecords = ShipsReader.read(buffer.iterator.drop(pointers(0) - 1))
-    val targets = TargetReader.readFromRst(buffer)
+    val targets = TargetReader.readFromRst(buffer, isWinplan)
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
     val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
@@ -52,7 +53,7 @@ object RstFileReader {
 
     val ships = buildShipsMap(specs, shipRecords, targets, shipCoords)
 
-    ServerData(signature, subversion, ships, planets, bases, messages, generalInfo, mineFields, ionStorms, explosions)
+    ServerData(isWinplan, subversion, ships, planets, bases, messages, generalInfo, mineFields, ionStorms, explosions)
   }
 
   def readGeneralInfo(file: Path) = {
