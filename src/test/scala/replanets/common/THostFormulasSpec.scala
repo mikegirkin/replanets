@@ -12,5 +12,13 @@ class THostFormulasSpec extends WordSpec with Matchers {
     erndDiv(15, 2) should be(8)
     erndDiv(13, 2) should be(6)
   }
+
+  "correctly calculates tech level upgrade costs" in {
+
+    techUpgradeCost(1, 10) should be (4500)
+    techUpgradeCost(9, 10) should be (1700)
+    techUpgradeCost(8, 10) should be (2400)
+    techUpgradeCost(10, 4) should be (0)
+  }
 }
 

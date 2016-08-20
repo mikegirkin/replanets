@@ -78,4 +78,5 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
     beams(9).name should be ("Heavy Phaser")
     beams(9).cost.money should be (54)
   }
+
 }

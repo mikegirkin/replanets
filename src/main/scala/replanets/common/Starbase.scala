@@ -1,5 +1,7 @@
 package replanets.common
 
+import replanets.model.THostFormulas
+
 case class ShipCost(
   hullCost: Cost,
   enginesCost: Cost,
@@ -50,11 +52,23 @@ case class Starbase(
     numberOfLaunchers: Int): ShipCost = {
 
     val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) == 0) Cost.zero else hullspec.cost
-    val enginesToBuild = hullspec.enginesNumber - storedEngines(engspec.id.value - 1) match {
-      case x if x < 0 => 0
-      case x => x
-    }
+    val enginesToBuild = lowerLimit(hullspec.enginesNumber - storedEngines(engspec.id.value - 1), 0)
+    val enginesCost = engspec.cost.mul(enginesToBuild)
+    val beamsToBuild = lowerLimit(numberOfBeams - storedBeams(beamspec.id.value - 1), 0)
+    val beamsCost = beamspec.cost.mul(beamsToBuild)
+    val launchersToBuild = lowerLimit(numberOfLaunchers - storedLaunchers(torpspec.id.value - 1), 0)
+    val launcherCost = torpspec.launcherCost.mul(launchersToBuild)
 
-    ???
+    val techCost =
+      THostFormulas.techUpgradeCost(hullsTech, hullspec.techLevel) +
+      THostFormulas.techUpgradeCost(engineTech, engspec.techLevel) +
+      THostFormulas.techUpgradeCost(beamTech, beamspec.techLevel) +
+      THostFormulas.techUpgradeCost(torpedoTech, torpspec.techLevel)
+
+    ShipCost(hullCost, enginesCost, beamsCost, launcherCost, Cost(0, 0, 0, techCost))
+  }
+
+  private def lowerLimit(number: Int, limit: Int): Int = {
+    if(number<limit) limit else number
   }
 }
