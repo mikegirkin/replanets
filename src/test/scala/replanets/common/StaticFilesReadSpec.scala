@@ -61,8 +61,20 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
     val engines = EngspecItem.fromFile(Paths.get(filename))
 
+    engines(8).id should be (EngineId(9))
     engines(8).techLevel should be (10)
     engines(8).name should be ("Transwarp Drive")
     engines(8).cost.money should be (300)
+  }
+
+  "beamspec reader should read data correclty" in {
+    val filename = getResourceFilename("/beamspec.dat")
+
+    val beams = BeamspecItem.fromFile(Paths.get(filename))
+
+    beams(9).id should be (BeamId(10))
+    beams(9).techLevel should be (10)
+    beams(9).name should be ("Heavy Phaser")
+    beams(9).cost.money should be (54)
   }
 }

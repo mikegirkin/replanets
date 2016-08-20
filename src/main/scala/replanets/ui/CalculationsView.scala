@@ -120,10 +120,10 @@ class CalculationsView(
 
     val beam = selectedBeams.value
     val beamNumber = hull.maxBeamWeapons
-    lblBeamsMoneyCost.text = (beam.moneyCost * beamNumber).toString
-    lblBeamsTriCost.text = (beam.triCost * beamNumber).toString
-    lblBeamsDurCost.text = (beam.durCost * beamNumber).toString
-    lblBeamsMolCost.text = (beam.molCost * beamNumber).toString
+    lblBeamsMoneyCost.text = (beam.cost.money * beamNumber).toString
+    lblBeamsTriCost.text = (beam.cost.tri * beamNumber).toString
+    lblBeamsDurCost.text = (beam.cost.dur * beamNumber).toString
+    lblBeamsMolCost.text = (beam.cost.mol * beamNumber).toString
 
     val torps = selectedLaunchers.value
     val torpNumber = hull.maxTorpedoLaunchers

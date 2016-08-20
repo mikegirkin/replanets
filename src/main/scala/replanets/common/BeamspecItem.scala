@@ -1,15 +1,13 @@
 package replanets.common
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
-import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
+import replanets.recipes._
 
 case class BeamspecItem(
+  id: BeamId,
   name: String,
-  moneyCost: Short,
-  triCost: Short,
-  durCost: Short,
-  molCost: Short,
+  cost: Cost,
   mass: Short,
   techLevel: Short,
   killValue: Short,
@@ -19,19 +17,24 @@ case class BeamspecItem(
 object BeamspecItem {
   
   val beamNameLength = 20
-  val recipe = RecordRecipe(
-    SpacePaddedString(beamNameLength),
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD
-  )(BeamspecItem.apply)
 
   def fromFile(file: Path): IndexedSeq[BeamspecItem] = {
-    recipe.readFromFile(file, Constants.BeamsInBeamspec)
+    val it = Files.readAllBytes(file).iterator
+    (1 to Constants.BeamsInBeamspec).map { idx =>
+      BeamspecItem(
+        BeamId(idx),
+        SpacePaddedString(beamNameLength).read(it),
+        Cost(
+          money = WORD.read(it),
+          tri = WORD.read(it),
+          dur = WORD.read(it),
+          mol = WORD.read(it)
+        ),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it)
+      )
+    }
   }
 }
