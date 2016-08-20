@@ -5,19 +5,19 @@ package replanets.common
   */
 class ImpossibleOneBasedIndex(value: Int) extends Exception
 
-class OneBasedIndex(
-  val value: Int) {
-  if(!OneBasedIndex.isValidValue(value)) throw new ImpossibleOneBasedIndex(value)
+trait OneBasedIndex {
+  val value: Int
+  if (!OneBasedIndex.isValidValue(value)) throw new ImpossibleOneBasedIndex(value)
 }
 
 object OneBasedIndex {
   def isValidValue(value: Int) = value > 0
-
-  def tryConvert(value: Int) = if(isValidValue(value)) Some(OneBasedIndex(value))
-  else None
-
-  def apply(value: Int): OneBasedIndex = new OneBasedIndex(value)
 }
 
-case class RaceId(override val value: Int) extends OneBasedIndex(value)
-case class TurnId(override val value: Int) extends OneBasedIndex(value)
+case class Id(value: Int) extends OneBasedIndex
+case class HullId(value: Int) extends OneBasedIndex
+case class EngineId(value: Int) extends OneBasedIndex
+case class RaceId(value: Int) extends OneBasedIndex
+case class TurnId(value: Int) extends OneBasedIndex
+case class PlanetId(value: Int) extends OneBasedIndex
+case class ShipId(value: Int) extends OneBasedIndex

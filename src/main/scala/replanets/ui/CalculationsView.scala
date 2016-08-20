@@ -106,10 +106,10 @@ class CalculationsView(
 
   private def renewData(): Unit = {
     val hull = selectedHull.value
-    lblHullMoneyCost.text = hull.moneyCost.toString
-    lblHullTriCost.text = hull.triCost.toString
-    lblHullDurCost.text = hull.durCost.toString
-    lblHullMolCost.text = hull.molCost.toString
+    lblHullMoneyCost.text = hull.cost.money.toString
+    lblHullTriCost.text = hull.cost.tri.toString
+    lblHullDurCost.text = hull.cost.dur.toString
+    lblHullMolCost.text = hull.cost.mol.toString
 
     val engine = selectedEngines.value
     val engineNumber = hull.enginesNumber

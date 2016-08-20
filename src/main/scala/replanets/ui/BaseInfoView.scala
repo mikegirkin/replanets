@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.Constants
-import replanets.model.{Game, PlanetId}
+import replanets.common.{Constants, PlanetId}
+import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -78,7 +78,7 @@ class BaseInfoView(
 
     val hulls = base.storedHulls
       .toSeq
-      .map{ case (hullId, hullCount) => (hullCount, game.specs.hullSpecs(hullId).name) } //TODO: Check if stored hulls are correctly calculated
+      .map{ case (hullId, hullCount) => (hullCount, game.specs.hullSpecs(hullId.value - 1).name) } //TODO: Check if stored hulls are correctly calculated
 
     val beams = base.storedBeams.zipWithIndex
       .filter { case (beamCount, idx) => beamCount > 0 }

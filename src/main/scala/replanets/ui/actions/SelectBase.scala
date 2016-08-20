@@ -1,6 +1,7 @@
 package replanets.ui.actions
 
-import replanets.model.{Game, PlanetId}
+import replanets.common.PlanetId
+import replanets.model.Game
 import replanets.ui.viewmodels.ViewModel
 import replanets.ui.MapObject
 

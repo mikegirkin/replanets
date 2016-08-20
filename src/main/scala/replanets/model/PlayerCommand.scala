@@ -1,18 +1,9 @@
 package replanets.model
 
-import replanets.common.{Fcode, RaceId, TurnId}
-
-/**
-  * Created by mgirkin on 09/08/2016.
-  */
-trait ObjectId {
-  val value: Int
-}
-case class PlanetId(value: Int) extends ObjectId
-case class ShipId(value: Int) extends ObjectId
+import replanets.common._
 
 trait PlayerCommand {
-  def objectId: ObjectId
+  def objectId: OneBasedIndex
   def isReplacableBy(other: PlayerCommand): Boolean
   def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean
 }

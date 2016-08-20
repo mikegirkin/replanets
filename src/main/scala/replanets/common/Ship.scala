@@ -1,7 +1,5 @@
 package replanets.common
 
-import replanets.model.ShipId
-
 sealed trait Ship extends ObjectWithCoords {
   val id: ShipId
   val x: Short

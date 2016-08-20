@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, PlanetId}
+import replanets.model.{Game}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -59,7 +59,7 @@ class BuildShipView(
     _.techLevel,
     _.name,
     _.hullsTech,
-    (b, hull, _) => b.storedHulls.getOrElse(hull.id.toShort, 0.toShort).toInt
+    (b, hull, _) => b.storedHulls.getOrElse(hull.id, 0.toShort).toInt
   ) {
     styleClass.append("hullList")
   }

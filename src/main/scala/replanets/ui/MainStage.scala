@@ -1,6 +1,7 @@
 package replanets.ui
 
-import replanets.model.{Game, PlanetId}
+import replanets.common.PlanetId
+import replanets.model.Game
 import replanets.ui.actions.{Actions, SelectBase, SelectPlanet, SetFcode}
 import replanets.ui.viewmodels.{CurrentView, ViewModel}
 

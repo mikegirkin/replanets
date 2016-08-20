@@ -1,7 +1,7 @@
 package replanets.common
 
 import org.scalatest.{Matchers, WordSpec}
-import replanets.model.{PlanetId, SetPlanetFcode, SetShipFcode, ShipId}
+import replanets.model.{SetPlanetFcode, SetShipFcode}
 
 /**
   * Created by mgirkin on 09/08/2016.

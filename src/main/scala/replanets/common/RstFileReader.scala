@@ -2,7 +2,7 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.{PlanetId, ShipId, Specs}
+import replanets.model.Specs
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class ServerData(
@@ -41,7 +41,7 @@ object RstFileReader {
     val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1)).map { br =>
       val storedHulls = br.storedHulls.zipWithIndex
         .filter { case (numberStored, index) => numberStored != 0 }
-        .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id.toShort, numberStored) }
+        .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id, numberStored) }
         .toMap
       PlanetId(br.baseId) -> Starbase(PlanetId(br.baseId), planets.find(p => p.planetId == br.baseId).get, RaceId(br.owner),
         br.defences, br.damage, br.engineTech, br.hullsTech, br.beamTech, br.torpedoTech,

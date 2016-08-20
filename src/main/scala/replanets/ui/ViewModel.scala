@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, PlanetId}
+import replanets.model.{Game}
 
 case class Coords(x: Double, y: Double) {
   def shift(dx: Double, dy: Double) = {

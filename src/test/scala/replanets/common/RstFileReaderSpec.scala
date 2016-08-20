@@ -3,7 +3,7 @@ package replanets.common
 import java.nio.file.Paths
 
 import org.scalatest.{Matchers, WordSpec}
-import replanets.model.{PlanetId, Specs}
+import replanets.model.Specs
 
 class RstFileReaderSpec extends WordSpec with Matchers {
   "Reading bases" should {
@@ -15,8 +15,6 @@ class RstFileReaderSpec extends WordSpec with Matchers {
 
       val base = rst.bases(PlanetId(16))
       val klingonHulls = specs.getRaceHulls(RaceId(4))
-
-      val a = 0
 
       val hulls = klingonHulls.map {
         _.name
@@ -40,7 +38,9 @@ class RstFileReaderSpec extends WordSpec with Matchers {
       hulls(16) should be("NEUTRONIC REFINERY SHIP")
       hulls(17) should be("MERLIN CLASS ALCHEMY SHIP")
 
-      pending
+      base.storedHulls(HullId(14)) should be (1)
+      base.storedHulls(HullId(15)) should be (1)
+      base.storedHulls(HullId(104)) should be (1)
     }
   }
 }

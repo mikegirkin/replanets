@@ -73,7 +73,7 @@ object ShipsReader {
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
-      OneBasedIndex(WORD.read(it)),
+      Id(WORD.read(it)),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),

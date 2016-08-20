@@ -1,7 +1,5 @@
 package replanets.common
 
-import replanets.model.PlanetId
-
 case class ShipCost(
   hullCost: Cost,
   enginesCost: Cost,
@@ -27,8 +25,8 @@ case class Starbase(
   /***
     * hullspec.id => number stored
     */
-  storedHulls: Map[Int, Short],
-  storedBeams: IndexedSeq[Int],
+  storedHulls: Map[HullId, Short],
+  storedBeams: IndexedSeq[Short],
   storedLaunchers: IndexedSeq[Short],
   storedTorpedoes: IndexedSeq[Short],
   fightersNumber: Short,
@@ -51,8 +49,7 @@ case class Starbase(
     torpspec: TorpspecItem,
     numberOfLaunchers: Int): ShipCost = {
 
-    val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) == 0) Cost.zero else
-      Cost(hullspec.triCost, hullspec.durCost, hullspec.molCost, hullspec.moneyCost)
+    val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) == 0) Cost.zero else hullspec.cost
     val enginesToBuild = hullspec.enginesNumber - storedEngines(engspec.id.value - 1) match {
       case x if x < 0 => 0
       case x => x

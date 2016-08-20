@@ -2,7 +2,7 @@ package replanets.model
 
 import play.api.libs.json.Json._
 import play.api.libs.json._
-import replanets.common.Fcode
+import replanets.common.{Fcode, PlanetId, ShipId}
 /**
   * Created by mgirkin on 09/08/2016.
   */

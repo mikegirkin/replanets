@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common.{ExplosionRecord, _}
-import replanets.model.{Game, PlanetId, ShipId}
+import replanets.model.{Game}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 

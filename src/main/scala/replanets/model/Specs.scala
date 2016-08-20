@@ -14,11 +14,11 @@ case class Specs(
 ) {
   def getRaceHulls(race: RaceId): IndexedSeq[HullspecItem] = {
     val hullIndexes = raceHulls.getRaceHullIds(race.value - 1)
-    hullSpecs.filter(h => hullIndexes.contains(h.id))
+    hullSpecs.filter(h => hullIndexes.contains(h.id.value))
   }
 
-  def isGravitonic(hullId: Int): Boolean = {
-    Seq(43, 44, 45).contains(hullId) //TODO: hardcoded bells and whistles!!!
+  def isGravitonic(hullId: OneBasedIndex): Boolean = {
+    Seq(43, 44, 45).contains(hullId.value) //TODO: hardcoded bells and whistles!!!
   }
 
 }

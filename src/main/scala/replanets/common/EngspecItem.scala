@@ -5,7 +5,7 @@ import java.nio.file.{Files, Path}
 import replanets.recipes.{WORD, _}
 
 case class EngspecItem(
-  id: OneBasedIndex,
+  id: EngineId,
   name: String,
   cost: Cost,
   techLevel: Short,
@@ -19,7 +19,7 @@ object EngspecItem {
     val it = Files.readAllBytes(file).iterator
     (1 to Constants.EnginesInSpec).map { idx =>
       EngspecItem(
-        OneBasedIndex(idx),
+        EngineId(idx),
         SpacePaddedString(engineNameLength).read(it),
         Cost(
           money = WORD.read(it),

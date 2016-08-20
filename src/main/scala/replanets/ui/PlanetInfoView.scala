@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.{Constants, Fcode, TurnId}
-import replanets.model.{Game, PlanetId}
+import replanets.common.{Constants, Fcode, PlanetId, TurnId}
+import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
 
