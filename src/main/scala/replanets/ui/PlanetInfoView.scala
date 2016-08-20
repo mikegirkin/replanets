@@ -83,7 +83,8 @@ class PlanetInfoView(
     data.planets.find(_.planetId == planetId).foreach(p => {
       val vm = new PlanetInfoVM(game, viewModel.turnShown, p.planetId)
 
-      lblOwner.text = game.races(vm.ownerId - 1).shortname
+      if(vm.ownerId != 0) lblOwner.text = game.races(vm.ownerId - 1).shortname
+        else lblOwner.text = "(none)"
       lblFcode.text = vm.fcode.value
       edFcode.text = vm.fcode.value
       lblClimate.text = vm.temperature.toString

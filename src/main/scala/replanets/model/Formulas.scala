@@ -17,8 +17,9 @@ trait Formulas {
   def miningRate(density: Int, mines: Int, raceId: Int, nativeId: Int): Int
   def fuelBurn(engine: EngspecItem, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int
 
-  def techUpgradeCost(from: Int, to: Int) = {
-    if(from >= to) 0
-    else Constants.techLevelsCost.slice(from - 1, to - 1).sum
+  def techUpgradeCost(available: Int, desired: Int) = {
+    if(available >= desired) 0
+    else if(available >= 10) 0
+    else Constants.techLevelsCost.slice(available, desired).sum
   }
 }

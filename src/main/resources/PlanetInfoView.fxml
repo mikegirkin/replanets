@@ -52,7 +52,7 @@
         <Label text="Natives:" />
         <Label fx:id="lblNatives" />
         <Label fx:id="lblGovernment" />
-        <GridPane visible="false"  styleClass="infoGrid">
+        <GridPane styleClass="infoGrid">
             <columnConstraints>
                 <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
                 <ColumnConstraints percentWidth="50" halignment="LEFT"/>

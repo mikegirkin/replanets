@@ -21,21 +21,27 @@ case class ServerData(
 
 object RstFileReader {
 
-  import IteratorExtensions._
-
   def read(file: Path, race: RaceId, specs: Specs) = {
     val buffer = Files.readAllBytes(file)
     val it = buffer.iterator
 
     val pointers = DWORD.readSome(it, 8)
     val signature = SpacePaddedString(6).read(it)
-    val isWinplan = signature == "VER3.5"
+
     val subversion = SpacePaddedString(2).read(it)
     val winplanDataPosition = DWORD.read(it)
     val leechPosition = DWORD.read(it)
 
+    val anotherSignature = {
+      val it = buffer.iterator.drop(winplanDataPosition - 1).drop(500 * 8 + 600 + 50 * 4 + 682 + 7800)
+      SpacePaddedString(4).read(it)
+    }
+    val isWinplan = signature == "VER3.5" && (anotherSignature == "1211" || anotherSignature == "1120")
+
     val shipRecords = ShipsReader.read(buffer.iterator.drop(pointers(0) - 1))
-    val targets = TargetReader.readFromRst(buffer, isWinplan)
+
+    val targets = TargetReader.readDosRecords(buffer) ++ (if(isWinplan) TargetReader.readWinplanRecords(buffer) else IndexedSeq())
+
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
 
     val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1)).map { br =>
@@ -55,10 +61,9 @@ object RstFileReader {
     val generalInfo = GeneralDataReader.read(buffer.iterator.drop(pointers(6) - 1))
     //TODO: vcrs
 
-    val winplanDataPointer = buffer.iterator.drop(40).read(DWORD)
-    val mineFields = MineFieldsSectionReader.read(buffer.iterator.drop(winplanDataPointer - 1))
-    val ionStorms = IonStormReader.read(buffer.iterator.drop(winplanDataPointer - 1 + 500 * 8))
-    val explosions = ExplosionsReader.read(buffer)
+    val mineFields = if(isWinplan) MineFieldsSectionReader.read(buffer.iterator.drop(winplanDataPosition - 1)) else IndexedSeq()
+    val ionStorms = if(isWinplan) IonStormReader.read(buffer.iterator.drop(winplanDataPosition - 1 + 500 * 8)) else IndexedSeq()
+    val explosions = if(isWinplan) ExplosionsReader.read(buffer) else IndexedSeq()
 
     val ships = buildShipsMap(specs, shipRecords, targets, shipCoords)
 

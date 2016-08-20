@@ -46,4 +46,12 @@ class RstFileReaderSpec extends WordSpec with Matchers {
       base.storedHulls(HullId(104)) should be (1)
     }
   }
+
+  "Can read dos-style RST" in {
+    val specs = Specs.fromDirectory(Paths.get("./testfiles/testgame-10/"))
+    val path = Paths.get("./testfiles/testgame-10/db/1/player10.rst")
+    val rst = RstFileReader.read(path, RaceId(10), specs)
+
+    rst.generalInfo.turnNumber should be(1)
+  }
 }

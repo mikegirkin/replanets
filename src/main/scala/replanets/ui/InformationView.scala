@@ -49,7 +49,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
           }
         }
         onMouseClicked = (e: MouseEvent) => {
-          viewModel.selectedObject = Some(this.item.delegate.get())
+          if(item.value != null) viewModel.selectedObject = Some(this.item.value)
         }
       }
     }

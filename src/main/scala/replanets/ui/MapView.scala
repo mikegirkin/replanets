@@ -90,31 +90,29 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def currentTurnServerData = currentTurn(game.playingRace).rst
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
-    def shortestDistanceReducer[T](getCoords: T => IntCoords)(p1: T, p2: T): T = {
-      if(distSqr(coords, getCoords(p1)) < distSqr(coords, getCoords(p2))) p1 else p2
-    }
-
     //planets
-    val closestPlanet = game.map.planets.reduce(shortestDistanceReducer { p: Planet => p.coords })
+    val closestPlanet = game.map.planets.minBy(x => distSqr(coords, x.coords))
     //ships
-    val closestShip = game.turnSeverData(viewModel.turnShown).ships.values.reduce(shortestDistanceReducer[Ship] { s => s.coords })
+    val closestShip = if(currentTurnServerData.ships.isEmpty) None else Some(currentTurnServerData.ships.values.minBy(x => distSqr(coords, x.coords)))
     //minefields
+    val closestMinefield = if(currentTurnServerData.mineFields.isEmpty) None else Some(currentTurnServerData.mineFields.minBy(x => distSqr(coords, x.coords)))
     //explosions
+    val closestExplosion = if(currentTurnServerData.explosions.isEmpty) None else Some(currentTurnServerData.explosions.minBy(x => distSqr(coords, x.coords)))
     //ionstroms
-    val closestStorm = currentTurnServerData.ionStorms.reduce(shortestDistanceReducer { s: IonStorm => s.coords })
+    val closestStorm = if(currentTurnServerData.ionStorms.isEmpty) None else Some(currentTurnServerData.ionStorms.minBy(s => distSqr(coords, s.coords)))
 
-    Seq(
-      MapObject.forPlanet(closestPlanet),
-      MapObject.forShip(closestShip),
-      MapObject.forIonStorm(closestStorm)
-    ).reduce((x1, x2) => if(distSqr(coords, x1.coords) <= distSqr(coords, x2.coords)) x1 else x2)
+    (Seq(MapObject.forPlanet(closestPlanet)) ++
+      closestShip.map(x => MapObject.forShip(x)) ++
+      closestMinefield.map(x => MapObject.forMinefield(game)(x)) ++
+      closestStorm.map(x => MapObject.forIonStorm(x)) ++
+      closestExplosion.map(x => MapObject.forExplosion(x))
+    ).minBy(x => distSqr(coords, x.coords))
   }
 
   private def selectMapObject(it: MapObject): Unit = {
     viewModel.selectedObject = Some(it)
     redraw()
   }
-
 
   private def zoom(scaleStep: Double, zoomPoint: Coords) = {
     val mapCoordsZoomPoint = mapCoords(zoomPoint)
@@ -178,7 +176,6 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val canvasRadius = m.radius * scale
       gc.strokeCircle(coords, canvasRadius * 2)
     }
-
   }
 
   private def drawSelectedCross(gc: GraphicsContext) = {
@@ -194,7 +191,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   private def drawPlanets(gc: GraphicsContext) = {
     def planetColor(owner: Option[Int], hasBase: Boolean): Color = {
       owner.fold(unscannedPlanetColor)( ow =>
-        if(ow == game.playingRace.value)  if(hasBase) Color.Aqua else Color.Green
+        if(ow == game.playingRace.value) if(hasBase) Color.Aqua else Color.Green
+        else if(ow == 0) Color.Yellow
         else if(hasBase) Color.Red else Color.OrangeRed
       )
     }

@@ -4,7 +4,7 @@ import replanets.common.HullspecItem
 
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.HPos
-import scalafx.scene.control.Label
+import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{ColumnConstraints, GridPane, VBox}
 
 class CurrentHullInfoView(

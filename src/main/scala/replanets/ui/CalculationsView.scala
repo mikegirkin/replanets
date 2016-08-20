@@ -163,7 +163,12 @@ class CalculationsView(
       bindCostLabels(lblTorpsMoneyCost, lblTorpsTriCost, lblTorpsDurCost, lblTorpsMolCost, shipCost.launcherCost)
       lblTechMoneyCost.text = shipCost.techCost.money.toString
       bindCostLabels(lblTotalMoneyCost, lblTotalTriCost, lblTotalDurCost, lblTotalMolCost, shipCost.total)
-      val planetAmount = Cost(thisbase.planet.money, thisbase.planet.surfaceMinerals.tritanium, thisbase.planet.surfaceMinerals.duranium, thisbase.planet.surfaceMinerals.molybdenium)
+      val planetAmount = Cost(
+        thisbase.planet.surfaceMinerals.tritanium,
+        thisbase.planet.surfaceMinerals.duranium,
+        thisbase.planet.surfaceMinerals.molybdenium,
+        thisbase.planet.money + thisbase.planet.supplies
+      )
       bindCostLabels(lblPlanetMoney, lblPlanetTri, lblPlanetDur, lblPlanetMol, planetAmount)
       val remaining = planetAmount.sub(shipCost.total)
       lblRemainingMoney setValue remaining.money

@@ -21,7 +21,7 @@ object Constants {
   val hullspecFileName = "hullspec.dat"
   val hullsAssignmentFilename = "truehull.dat"
 
-  val techLevelsCost = IndexedSeq(0, 100, 200, 300, 400, 500, 600, 700, 1700)
+  val techLevelsCost = IndexedSeq(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
 
   val natives = Map[Int, String](
     0 -> "none",

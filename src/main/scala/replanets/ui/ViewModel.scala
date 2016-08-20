@@ -48,6 +48,14 @@ object MapObject {
     MapObject.IonStorm(storm.id, storm.coords, s"Ion storm ${storm.id}")
   }
 
+  def forMinefield(game: Game)(minefield: replanets.common.MineFieldRecord) = {
+    MapObject.Minefield(minefield.id, minefield.coords, s"${game.races(minefield.owner - 1).adjective} minefield ${minefield.id}")
+  }
+
+  def forExplosion(explosion: replanets.common.ExplosionRecord) = {
+    MapObject.Explosion(explosion.id, explosion.coords, s"Explosion ${explosion.id}")
+  }
+
   def findAtCoords(game: Game, turn: TurnId)(coords: IntCoords): IndexedSeq[MapObject] = {
     //ships
     val ships = game.turnSeverData(turn).ships.values
@@ -66,7 +74,7 @@ object MapObject {
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields
       .filter(mf => mf.coords == coords)
-      .map(mf => MapObject.Minefield(mf.id, coords, s"${game.races(mf.owner - 1).adjective} minefield ${mf.id}"))
+      .map(mf => MapObject.forMinefield(game)(mf))
     //ion storms
     val ionStorms = game.turnSeverData(turn).ionStorms
       .filter(is => is.coords == coords)
@@ -74,7 +82,7 @@ object MapObject {
     //explosions
     val explosions = game.turnSeverData(turn).explosions
       .filter(ex => ex.coords == coords)
-      .map(ex => MapObject.Explosion(ex.id, coords, s"Explosion ${ex.id}"))
+      .map(ex => MapObject.forExplosion(ex))
 
     planets ++ bases ++ ships ++ mineFields ++ explosions ++ ionStorms
   }
