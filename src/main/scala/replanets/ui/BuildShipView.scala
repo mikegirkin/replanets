@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game}
+import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -18,7 +18,11 @@ class BuildShipView(
   val actions: Actions
 ) extends VBox {
 
-  val data = new ObjectProperty[Option[Starbase]](this, "starbase", None)
+  val data = ObjectProperty[Option[Starbase]](None)
+  val selectedHull = ObjectProperty[HullspecItem](game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel).head)
+  val selectedEngine = ObjectProperty[EngspecItem](game.specs.engineSpecs.head)
+  val selectedBeam = ObjectProperty[BeamspecItem](game.specs.beamSpecs.head)
+  val selectedLauncher = ObjectProperty[TorpspecItem](game.specs.torpSpecs.head)
 
   styleClass = Seq("buildShipView")
 
@@ -55,6 +59,7 @@ class BuildShipView(
   val hullsList = new ShipItemsView[HullspecItem](
     "Available hulls:",
     data,
+    selectedHull,
     game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel),
     _.techLevel,
     _.name,
@@ -67,6 +72,7 @@ class BuildShipView(
   val enginesList =  new ShipItemsView[EngspecItem](
     "Engines:",
     data,
+    selectedEngine,
     game.specs.engineSpecs,
     _.techLevel,
     _.name,
@@ -79,6 +85,7 @@ class BuildShipView(
   val beamsList = new ShipItemsView[BeamspecItem](
     "Beams:",
     data,
+    selectedBeam,
     game.specs.beamSpecs,
     _.techLevel,
     _.name,
@@ -91,6 +98,7 @@ class BuildShipView(
   val launchersList = new ShipItemsView[TorpspecItem](
     "Launchers:",
     data,
+    selectedLauncher,
     game.specs.torpSpecs,
     _.techLevel,
     _.name,
@@ -100,15 +108,9 @@ class BuildShipView(
     styleClass.append("launcherList")
   }
 
-  val info = new CurrentHullInfoView(hullsList.selectedItem)
+  val info = new CurrentHullInfoView(selectedHull)
 
-  val calculations = new CalculationsView(
-    data,
-    hullsList.selectedItem,
-    enginesList.selectedItem,
-    beamsList.selectedItem,
-    launchersList.selectedItem
-  )
+  val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, selectedLauncher)
 
   children = Seq(
     new HBox(

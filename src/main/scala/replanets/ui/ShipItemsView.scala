@@ -14,6 +14,7 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 class ShipItemsView[T](
   headerText: String,
   base: ObjectProperty[Option[Starbase]],
+  selectedItem: ObjectProperty[T],
   things: Seq[T],
   techLevel: T => Int,
   name: T => String,
@@ -22,10 +23,6 @@ class ShipItemsView[T](
 ) extends VBox {
 
   styleClass = Seq("itemsView")
-
-  val selectedItemIndex = IntegerProperty(0)
-  val selectedItem = new ObjectProperty[T]()
-  selectedItem <== createObjectBinding[T](() => things(selectedItemIndex.value), selectedItemIndex)
 
   children = Seq(
     new Label(headerText),
@@ -40,10 +37,10 @@ class ShipItemsView[T](
   private def createRows(): Seq[(Int, Pane)] = {
     things.zipWithIndex.map { case (thing, idx) =>
       val colorBinding = createObjectBinding[jfxsp.Color](() => {
-        if(selectedItemIndex.value == idx) jfxsp.Color.LIMEGREEN
+        if(selectedItem.value == thing) jfxsp.Color.LIMEGREEN
         else if(techLevel(thing) > base.value.map(baseTech).getOrElse(0)) jfxsp.Color.DARKGRAY
         else jfxsp.Color.WHITE
-      }, base, selectedItemIndex)
+      }, base, selectedItem)
       (
         idx,
         new HBox {
@@ -66,7 +63,7 @@ class ShipItemsView[T](
           alignment = Pos.CenterLeft
           styleClass = Seq("itemsListItem")
 
-          onMouseClicked = (e: MouseEvent) => selectedItemIndex.value = idx
+          onMouseClicked = (e: MouseEvent) => selectedItem.value = thing
         }
       )
     }
