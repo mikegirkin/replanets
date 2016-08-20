@@ -51,7 +51,7 @@ case class Starbase(
     torpspec: TorpspecItem,
     numberOfLaunchers: Int): ShipCost = {
 
-    val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) == 0) Cost.zero else hullspec.cost
+    val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) != 0) Cost.zero else hullspec.cost
     val enginesToBuild = lowerLimit(hullspec.enginesNumber - storedEngines(engspec.id.value - 1), 0)
     val enginesCost = engspec.cost.mul(enginesToBuild)
     val beamsToBuild = lowerLimit(numberOfBeams - storedBeams(beamspec.id.value - 1), 0)

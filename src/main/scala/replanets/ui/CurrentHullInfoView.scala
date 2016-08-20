@@ -28,6 +28,7 @@ class CurrentHullInfoView(
     styleClass = Seq("specialFunction")
   }
   val lblTorpedoTubesHeader = new Label("???")
+  val lblBeamWeaponsHeader = new Label("???")
 
   children = Seq(
     lblHullName,
@@ -43,7 +44,7 @@ class CurrentHullInfoView(
       add(lblTechLevel, 1, 0)
       add(new Label("Engines:"), 0, 1)
       add(lblEnginesNumber, 1, 1)
-      add(new Label("Beam weapons:"), 0, 2)
+      add(lblBeamWeaponsHeader, 0, 2)
       add(lblBeamsNumber, 1, 2)
       add(lblTorpedoTubesHeader, 0, 3)
       add(lblLaunchersNumber, 1, 3)
@@ -64,12 +65,13 @@ class CurrentHullInfoView(
     val hull = currentHull.value
     lblHullName.text = hull.name
     lblTechLevel.text = hull.techLevel.toString
+    lblEnginesNumber.text = hull.enginesNumber.toString
 
     if(hull.maxBeamWeapons > 0) {
-      lblEnginesNumber.text = hull.enginesNumber.toString
+      lblBeamWeaponsHeader.text = "Beam weapons:"
       lblBeamsNumber.text = hull.maxBeamWeapons.toString
     } else {
-      lblEnginesNumber.text = ""
+      lblBeamWeaponsHeader.text = ""
       lblBeamsNumber.text = ""
     }
 

@@ -54,7 +54,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   scene = new Scene {
     stylesheets += getClass.getResource("/styles.css").toExternalForm
-    minWidth = 600
+    minWidth = 800
     minHeight = 500
     root = mainLayout
 
