@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common.{ExplosionRecord, _}
-import replanets.model.{Game, ShipId}
+import replanets.model.{Game, PlanetId, ShipId}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -158,7 +158,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   }
 
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
-    baseInfoView.setData(mapObject.id)
+    baseInfoView.setData(PlanetId(mapObject.id))
     setDetailsView(baseInfoView.rootPane)
   }
 

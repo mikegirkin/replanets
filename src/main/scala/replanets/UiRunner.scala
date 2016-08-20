@@ -5,7 +5,7 @@ import java.io.File
 import com.typesafe.config.ConfigFactory
 import java.nio.file._
 
-import replanets.common.GameDatabase
+import replanets.common.{GameDatabase, RaceId}
 import replanets.model.Game
 import replanets.ui.MainStage
 import replanets.ui.viewmodels.ViewModel
@@ -24,7 +24,7 @@ object UiRunner extends JFXApp {
   println(s"Starting for race $raceNumber in game directory $gameDirectory")
   val gamePath: Path = Paths.get(gameDirectory)
   val absolutePath = gamePath.toAbsolutePath
-  val gameDb = new GameDatabase(absolutePath, raceNumber)
+  val gameDb = new GameDatabase(absolutePath, RaceId(raceNumber))
 
   val rstFiles = rstFilesInGameDirectory(absolutePath)
   rstFiles.foreach { file =>

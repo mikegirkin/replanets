@@ -7,5 +7,6 @@ class Actions(
   val selectStarbase: SelectBase,
   val selectPlanet: SelectPlanet,
   val setFcode: SetFcode,
-  val showBuildShipView: () => Unit
+  val showBuildShipView: () => Unit,
+  val showMapView: () => Unit
 )

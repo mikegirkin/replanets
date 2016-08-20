@@ -35,9 +35,9 @@ object MapObject {
     }
   }
 
-  def forStarbase(game: Game)(base: BaseRecord): MapObject = {
-    val coords = game.map.planets.find(p => p.id == base.baseId).get.coords
-    MapObject.Starbase(base.baseId, coords, s"Starbase ${base.baseId}")
+  def forStarbase(game: Game)(base: replanets.common.Starbase): MapObject = {
+    val planet = game.map.planets.find(_.id == base.id.value)
+    MapObject.Starbase(base.id.value, planet.get.coords, s"Starbase ${base.id.value}")
   }
 
   def forPlanet(planet: replanets.model.Planet) = {
@@ -59,14 +59,9 @@ object MapObject {
       .map(p => forPlanet(p))
       .toIndexedSeq
     //bases
-    val bases = game.turnSeverData(turn).bases
-      .find(b => {
-        (for(
-          planet <- game.map.planets.find(_.id == b.baseId)
-        ) yield planet.coords == coords)
-          .getOrElse(false)
-      })
-      .map(b => MapObject.forStarbase(game)(b))
+    val bases = planets.flatMap { p =>
+      game.turnSeverData(turn).bases.get(PlanetId(p.id))
+    }.map { b => forStarbase(game)(b) }
       .toIndexedSeq
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields

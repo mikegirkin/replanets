@@ -127,3 +127,50 @@ ListView ListCell {
     -fx-text-fill: darkgray;
     -fx-fill: darkgray;
 }
+
+.buildShipView .itemsView {
+    -fx-border-color: dimgray;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-padding: 6 0 6 0;
+}
+
+.buildShipView .hullList {
+    -fx-min-width: 250;
+}
+
+.buildShipView .engineList {
+    -fx-min-width: 150;
+}
+
+.buildShipView .beamList {
+    -fx-min-width: 125;
+}
+
+.buildShipView .launcherList {
+    -fx-min-width: 125;
+}
+
+
+.buildShipView .itemsListItem {
+}
+
+.buildShipView .itemsListItem:hover {
+    -fx-background-color: #444;
+}
+
+.buildShipView .currentHullInfoView {
+    -fx-min-width: 300;
+}
+
+.buildShipView .currentHullInfoView .hullName {
+    -fx-text-fill: gold;
+    -fx-fill: gold;
+    -fx-font-weight: bold;
+
+}
+
+.buildShipView .currentHullInfoView .specialFunction {
+    -fx-text-fill: deepskyblue;
+    -fx-fill: deepskyblue;
+}

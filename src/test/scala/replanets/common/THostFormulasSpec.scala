@@ -2,9 +2,6 @@ package replanets.common
 
 import org.scalatest.{Matchers, WordSpec}
 
-/**
-  * Created by mgirkin on 06/08/2016.
-  */
 class THostFormulasSpec extends WordSpec with Matchers {
   import replanets.model.THostFormulas._
 
@@ -16,3 +13,4 @@ class THostFormulasSpec extends WordSpec with Matchers {
     erndDiv(13, 2) should be(6)
   }
 }
+

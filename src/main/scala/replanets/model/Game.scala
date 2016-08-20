@@ -68,7 +68,7 @@ object Game {
     val specs = Specs.fromDirectory(gameDirectory)
     val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
-    Game("Test game", gameDb, RaceId(gameDb.playingRace), races, map, specs, THost)
+    Game("Test game", gameDb, gameDb.playingRace, races, map, specs, THost)
   }
 }
 

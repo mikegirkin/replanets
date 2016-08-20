@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common.{Constants, Fcode, TurnId}
-import replanets.model.Game
+import replanets.model.{Game, PlanetId}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
 
@@ -124,7 +124,7 @@ class PlanetInfoView(
       lblMolDensity.text = s"${miningRate(vm.densityMinerals.molybdenium)} / ${vm.densityMinerals.molybdenium}"
       pnMinerals.visible = true
     })
-    data.bases.find(_.baseId == planetId).foreach{ _ =>
+    data.bases.get(PlanetId(planetId)).foreach{ _ =>
       btnStarbase.visible = true
     }
   }

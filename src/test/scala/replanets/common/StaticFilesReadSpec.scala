@@ -51,8 +51,18 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
     val assignment = HullAssignment.fromFile(Paths.get(filename))
 
     assignment.availableHulls should have size 11
-    assignment.availableHulls(0)(0) should be (0)
-    assignment.availableHulls(10).last should be (104)
+    assignment.availableHulls(0)(0) should be (1)
+    assignment.availableHulls(10).last should be (105)
   }
 
+
+  "engspec reader should read correctly" in {
+    val filename = getResourceFilename("/engspec.dat")
+
+    val engines = EngspecItem.fromFile(Paths.get(filename))
+
+    engines(8).techLevel should be (10)
+    engines(8).name should be ("Transwarp Drive")
+    engines(8).cost.money should be (300)
+  }
 }

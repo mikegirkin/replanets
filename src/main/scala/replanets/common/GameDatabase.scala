@@ -14,7 +14,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by mgirkin on 07/08/2016.
   */
-class GameDatabase(gamePath: Path, val playingRace: Int) {
+class GameDatabase(gamePath: Path, val playingRace: RaceId) {
   val dbFoldername = "db"
   val dbDirectoryPath = gamePath.resolve(dbFoldername)
   def commandsFilePath(turnId: Int, raceId: Int) =
@@ -50,7 +50,7 @@ class GameDatabase(gamePath: Path, val playingRace: Int) {
       filesInTurnDirectory.filter { file =>
         file.getFileName.toString.toLowerCase.endsWith("rst")
       }.map { file =>
-        val rst = RstFileReader.read(file, specs)
+        val rst = RstFileReader.read(file, playingRace, specs)
         (rst.generalInfo.turnNumber.toInt, rst.generalInfo.playerId.toInt, rst)
       }
     }

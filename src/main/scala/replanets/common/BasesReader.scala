@@ -2,10 +2,6 @@ package replanets.common
 
 import replanets.recipes.{ArrayRecipe, RecordRecipe, WORD}
 
-/**
-  * Created by mgirkin on 27/07/2016.
-  */
-
 case class BaseRecord(
   baseId: Short,
   owner: Short,

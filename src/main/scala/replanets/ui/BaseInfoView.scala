@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common.Constants
-import replanets.model.Game
+import replanets.model.{Game, PlanetId}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -13,7 +13,7 @@ import scalafxml.core.macros.sfxml
 
 trait IBaseInfoView {
   def rootPane: Pane
-  def setData(starbaseId: Int): Unit
+  def setData(starbaseId: PlanetId): Unit
 }
 
 @sfxml
@@ -64,40 +64,38 @@ class BaseInfoView(
   lvDrives.cellFactory = lvCellFactory
   lvLaunchers.cellFactory = lvCellFactory
 
-  override def setData(starbaseId: Int): Unit = {
-    val base = game.turnSeverData(viewModel.turnShown).bases.find(_.baseId == starbaseId)
-    base.foreach { b =>
-      lblStarbaseId.text = b.baseId.toString
-      lblDefense.text = b.defences.toString
-      lblDamage.text = b.damage.toString
-      lblFighters.text = b.fightersNumber.toString
-      lblPrimaryOrder.text = Constants.baseMissions(b.primaryOrder)
-      lblEngines.text = b.engineTech.toString
-      lblHulls.text = b.hullsTech.toString
-      lblBeams.text = b.beamTech.toString
-      lblTorpedoes.text = b.torpedoTech.toString
+  override def setData(starbaseId: PlanetId): Unit = {
+    val base = game.turnSeverData(viewModel.turnShown).bases(starbaseId)
+    lblStarbaseId.text = base.id.value.toString
+    lblDefense.text = base.defences.toString
+    lblDamage.text = base.damage.toString
+    lblFighters.text = base.fightersNumber.toString
+    lblPrimaryOrder.text = Constants.baseMissions(base.primaryOrder)
+    lblEngines.text = base.engineTech.toString
+    lblHulls.text = base.hullsTech.toString
+    lblBeams.text = base.beamTech.toString
+    lblTorpedoes.text = base.torpedoTech.toString
 
-      val hulls = b.storedHulls.zipWithIndex
-        .filter{ case (hullCount, idx) => hullCount > 0 }
-        .map{ case (hullCount, idx) => (hullCount, game.specs.getHull(game.playingRace.value - 1, idx).name)} //TODO: Check if stored hulls are correctly calculated
+    val hulls = base.storedHulls
+      .toSeq
+      .map{ case (hullId, hullCount) => (hullCount, game.specs.hullSpecs(hullId).name) } //TODO: Check if stored hulls are correctly calculated
 
-      val beams = b.storedBeams.zipWithIndex
-        .filter { case (beamCount, idx) => beamCount > 0 }
-        .map { case (beamCount, idx) => (beamCount, game.specs.beamSpecs(idx).name) }
+    val beams = base.storedBeams.zipWithIndex
+      .filter { case (beamCount, idx) => beamCount > 0 }
+      .map { case (beamCount, idx) => (beamCount, game.specs.beamSpecs(idx).name) }
 
-      val drives = b.storedEngines.zipWithIndex
-        .filter { case (driveCount, idx) => driveCount > 0 }
-        .map { case (driveCount, idx) => (driveCount, game.specs.engineSpecs(idx).name) }
+    val drives = base.storedEngines.zipWithIndex
+      .filter { case (driveCount, idx) => driveCount > 0 }
+      .map { case (driveCount, idx) => (driveCount, game.specs.engineSpecs(idx).name) }
 
-      val launchers = b.storedLaunchers.zipWithIndex
-        .filter { case (launcherCount, idx) => launcherCount > 0 }
-        .map { case (launcherCount, idx) => (launcherCount, game.specs.torpSpecs(idx).name) }
+    val launchers = base.storedLaunchers.zipWithIndex
+      .filter { case (launcherCount, idx) => launcherCount > 0 }
+      .map { case (launcherCount, idx) => (launcherCount, game.specs.torpSpecs(idx).name) }
 
-      lvHulls.items = ObservableBuffer(hulls)
-      lvBeams.items = ObservableBuffer(beams)
-      lvDrives.items = ObservableBuffer(drives)
-      lvLaunchers.items = ObservableBuffer(launchers)
-    }
+    lvHulls.items = ObservableBuffer(hulls)
+    lvBeams.items = ObservableBuffer(beams)
+    lvDrives.items = ObservableBuffer(drives)
+    lvLaunchers.items = ObservableBuffer(launchers)
   }
 
   def handlePlanetButton(e: ActionEvent) = actions.selectPlanet.execute()

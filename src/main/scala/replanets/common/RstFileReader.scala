@@ -2,7 +2,7 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.{ShipId, Specs}
+import replanets.model.{PlanetId, ShipId, Specs}
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class ServerData(
@@ -11,22 +11,19 @@ case class ServerData(
 
   ships: Map[ShipId, Ship],
   planets: IndexedSeq[PlanetRecord],
-  bases: IndexedSeq[BaseRecord],
+  bases: Map[PlanetId, Starbase],
   messages: IndexedSeq[MessageInfo],
   generalInfo: GeneralTurnInformation,
   mineFields: IndexedSeq[MineFieldRecord],
   ionStorms: IndexedSeq[IonStorm],
   explosions: IndexedSeq[ExplosionRecord]
-) {
-}
-
-
+)
 
 object RstFileReader {
 
   import IteratorExtensions._
 
-  def read(file: Path, specs: Specs) = {
+  def read(file: Path, race: RaceId, specs: Specs) = {
     val buffer = Files.readAllBytes(file)
     val it = buffer.iterator
 
@@ -40,7 +37,19 @@ object RstFileReader {
     val shipRecords = ShipsReader.read(buffer.iterator.drop(pointers(0) - 1))
     val targets = TargetReader.readFromRst(buffer, isWinplan)
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
-    val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
+
+    val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1)).map { br =>
+      val storedHulls = br.storedHulls.zipWithIndex
+        .filter { case (numberStored, index) => numberStored != 0 }
+        .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id.toShort, numberStored) }
+        .toMap
+      PlanetId(br.baseId) -> Starbase(PlanetId(br.baseId), planets.find(p => p.planetId == br.baseId).get, RaceId(br.owner),
+        br.defences, br.damage, br.engineTech, br.hullsTech, br.beamTech, br.torpedoTech,
+        br.storedEngines, storedHulls, br.storedBeams, br.storedLaunchers, br.storedTorpedoes,
+        br.fightersNumber, br.actionedShipId, br.shipAction, br.primaryOrder, br.buildShipType,
+        br.engineType, br.beamType, br.beamCount, br.launcherType, br.launchersCount)
+    }.toMap
+
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
     val shipCoords = ShipCoordsReader.read(buffer.iterator.drop(pointers(5) - 1))
     val generalInfo = GeneralDataReader.read(buffer.iterator.drop(pointers(6) - 1))

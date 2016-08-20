@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, Planet}
+import replanets.model.{Game, Planet, PlanetId}
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
@@ -202,7 +202,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     (0 until 500).foreach { idx =>
       val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
       val planetInfo = currentTurnServerData.planets.find(_.planetId == idx + 1)
-      val baseInfo = currentTurnServerData.bases.find(_.baseId == idx + 1)
+      val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(PlanetId(p.planetId)) }
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))

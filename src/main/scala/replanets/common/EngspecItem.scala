@@ -1,15 +1,13 @@
 package replanets.common
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
-import replanets.recipes._
+import replanets.recipes.{WORD, _}
 
 case class EngspecItem(
+  id: OneBasedIndex,
   name: String,
-  moneyCost: Short,
-  triCost: Short,
-  durCost: Short,
-  molCost: Short,
+  cost: Cost,
   techLevel: Short,
   fuel: IndexedSeq[Int]
 )
@@ -17,18 +15,22 @@ case class EngspecItem(
 object EngspecItem {
   val engineNameLength = 20
 
-  val recipe = RecordRecipe(
-    SpacePaddedString(engineNameLength),
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    ArrayRecipe(9, DWORD)
-  )(EngspecItem.apply)
-
   def fromFile(file: Path) = {
-    recipe.readFromFile(file, 9)
+    val it = Files.readAllBytes(file).iterator
+    (1 to Constants.EnginesInSpec).map { idx =>
+      EngspecItem(
+        OneBasedIndex(idx),
+        SpacePaddedString(engineNameLength).read(it),
+        Cost(
+          money = WORD.read(it),
+          tri = WORD.read(it),
+          dur = WORD.read(it),
+          mol = WORD.read(it)
+        ),
+        WORD.read(it),
+        ArrayRecipe(9, DWORD).read(it)
+      )
+    }
   }
 }
 

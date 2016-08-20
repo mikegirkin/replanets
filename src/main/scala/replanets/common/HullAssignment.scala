@@ -20,7 +20,7 @@ object HullAssignment {
       .grouped(numberOfHullsPerRace)
       .take(Constants.NumberOfRaces)
       .map { raceArray =>
-        raceArray.filter(_ != 0).map(x => (x - 1).toShort).toIndexedSeq
+        raceArray.filter(_ != 0).toIndexedSeq
       }
       .toIndexedSeq
 

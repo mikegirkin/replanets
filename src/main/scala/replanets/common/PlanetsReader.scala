@@ -2,10 +2,6 @@ package replanets.common
 
 import replanets.recipes._
 
-/**
-  * Created by mgirkin on 26/07/2016.
-  */
-
 case class Minerals(
   neutronium: Int,
   tritanium: Int,

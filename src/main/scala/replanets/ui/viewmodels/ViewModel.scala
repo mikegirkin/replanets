@@ -3,6 +3,11 @@ package replanets.ui.viewmodels
 import replanets.common.TurnId
 import replanets.ui.{Event, MapObject}
 
+sealed trait BuildShipViewColumn
+case object Hulls extends BuildShipViewColumn
+case object Engines extends BuildShipViewColumn
+case object Beams extends BuildShipViewColumn
+case object Launchers extends BuildShipViewColumn
 
 sealed trait CurrentView
 

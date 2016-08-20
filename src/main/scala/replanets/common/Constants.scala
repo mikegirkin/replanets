@@ -2,6 +2,7 @@ package replanets.common
 
 object Constants {
   val HullsInHullspec: Int = 105
+  val EnginesInSpec: Int = 9
   val BeamsInBeamspec: Int = 10
   val TorpspecRecordsNumber = 10
 

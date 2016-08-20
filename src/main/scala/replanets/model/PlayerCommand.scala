@@ -10,7 +10,6 @@ trait ObjectId {
 }
 case class PlanetId(value: Int) extends ObjectId
 case class ShipId(value: Int) extends ObjectId
-case class BaseId(value: Int) extends ObjectId
 
 trait PlayerCommand {
   def objectId: ObjectId

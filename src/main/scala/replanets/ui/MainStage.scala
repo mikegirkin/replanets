@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.model.{BaseId, Game}
+import replanets.model.{Game, PlanetId}
 import replanets.ui.actions.{Actions, SelectBase, SelectPlanet, SetFcode}
 import replanets.ui.viewmodels.{CurrentView, ViewModel}
 
@@ -22,13 +22,14 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     new SelectBase(game, viewModel),
     new SelectPlanet(game, viewModel),
     new SetFcode(game, viewModel),
-    showBuildShipView = () => viewModel.currentView = CurrentView.BuildShip
+    () => viewModel.currentView = CurrentView.BuildShip,
+    () => viewModel.currentView = CurrentView.Map
   )
 
   private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).rst.messages)
   private val mapView = new MapView(game, viewModel)
   private val informationView = new InformationView(game, viewModel, actions)
-  private val buildShipView = new BuildShipView(game, viewModel)
+  private val buildShipView = new BuildShipView(game, viewModel, actions)
 
   private def showMapView() = {
     mainLayout.center = mapView
@@ -37,7 +38,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   private def showBuildShipView() = {
     viewModel.selectedObject.foreach { b =>
-      buildShipView.setData(BaseId(b.id.toShort))
+      buildShipView.setData(PlanetId(b.id))
       mainLayout.center = buildShipView
       mainLayout.right = null
     }
