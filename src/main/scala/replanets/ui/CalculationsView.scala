@@ -127,10 +127,10 @@ class CalculationsView(
 
     val torps = selectedLaunchers.value
     val torpNumber = hull.maxTorpedoLaunchers
-    lblTorpsMoneyCost.text = (torps.launcherMoneyCost * torpNumber).toString
-    lblTorpsTriCost.text = (torps.triCost * torpNumber).toString
-    lblTorpsDurCost.text = (torps.durCost * torpNumber).toString
-    lblTorpsMolCost.text = (torps.molCost * torpNumber).toString
+    lblTorpsMoneyCost.text = (torps.launcherCost.money * torpNumber).toString
+    lblTorpsTriCost.text = (torps.launcherCost.tri * torpNumber).toString
+    lblTorpsDurCost.text = (torps.launcherCost.dur * torpNumber).toString
+    lblTorpsMolCost.text = (torps.launcherCost.mol * torpNumber).toString
 
     val techCost = 0
   }

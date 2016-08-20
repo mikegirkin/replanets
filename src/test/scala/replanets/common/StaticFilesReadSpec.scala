@@ -17,7 +17,8 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
     torps should have size Constants.TorpspecRecordsNumber
     torps(5).name should be("Mark 4 Photon")
     torps(5).kill should be(13)
-
+    torps(5).launcherCost.money should be (20)
+    torps(5).id should be (LauncherId(6))
   }
 
   "A hullspec.dat should be read correctly" in {

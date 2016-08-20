@@ -1,16 +1,14 @@
 package replanets.common
 
-import java.nio.file.Path
+import java.nio.file.{Files, Path}
 
-import replanets.recipes.{RecordRecipe, SpacePaddedString, WORD}
+import replanets.recipes._
 
 case class TorpspecItem(
+  id: LauncherId,
   name: String,
-  topredoMoneyCost: Short,
-  launcherMoneyCost: Short,
-  triCost: Short,
-  durCost: Short,
-  molCost: Short,
+  torpedoMoneyCost: Short,
+  launcherCost: Cost,
   mass: Short,
   techLevel: Short,
   kill: Short,
@@ -20,19 +18,24 @@ case class TorpspecItem(
 object TorpspecItem {
   val nameLength = 20
 
-  val recipe = RecordRecipe(
-    SpacePaddedString(nameLength),
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD,
-    WORD
-  )(TorpspecItem.apply)
-
-  def fromFile(file: Path): IndexedSeq[TorpspecItem] =
-    recipe.readFromFile(file, Constants.TorpspecRecordsNumber)
+  def fromFile(file: Path): IndexedSeq[TorpspecItem] = {
+    val it = Files.readAllBytes(file).iterator
+    (1 to Constants.TorpspecRecordsNumber).map { idx =>
+      TorpspecItem(
+        LauncherId(idx),
+        SpacePaddedString(nameLength).read(it),
+        WORD.read(it),
+        Cost(
+          money = WORD.read(it),
+          tri = WORD.read(it),
+          dur = WORD.read(it),
+          mol = WORD.read(it)
+        ),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it),
+        WORD.read(it)
+      )
+    }
+  }
 }
