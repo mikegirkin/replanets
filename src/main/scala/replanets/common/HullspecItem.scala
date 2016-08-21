@@ -18,7 +18,8 @@ case class HullspecItem(
   fighterBaysNumber: Short,
   maxTorpedoLaunchers: Short,
   maxBeamWeapons: Short,
-  cost: Cost
+  cost: Cost,
+  specials: Set[HullFunc]
 )
 
 object HullspecItem {
@@ -42,7 +43,7 @@ object HullspecItem {
     maxBeamWeapons: Short,
     moneyCost: Short
   ) {
-    def toHullspecItem = HullspecItem(
+    def toHullspecItem(specials: Set[HullFunc]) = HullspecItem(
       HullId(id),
       name,
       pictureNumber,
@@ -56,13 +57,14 @@ object HullspecItem {
       fighterBaysNumber,
       maxTorpedoLaunchers,
       maxBeamWeapons,
-      cost = Cost(triCost, durCost, molCost, moneyCost)
+      cost = Cost(triCost, durCost, molCost, moneyCost),
+      specials
     )
   }
 
   val nameLength = 30
 
-  def read(idx: Int, it: Iterator[Byte]) = {
+  private def read(idx: Int, it: Iterator[Byte]) = {
     HullspecRecord(
       idx,
       SpacePaddedString(nameLength).read(it),
@@ -81,13 +83,13 @@ object HullspecItem {
       WORD.read(it),
       WORD.read(it),
       WORD.read(it)
-    ).toHullspecItem
+    )
   }
 
-  def fromFile(file: Path): IndexedSeq[HullspecItem] = {
+  def fromFile(file: Path, specials: Map[HullId, Set[HullFunc]]): IndexedSeq[HullspecItem] = {
     val it = Files.readAllBytes(file).iterator
     (1 to Constants.HullsInHullspec).map { idx =>
-      read(idx, it)
+      read(idx, it).toHullspecItem(specials.getOrElse(HullId(idx), Set()))
     }
   }
 }

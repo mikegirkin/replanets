@@ -67,6 +67,45 @@ object Constants {
     5 -> "Repair base",
     6 -> "Force a surrender"
   )
+
+  val thostHullFunctions: Map[HullId, Set[HullFunc]] = Map(
+    HullId(3) -> Set(HeatsTo50, ScansAllWormholes),
+    HullId(7) -> Set(AntiCloak),
+    HullId(8) -> Set(CoolsTo50),
+    HullId(9) -> Set(Bioscan),
+    HullId(21) -> Set(Cloak),
+    HullId(22) -> Set(Cloak),
+    HullId(25) -> Set(Cloak),
+    HullId(26) -> Set(Cloak),
+    HullId(27) -> Set(Cloak),
+    HullId(28) -> Set(Cloak),
+    HullId(29) -> Set(AdvancedCloak),
+    HullId(31) -> Set(AdvancedCloak),
+    HullId(32) -> Set(Cloak),
+    HullId(33) -> Set(Cloak),
+    HullId(36) -> Set(Cloak),
+    HullId(38) -> Set(Cloak),
+    HullId(39) -> Set(GloryDeviceHighDamage),
+    HullId(41) -> Set(GloryDeviceLowDamage),
+    HullId(42) -> Set(Gambling),
+    HullId(43) -> Set(Cloak),
+    HullId(44) -> Set(Gravitonic, Cloak),
+    HullId(45) -> Set(Gravitonic, Cloak),
+    HullId(46) -> Set(Gravitonic, Cloak),
+    HullId(47) -> Set(Cloak),
+    HullId(51) -> Set(Hyperdrive),
+    HullId(56) -> Set(Chunneling),
+    HullId(64) -> Set(HeatsTo100),
+    HullId(69) -> Set(ImperialAssault),
+    HullId(77) -> Set(Hyperdrive),
+    HullId(84) -> Set(FullBioscan),
+    HullId(87) -> Set(Hyperdrive),
+    HullId(96) -> Set(Ramscoop, Bioscan),
+    HullId(43) -> Set(Cloak),
+    HullId(97) -> Set(AdvancedRefinery),
+    HullId(104) -> Set(Refinery),
+    HullId(105) -> Set(Alchemy)
+  )
 }
 
 

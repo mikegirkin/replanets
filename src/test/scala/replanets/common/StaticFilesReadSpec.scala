@@ -25,7 +25,7 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
     val file = Paths.get("./testfiles/THost/hullspec.dat")
 
-    val hulls = HullspecItem.fromFile(file)
+    val hulls = HullspecItem.fromFile(file, Constants.thostHullFunctions)
 
     hulls should have size 105
     val hull = hulls(65)
@@ -42,6 +42,10 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
     hull.cargo should be (19)
     hull.fuelTankSize should be (55)
     hull.crewSize should be (25)
+
+    val meteor = hulls.find(_.id == HullId(46)).get
+    meteor.specials should contain theSameElementsAs Set(Cloak, Gravitonic)
+    meteor.name should be ("METEOR CLASS BLOCKADE RUNNER")
 
   }
 

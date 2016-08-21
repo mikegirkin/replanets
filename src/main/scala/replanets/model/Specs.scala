@@ -4,21 +4,22 @@ import java.nio.file.Path
 
 import replanets.common._
 
-
 case class Specs(
   beamSpecs: IndexedSeq[BeamspecItem],
   torpSpecs: IndexedSeq[TorpspecItem],
   engineSpecs: IndexedSeq[EngspecItem],
   hullSpecs: IndexedSeq[HullspecItem],
-  raceHulls: HullAssignment
+  raceHulls: HullAssignment,
+  hullFunctions: Map[HullId, Set[HullFunc]]
 ) {
   def getRaceHulls(race: RaceId): IndexedSeq[HullspecItem] = {
     val hullIndexes = raceHulls.getRaceHullIds(race.value - 1)
     hullSpecs.filter(h => hullIndexes.contains(h.id.value))
   }
 
-  def isGravitonic(hullId: OneBasedIndex): Boolean = {
-    Seq(43, 44, 45).contains(hullId.value) //TODO: hardcoded bells and whistles!!!
+  def isGravitonic(hullId: HullId): Boolean = {
+    hullFunctions.get(hullId)
+      .exists(hf => hf.contains(Gravitonic))
   }
 
 }
@@ -30,9 +31,10 @@ object Specs {
     val beams = BeamspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.beamspecFilename), "/files/beamspec.dat"))
     val torps = TorpspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.torpspecFilename), "/files/torpspec.dat"))
     val engines = EngspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.engspecFilename), "/files/engspec.dat"))
-    val hulls = HullspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullspecFileName), "/files/hullspec.dat"))
+    val hullfuncs = Constants.thostHullFunctions
+    val hulls = HullspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullspecFileName), "/files/hullspec.dat"), hullfuncs)
     val hullAssignment = HullAssignment.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullsAssignmentFilename), "files/truehull.dat"))
 
-    Specs(beams, torps, engines, hulls, hullAssignment)
+    Specs(beams, torps, engines, hulls, hullAssignment, hullfuncs)
   }
 }

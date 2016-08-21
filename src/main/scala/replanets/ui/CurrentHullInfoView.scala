@@ -146,6 +146,7 @@ class CurrentHullInfoView(
     lblCrew.text = hull.crewSize.toString
     lblFueltank.text = hull.fuelTankSize.toString
     lblCargoSpace.text = hull.cargo.toString
+    lblSpecialFunction.text = hull.specials.seq.map(x => x.displayName).mkString(", ")
   }
 
   currentHull.onChange(renewData())
