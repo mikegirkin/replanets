@@ -2,8 +2,6 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.JsonUtils._
-import play.api.libs.json.Json._
 import play.api.libs.json._
 import replanets.model.{PlayerCommand, Specs, TurnInfo}
 
@@ -11,9 +9,8 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-/**
-  * Created by mgirkin on 07/08/2016.
-  */
+import replanets.model.JsonUtils._
+
 class GameDatabase(gamePath: Path, val playingRace: RaceId) {
   val dbFoldername = "db"
   val dbDirectoryPath = gamePath.resolve(dbFoldername)
@@ -57,8 +54,19 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
 
   }
 
+  private case class PlayerActionsData(
+    version: String,
+    commands: Seq[PlayerCommand],
+    additionalData: Seq[String]
+  )
+
+  private object PlayerActionsData {
+    implicit val fmt = play.api.libs.json.Json.format[PlayerActionsData]
+  }
+
   def saveCommands(turnId: TurnId, raceId: RaceId, commands: mutable.Buffer[PlayerCommand]) = {
-    val json = Json.stringify(Json.toJson(commands))
+    val data = PlayerActionsData("v1", commands, Seq())
+    val json = Json.prettyPrint(Json.toJson(data))
     Files.write(commandsFilePath(turnId.value, raceId.value), json.getBytes)
   }
 
@@ -66,9 +74,11 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
     val commandsFile = commandsFilePath(turnId, raceId)
     if(Files.exists(commandsFile)) {
       val bytes = Files.readAllBytes(commandsFile)
-      Json.parse(bytes).as[Seq[PlayerCommand]]
-    } else
+      val data = Json.parse(bytes).as[PlayerActionsData]
+      data.commands
+    } else {
       Seq()
+    }
   }
 
   def importRstFile(rstFile: Path): Boolean = {

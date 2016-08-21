@@ -124,7 +124,7 @@ class BuildShipView(
   val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
 
   val btnStartStopConstruction = new Button{
-    text <== createStringBinding(() => if(data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)) "Start construction" else "Stop construction")
+    text <== createStringBinding(() => if(data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)) "Stop construction" else "Start construction", data)
     onAction = (e: ActionEvent) => startStopConstruction()
   }
 
@@ -162,7 +162,12 @@ class BuildShipView(
       if(base.shipBeingBuilt.isDefined) {
         //stop order
       } else {
-        //crete new order
+        data.value.foreach(base =>
+          actions.buildShip(base, ShipBuildOrder(
+            selectedHull.value, selectedEngine.value,
+            selectedBeam.value, beamsToBuild.value,
+            selectedLauncher.value, launchersToBuild.value))
+        )
       }
     }
   }

@@ -52,3 +52,40 @@ case class SetShipFcode(
   override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = true
 
 }
+
+case class BuildShip(
+  objectId: PlanetId, hullId: HullId, engineId: EngineId,
+  beamId: BeamId, beamsCount: Int,
+  launcherId: LauncherId, launcherCount: Int
+) extends PlayerCommand {
+
+  def this(
+    objectId: PlanetId,
+    buildOrder: ShipBuildOrder) =
+    this(
+      objectId, buildOrder.hull.id, buildOrder.engine.id,
+      buildOrder.beam.id, buildOrder.beamCount,
+      buildOrder.launchers.id, buildOrder.launcherCount
+    )
+
+  def getBuildOrder(specs: Specs) = ShipBuildOrder(
+    specs.hullSpecs.find(_.id == hullId).get,
+    specs.engineSpecs.find(_.id == engineId).get,
+    specs.beamSpecs.find(_.id == beamId).get,
+    beamsCount,
+    specs.torpSpecs.find(_.id == launcherId).get,
+    launcherCount
+  )
+
+  override def isReplacableBy(other: PlayerCommand): Boolean = {
+    other match {
+      case BuildShip(baseId, _, _, _, _, _, _) if baseId == objectId => true
+      case _ => false
+    }
+  }
+
+  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = {
+    val base = game.turnInfo(turn).getStarbaseState(objectId)
+    if(base.shipBeingBuilt.contains(getBuildOrder(game.specs))) false else true
+  }
+}

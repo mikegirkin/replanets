@@ -19,12 +19,12 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     minWidth = 600
   }
 
-  private val actions = new Actions(
+  private val actions = new Actions(game, viewModel)(
     new SelectBase(game, viewModel),
     new SelectPlanet(game, viewModel),
-    new SetFcode(game, viewModel),
     () => viewModel.currentView = CurrentView.BuildShip,
-    () => viewModel.currentView = CurrentView.Map
+    () => viewModel.currentView = CurrentView.Map,
+    setFcode = new SetFcode(game, viewModel)
   )
 
   private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).rst.messages)

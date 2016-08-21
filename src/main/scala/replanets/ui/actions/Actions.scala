@@ -1,12 +1,25 @@
 package replanets.ui.actions
 
-/**
-  * Created by mgirkin on 06/08/2016.
-  */
-class Actions(
+import replanets.common.{ShipBuildOrder, Starbase}
+import replanets.model.{BuildShip, Game}
+import replanets.ui.viewmodels.ViewModel
+
+class Actions(game: Game, viewModel: ViewModel)(
   val selectStarbase: SelectBase,
   val selectPlanet: SelectPlanet,
-  val setFcode: SetFcode,
   val showBuildShipView: () => Unit,
-  val showMapView: () => Unit
-)
+  val showMapView: () => Unit,
+
+  //orders
+  val setFcode: SetFcode
+) {
+
+  val buildShip = (starbase: Starbase, buildOrder: ShipBuildOrder) => {
+    val command = BuildShip(starbase.id, buildOrder)
+    game.addCommand(command)
+    viewModel.selectedObject.foreach(x =>
+      viewModel.objectChanged.fire(x)
+    )
+  }
+
+}
