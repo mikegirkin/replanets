@@ -18,13 +18,16 @@ class BuildShipView(
   val actions: Actions
 ) extends VBox {
 
-  val data = ObjectProperty[Option[Starbase]](None)
-  val selectedHull = ObjectProperty[HullspecItem](game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel).head)
-  val selectedEngine = ObjectProperty[EngspecItem](game.specs.engineSpecs.head)
-  val selectedBeam = ObjectProperty[BeamspecItem](game.specs.beamSpecs.head)
-  val selectedLauncher = ObjectProperty[TorpspecItem](game.specs.torpSpecs.head)
-  val beamsToBuild = IntegerProperty(selectedHull.value.maxBeamWeapons)
-  val launchersToBuild = IntegerProperty(selectedHull.value.maxTorpedoLaunchers)
+  viewModel.selectedObjectChaged += onSelectedObjectChanged
+  viewModel.objectChanged += onModelObjectChanged
+
+  private val data = ObjectProperty[Option[Starbase]](None)
+  private val selectedHull = ObjectProperty[HullspecItem](game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel).head)
+  private val selectedEngine = ObjectProperty[EngspecItem](game.specs.engineSpecs.head)
+  private val selectedBeam = ObjectProperty[BeamspecItem](game.specs.beamSpecs.head)
+  private val selectedLauncher = ObjectProperty[TorpspecItem](game.specs.torpSpecs.head)
+  private val beamsToBuild = IntegerProperty(selectedHull.value.maxBeamWeapons)
+  private val launchersToBuild = IntegerProperty(selectedHull.value.maxTorpedoLaunchers)
 
   selectedHull.onChange({
     beamsToBuild.value = selectedHull.value.maxBeamWeapons
@@ -180,8 +183,27 @@ class BuildShipView(
 
   private def handleExitButton() = actions.showMapView()
 
-  def setData(starbaseId: PlanetId): Unit = {
-    val base = game.turnSeverData(viewModel.turnShown).bases(starbaseId)
+  private def onSelectedObjectChanged(x: Unit): Unit = {
+    viewModel.selectedObject.foreach { so =>
+      so match {
+        case MapObject.Starbase(id, _, _) => rebindTo(PlanetId(id))
+        case _ => data.value = None
+      }
+    }
+  }
+
+  private def onModelObjectChanged(mo: MapObject): Unit = {
+    for(base <- data.value) {
+      mo match {
+        case MapObject.Starbase(id, _, _) if PlanetId(id) == base.id => rebindTo(PlanetId(id))
+        case MapObject.Planet(id, _, _) if PlanetId(id) == base.id => rebindTo(PlanetId(id))
+          data.value = Some(base)
+      }
+    }
+  }
+
+  private def rebindTo(id: PlanetId) = {
+    val base = game.turnInfo(viewModel.turnShown).getStarbaseState(id)(game.specs)
     data.value = Some(base)
   }
 }

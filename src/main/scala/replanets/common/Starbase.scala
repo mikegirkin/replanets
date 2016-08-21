@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.model.THostFormulas
+import replanets.model._
 
 case class ShipCost(
   hullCost: Cost,
@@ -70,5 +70,25 @@ case class Starbase(
 
   private def lowerLimit(number: Int, limit: Int): Int = {
     if(number<limit) limit else number
+  }
+
+  def applyCommand(command: PlayerCommand)(specs: Specs): Starbase = {
+    command match {
+      case x: BuildShip if x.objectId == this.id => {
+        val order = x.getBuildOrder(specs)
+        val hullTechLevel = Math.max(order.hull.techLevel, this.hullsTech)
+        val engineTechLevel = Math.max(order.engine.techLevel, this.engineTech)
+        val beamTechLevel = Math.max(order.beam.techLevel, this.beamTech)
+        val torpsTechLevel = Math.max(order.launchers.techLevel, this.torpedoTech)
+        this.copy(
+          shipBeingBuilt = Some(x.getBuildOrder(specs)),
+          hullsTech = hullTechLevel,
+          engineTech = engineTechLevel,
+          beamTech = beamTechLevel,
+          torpedoTech = torpsTechLevel
+        )
+      }
+      case _ => this
+    }
   }
 }

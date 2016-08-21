@@ -39,7 +39,6 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   private def showBuildShipView() = {
     viewModel.selectedObject.foreach { b =>
-      buildShipView.setData(PlanetId(b.id))
       mainLayout.center = buildShipView
       mainLayout.right = null
     }

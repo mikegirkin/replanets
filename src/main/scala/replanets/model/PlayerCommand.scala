@@ -85,7 +85,7 @@ case class BuildShip(
   }
 
   override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = {
-    val base = game.turnInfo(turn).getStarbaseState(objectId)
+    val base = game.turnInfo(turn).getStarbaseState(objectId)(game.specs)
     if(base.shipBeingBuilt.contains(getBuildOrder(game.specs))) false else true
   }
 }
