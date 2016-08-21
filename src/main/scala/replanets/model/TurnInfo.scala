@@ -12,28 +12,63 @@ case class TurnInfo(
   def stateAfterCommands(specs: Specs): ServerData = {
     commands.foldLeft(initialState)((state, command) => {
       command match {
-        case SetPlanetFcode(planetId, newFcode) => handleSetPlanetFCode(planetId, newFcode)(state)
-        case SetShipFcode(shipId, newFcode) => handleSetShipFcode(shipId, newFcode)(state)
+        case x:SetPlanetFcode => handle(x)(state)
+        case x:SetShipFcode => handle(x)(state)
+        case x:StartShipConstruction => handle(x, specs)(state)
         case _ => state
       }
     })
   }
 
-  private def handleSetPlanetFCode(planetId: PlanetId, newFCode: Fcode)(state: ServerData): ServerData = {
+  private def handle(command: SetPlanetFcode)(state: ServerData): ServerData = {
     state.copy(
-      planets = state.planets.updated(planetId, state.planets(planetId).copy(fcode = newFCode))
+      planets = state.planets.updated(command.objectId, state.planets(command.objectId).copy(fcode = command.newFcode))
     )
   }
 
-  private def handleSetShipFcode(shipId: ShipId, newFcode: Fcode)(state: ServerData): ServerData = {
-    val ship = state.ships(shipId)
+  private def handle(command: SetShipFcode)(state: ServerData): ServerData = {
+    val ship = state.ships(command.objectId)
     if(!ship.isInstanceOf[OwnShip]) state
     else {
       val ownShip = ship.asInstanceOf[OwnShip]
       state.copy(
-        ships = state.ships.updated(shipId, ownShip.copy(fcode = newFcode))
+        ships = state.ships.updated(command.objectId, ownShip.copy(fcode = command.newFcode))
       )
     }
+  }
+
+  private def handle(command: StartShipConstruction, specs: Specs)(state: ServerData): ServerData = {
+    val order = command.getBuildOrder(specs)
+    val base = state.bases(command.objectId)
+    val hullTechLevel = Math.max(order.hull.techLevel, base.hullsTech)
+    val engineTechLevel = Math.max(order.engine.techLevel, base.engineTech)
+    val beamTechLevel = Math.max(order.beam.techLevel, base.beamTech)
+    val torpsTechLevel = Math.max(order.launchers.techLevel, base.torpedoTech)
+    val cost = base.shipCostAtStarbase(order.hull, order.engine, order.beam, order.beamCount, order.launchers, order.launcherCount)
+    val planet = state.planets(command.objectId)
+    val newPlanetMoney = if(planet.money >= cost.total.money) planet.money - cost.total.money else 0
+    val newPlanetSupplies = {
+      if(planet.money >= cost.total.money) planet.supplies
+      else planet.supplies - (cost.total.money - planet.money)
+    }
+    state.copy(
+      bases = state.bases.updated(command.objectId, base.copy(
+        shipBeingBuilt = Some(command.getBuildOrder(specs)),
+        hullsTech = hullTechLevel,
+        engineTech = engineTechLevel,
+        beamTech = beamTechLevel,
+        torpedoTech = torpsTechLevel
+      )),
+      planets = state.planets.updated(command.objectId, planet.copy(
+        surfaceMinerals = planet.surfaceMinerals.copy(
+          tritanium = planet.surfaceMinerals.tritanium - cost.total.tri,
+          duranium = planet.surfaceMinerals.duranium - cost.total.dur,
+          molybdenium = planet.surfaceMinerals.molybdenium - cost.total.mol
+        ),
+        money = newPlanetMoney,
+        supplies = newPlanetSupplies
+      ))
+    )
   }
 
   def getStarbaseState(baseId: PlanetId)(specs: Specs): Starbase = {

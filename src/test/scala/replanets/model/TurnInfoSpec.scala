@@ -15,12 +15,14 @@ class TurnInfoSpec extends WordSpec with Matchers {
     val rst = RstFileReader.read(path, RaceId(4), specs)
   }
 
+  def buildCommands(cmd: PlayerCommand*) = MutableBuffer(cmd:_*)
+
   "set planet fcode command" should {
     "change planet fcode" in {
       val gs = gameState
       val planetId = PlanetId(175)
       val newFcode = Fcode("AA3")
-      val commands: MutableBuffer[PlayerCommand] = MutableBuffer(SetPlanetFcode(planetId, newFcode))
+      val commands = buildCommands(SetPlanetFcode(planetId, newFcode))
       val turnInfo = TurnInfo(gs.rst, commands)
 
       val after = turnInfo.stateAfterCommands(gs.specs)
@@ -34,12 +36,42 @@ class TurnInfoSpec extends WordSpec with Matchers {
       val gs = gameState
       val shipId = ShipId(1)
       val newFcode = Fcode("082")
-      val commands: MutableBuffer[PlayerCommand] = MutableBuffer(SetShipFcode(shipId, newFcode))
+      val commands = buildCommands(SetShipFcode(shipId, newFcode))
       val turnInfo = TurnInfo(gs.rst, commands)
 
       val after = turnInfo.stateAfterCommands(gs.specs)
 
       after.ships(shipId).asInstanceOf[OwnShip].fcode should be (newFcode)
+    }
+  }
+
+  "start ship construction command" should {
+    val gs = gameState
+    val planetId = PlanetId(303)
+    val cmd = StartShipConstruction(
+      planetId, HullId(33), EngineId(9), BeamId(8), 6, LauncherId(1), 4
+    )
+    val commands = buildCommands(cmd)
+    val turnInfo = TurnInfo(gs.rst, commands)
+
+    val after = turnInfo.stateAfterCommands(gs.specs)
+
+    "set build order ot starbase" in {
+      after.bases(planetId).shipBeingBuilt should not be empty
+      val order = after.bases(planetId).shipBeingBuilt.get
+      order.hull.id should be (HullId(33))
+      order.launcherCount should be (4)
+      order.beamCount should be (6)
+      order.engine.id should be (EngineId(9))
+    }
+
+    "subtract cost from planetary resources" in {
+      val planet = after.planets(planetId)
+      planet.surfaceMinerals.tritanium should be(1554)
+      planet.surfaceMinerals.duranium should be(476)
+      planet.surfaceMinerals.molybdenium should be(493)
+      planet.money should be(0)
+      planet.supplies should be(492)
     }
   }
 }

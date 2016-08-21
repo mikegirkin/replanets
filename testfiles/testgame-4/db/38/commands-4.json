@@ -1,17 +1,6 @@
 {
   "version" : "v1",
   "commands" : [ {
-    "type" : "StartShipConstruction",
-    "value" : {
-      "objectId" : 303,
-      "hullId" : 16,
-      "engineId" : 1,
-      "beamId" : 1,
-      "beamsCount" : 0,
-      "launcherId" : 1,
-      "launcherCount" : 0
-    }
-  }, {
     "type" : "SetPlanetFcode",
     "value" : {
       "objectId" : 175,
@@ -38,6 +27,17 @@
       "beamsCount" : 6,
       "launcherId" : 1,
       "launcherCount" : 0
+    }
+  }, {
+    "type" : "StartShipConstruction",
+    "value" : {
+      "objectId" : 303,
+      "hullId" : 33,
+      "engineId" : 9,
+      "beamId" : 8,
+      "beamsCount" : 6,
+      "launcherId" : 1,
+      "launcherCount" : 4
     }
   } ],
   "additionalData" : [ ]
