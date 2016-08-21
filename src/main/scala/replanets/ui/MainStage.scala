@@ -27,7 +27,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     setFcode = new SetFcode(game, viewModel)
   )
 
-  private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).rst.messages)
+  private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).initialState.messages)
   private val mapView = new MapView(game, viewModel)
   private val informationView = new InformationView(game, viewModel, actions)
   private val buildShipView = new BuildShipView(game, viewModel, actions)

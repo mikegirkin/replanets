@@ -30,7 +30,7 @@ case class Game(
   }
 
   def turnSeverData(turn: TurnId) = {
-    turns(turn)(playingRace).rst
+    turns(turn)(playingRace).initialState
   }
 
   def turnInfo(turn: TurnId) = {

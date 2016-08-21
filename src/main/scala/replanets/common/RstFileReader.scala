@@ -10,7 +10,7 @@ case class ServerData(
   subversion: String,
 
   ships: Map[ShipId, Ship],
-  planets: IndexedSeq[PlanetRecord],
+  planets: Map[PlanetId, PlanetRecord],
   bases: Map[PlanetId, Starbase],
   messages: IndexedSeq[MessageInfo],
   generalInfo: GeneralTurnInformation,
@@ -52,8 +52,9 @@ object RstFileReader {
           .filter { case (numberStored, index) => numberStored != 0 }
           .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id, numberStored) }
           .toMap
-        PlanetId(br.baseId) -> Starbase(
-          PlanetId(br.baseId), planets.find(p => p.planetId == br.baseId).get, RaceId(br.owner),
+        val planetId = PlanetId(br.baseId)
+        planetId -> Starbase(
+          planetId, planets(planetId), RaceId(br.owner),
           br.defences, br.damage, br.engineTech, br.hullsTech, br.beamTech, br.torpedoTech,
           br.storedEngines, storedHulls, br.storedBeams, br.storedLaunchers, br.storedTorpedoes,
           br.fightersNumber, br.actionedShipId, br.shipAction, br.primaryOrder,

@@ -80,7 +80,7 @@ class PlanetInfoView(
     val data = game.turnSeverData(turnId)
     lblName.text = s"${game.map.planets(planetId).name} ($planetId)"
     lblWhen.text = "(now)"
-    data.planets.find(_.planetId == planetId).foreach(p => {
+    data.planets.get(PlanetId(planetId)).foreach(p => {
       val vm = new PlanetInfoVM(game, viewModel.turnShown, p.planetId)
 
       if(vm.ownerId != 0) lblOwner.text = game.races(vm.ownerId - 1).shortname

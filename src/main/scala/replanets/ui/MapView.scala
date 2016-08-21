@@ -87,7 +87,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   redraw()
 
   private def currentTurn = game.turns(viewModel.turnShown)
-  private def currentTurnServerData = currentTurn(game.playingRace).rst
+  private def currentTurnServerData = currentTurn(game.playingRace).initialState
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
     //planets
@@ -189,18 +189,18 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   }
 
   private def drawPlanets(gc: GraphicsContext) = {
-    def planetColor(owner: Option[Int], hasBase: Boolean): Color = {
+    def planetColor(owner: Option[RaceId], hasBase: Boolean): Color = {
       owner.fold(unscannedPlanetColor)( ow =>
-        if(ow == game.playingRace.value) if(hasBase) Color.Aqua else Color.Green
-        else if(ow == 0) Color.Yellow
+        if(ow == game.playingRace) if(hasBase) Color.Aqua else Color.Green
+        else if(ow.value == 0) Color.Yellow
         else if(hasBase) Color.Red else Color.OrangeRed
       )
     }
 
     (0 until 500).foreach { idx =>
       val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
-      val planetInfo = currentTurnServerData.planets.find(_.planetId == idx + 1)
-      val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(PlanetId(p.planetId)) }
+      val planetInfo = currentTurnServerData.planets.get(PlanetId(idx))
+      val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.planetId) }
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))

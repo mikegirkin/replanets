@@ -2,16 +2,9 @@ package replanets.common
 
 import replanets.recipes._
 
-case class Minerals(
-  neutronium: Int,
-  tritanium: Int,
-  duranium: Int,
-  molybdenium: Int
-)
-
 case class PlanetRecord(
-  ownerId: Short,
-  planetId: Short,
+  ownerId: RaceId,
+  planetId: PlanetId,
   fcode: Fcode,
   minesNumber: Short,
   factoriesNumber: Short,
@@ -36,8 +29,8 @@ case class PlanetRecord(
 object PlanetsReader {
   val planetRecipe = RecordRecipe(
     it => PlanetRecord(
-      WORD.read(it),
-      WORD.read(it),
+      RaceId(WORD.read(it)),
+      PlanetId(WORD.read(it)),
       Fcode(FixedLengthString(3).read(it)),
       WORD.read(it),
       WORD.read(it),
@@ -75,8 +68,8 @@ object PlanetsReader {
     )
   )
 
-  def read(it: Iterator[Byte]): IndexedSeq[PlanetRecord] = {
+  def read(it: Iterator[Byte]): Map[PlanetId, PlanetRecord] = {
     val recordsNum = WORD.read(it)
-    ArrayRecipe(recordsNum, planetRecipe).read(it)
+    ArrayRecipe(recordsNum, planetRecipe).read(it).map { x => x.planetId -> x }.toMap
   }
 }

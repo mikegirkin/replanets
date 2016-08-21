@@ -2,18 +2,10 @@ package replanets.model
 
 import replanets.common._
 
-trait PlayerCommand {
+sealed trait PlayerCommand {
   def objectId: OneBasedIndex
   def isReplacableBy(other: PlayerCommand): Boolean
   def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean
-}
-
-trait PlanetPlayerCommand extends PlayerCommand {
-  override def objectId: PlanetId
-}
-
-trait ShipPlayerCommand extends PlayerCommand {
-  override def objectId: ShipId
 }
 
 case class SetPlanetFcode(
@@ -31,8 +23,8 @@ case class SetPlanetFcode(
     val changed = for(
       turn <- game.turns.get(turn);
       raceTurn <- turn.get(race);
-      rst = raceTurn.rst;
-      planet <- rst.planets.find(_.planetId == objectId.value)
+      rst = raceTurn.initialState;
+      planet <- rst.planets.get(objectId)
     ) yield planet.fcode.value != newFcode.value
     changed.getOrElse(false)
   }

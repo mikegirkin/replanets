@@ -94,14 +94,14 @@ class TrnWriter(game: Game) {
   }
 
   private def generateCommandsSection(commands: Iterable[PlayerCommand]): Iterable[Iterable[Byte]] = {
-    val changedPlanetIds = commands.map(_.objectId).filter(_.isInstanceOf[PlanetId]).map(_.value).toSeq.distinct
+    val changedPlanetIds = commands.map(_.objectId).filter(_.isInstanceOf[PlanetId]).map(_.asInstanceOf[PlanetId]).toSeq.distinct
 
     for (
       planetId <- changedPlanetIds;
-      initialState <- game.turnSeverData(game.lastTurn).planets.find(p => p.planetId == planetId);
+      initialState <- game.turnSeverData(game.lastTurn).planets.get(planetId);
       resultState = new PlanetInfoVM(game, game.lastTurn, planetId)
     ) yield {
-      if(resultState.fcode != initialState.fcode) 21.toShort.toBytes ++ planetId.toShort.toBytes ++ resultState.fcode.value.toBytes(3)
+      if(resultState.fcode != initialState.fcode) 21.toShort.toBytes ++ planetId.value.toShort.toBytes ++ resultState.fcode.value.toBytes(3)
       else Seq()
     }
   }
