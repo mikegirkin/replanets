@@ -1,6 +1,7 @@
 package replanets.ui
 
 import replanets.common._
+import replanets.model.Starbase
 
 import scalafx.beans.property.{IntegerProperty, ObjectProperty, ReadOnlyIntegerProperty, ReadOnlyObjectProperty}
 import scalafx.geometry.HPos

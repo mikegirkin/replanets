@@ -1,7 +1,8 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game}
+import replanets.model
+import replanets.model.Game
 
 case class Coords(x: Double, y: Double) {
   def shift(dx: Double, dy: Double) = {
@@ -35,7 +36,7 @@ object MapObject {
     }
   }
 
-  def forStarbase(game: Game)(base: replanets.common.Starbase): MapObject = {
+  def forStarbase(game: Game)(base: model.Starbase): MapObject = {
     val planet = game.map.planets.find(_.id == base.id.value)
     MapObject.Starbase(base.id.value, planet.get.coords, s"Starbase ${base.id.value}")
   }

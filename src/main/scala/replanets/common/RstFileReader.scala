@@ -2,7 +2,7 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.Specs
+import replanets.model.{ShipBuildOrder, Specs, Starbase}
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class ServerData(

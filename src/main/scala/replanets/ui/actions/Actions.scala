@@ -1,7 +1,6 @@
 package replanets.ui.actions
 
-import replanets.common.{ShipBuildOrder, Starbase}
-import replanets.model.{StartShipConstruction, Game, StopShipConstruction}
+import replanets.model._
 import replanets.ui.viewmodels.ViewModel
 
 class Actions(game: Game, viewModel: ViewModel)(

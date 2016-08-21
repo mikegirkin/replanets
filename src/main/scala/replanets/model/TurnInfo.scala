@@ -1,6 +1,6 @@
 package replanets.model
 
-import replanets.common.{PlanetId, ServerData, Starbase}
+import replanets.common.{PlanetId, PlanetRecord, ServerData}
 
 import scala.collection.mutable
 

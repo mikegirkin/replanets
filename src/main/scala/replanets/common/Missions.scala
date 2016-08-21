@@ -36,7 +36,6 @@ class Missions(race: RaceId, hostType: HostType) {
   private val phostMissions = Map(
     20 -> "Make torpedoes",
     21 -> "Lay minefield",
-    //22 -> "Lay web minefield",
     23 -> "Scoop torpedoes from minefield",
     24 -> "Load minerals and make torpedoes",
     25 -> "Beam down money",

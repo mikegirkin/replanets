@@ -1,25 +1,6 @@
-package replanets.common
+package replanets.model
 
-import replanets.model._
-
-case class ShipCost(
-  hullCost: Cost,
-  enginesCost: Cost,
-  beamsCost: Cost,
-  launcherCost: Cost,
-  techCost: Cost
-) {
-  def total: Cost = hullCost.add(enginesCost).add(beamsCost).add(launcherCost).add(techCost)
-}
-
-case class ShipBuildOrder(
-  hull: HullspecItem,
-  engine: EngspecItem,
-  beam: BeamspecItem,
-  beamCount: Int,
-  launchers: TorpspecItem,
-  launcherCount: Int
-)
+import replanets.common._
 
 case class Starbase(
   id: PlanetId,

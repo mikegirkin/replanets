@@ -1,7 +1,7 @@
 package replanets.ui
 
-import replanets.common.{Constants, Starbase}
-import replanets.model.Game
+import replanets.common.Constants
+import replanets.model.{Game, Starbase}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 

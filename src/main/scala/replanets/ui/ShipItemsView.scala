@@ -2,10 +2,10 @@ package replanets.ui
 
 import javafx.scene.{paint => jfxsp}
 
-import replanets.common.{ShipBuildOrder, Starbase}
+import replanets.model.{ShipBuildOrder, Starbase}
 
 import scalafx.Includes._
-import scalafx.beans.property.{IntegerProperty, ObjectProperty}
+import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
 import scalafx.scene.control.Label
 import scalafx.scene.input.MouseEvent

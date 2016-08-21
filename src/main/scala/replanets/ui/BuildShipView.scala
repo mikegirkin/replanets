@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.Game
+import replanets.model.{Game, ShipBuildOrder, Starbase}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -176,6 +176,8 @@ class BuildShipView(
       }
     }
   }
+
+
 
   private def bindedLabel(extractor: (Starbase) => String) = new Label("???") {
     text <== createStringBinding(() => {
