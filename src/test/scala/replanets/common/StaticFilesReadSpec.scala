@@ -10,9 +10,9 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
   "A torpspec.dat reader reads file correctly" in {
 
-    val filename = getResourceFilename("/torpspec.dat")
+    val file = Paths.get("./testfiles/THost/torpspec.dat")
 
-    val torps = TorpspecItem.fromFile(Paths.get(filename))
+    val torps = TorpspecItem.fromFile(file)
 
     torps should have size Constants.TorpspecRecordsNumber
     torps(5).name should be("Mark 4 Photon")
@@ -23,9 +23,9 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
   "A hullspec.dat should be read correctly" in {
 
-    val filename = getResourceFilename("/hullspec.dat")
+    val file = Paths.get("./testfiles/THost/hullspec.dat")
 
-    val hulls = HullspecItem.fromFile(Paths.get(filename))
+    val hulls = HullspecItem.fromFile(file)
 
     hulls should have size 105
     val hull = hulls(65)
@@ -47,9 +47,9 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
   "truehull.dat should be read correctly" in {
 
-    val filename = getResourceFilename("/truehull.dat")
+    val file = Paths.get("./testfiles/THost/truehull.dat")
 
-    val assignment = HullAssignment.fromFile(Paths.get(filename))
+    val assignment = HullAssignment.fromFile(file)
 
     assignment.availableHulls should have size 11
     assignment.availableHulls(0)(0) should be (1)
@@ -58,9 +58,9 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
 
   "engspec reader should read correctly" in {
-    val filename = getResourceFilename("/engspec.dat")
+    val file = Paths.get("./testfiles/THost/engspec.dat")
 
-    val engines = EngspecItem.fromFile(Paths.get(filename))
+    val engines = EngspecItem.fromFile(file)
 
     engines(8).id should be (EngineId(9))
     engines(8).techLevel should be (10)
@@ -69,9 +69,9 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
   }
 
   "beamspec reader should read data correclty" in {
-    val filename = getResourceFilename("/beamspec.dat")
+    val file = Paths.get("./testfiles/THost/beamspec.dat")
 
-    val beams = BeamspecItem.fromFile(Paths.get(filename))
+    val beams = BeamspecItem.fromFile(file)
 
     beams(9).id should be (BeamId(10))
     beams(9).techLevel should be (10)

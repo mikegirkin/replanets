@@ -16,8 +16,8 @@ class THostFormulasSpec extends WordSpec with Matchers {
   "correctly calculates tech level upgrade costs" in {
 
     techUpgradeCost(1, 10) should be (4500)
-    techUpgradeCost(9, 10) should be (1700)
-    techUpgradeCost(8, 10) should be (2400)
+    techUpgradeCost(9, 10) should be (900)
+    techUpgradeCost(8, 10) should be (1700)
     techUpgradeCost(10, 4) should be (0)
   }
 }
