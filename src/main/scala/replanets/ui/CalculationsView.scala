@@ -169,7 +169,7 @@ class CalculationsView(
         thisbase.planet.money + thisbase.planet.supplies
       )
       bindCostLabels(lblPlanetMoney, lblPlanetTri, lblPlanetDur, lblPlanetMol, planetAmount)
-      val remaining = planetAmount.sub(shipCost.total)
+      val remaining = thisbase.remainsAtPlanet(shipCost)
       lblRemainingMoney setValue remaining.money
       lblRemainingTri setValue remaining.tri
       lblRemainingDur setValue remaining.dur

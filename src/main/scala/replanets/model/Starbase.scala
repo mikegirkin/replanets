@@ -49,6 +49,15 @@ case class Starbase(
     ShipCost(hullCost, enginesCost, beamsCost, launcherCost, Cost(0, 0, 0, techCost))
   }
 
+  def remainsAtPlanet(shipCost: ShipCost): Cost = {
+    Cost(
+      planet.surfaceMinerals.tritanium - shipCost.total.tri,
+      planet.surfaceMinerals.duranium - shipCost.total.dur,
+      planet.surfaceMinerals.molybdenium - shipCost.total.mol,
+      planet.money + planet.supplies - shipCost.total.money
+    )
+  }
+
   private def lowerLimit(number: Int, limit: Int): Int = {
     if(number<limit) limit else number
   }

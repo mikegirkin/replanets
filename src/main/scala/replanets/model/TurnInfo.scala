@@ -15,4 +15,12 @@ case class TurnInfo(
   def getStarbaseInitial(baseId: PlanetId): Starbase = {
     rst.bases(baseId)
   }
+
+  def getPlanetState(planetId: PlanetId): PlanetRecord = {
+    getPlanetInitial(planetId)
+  }
+
+  def getPlanetInitial(planetId: PlanetId): PlanetRecord = {
+    rst.planets(planetId.value - 1)
+  }
 }

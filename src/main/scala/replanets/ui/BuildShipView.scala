@@ -127,7 +127,10 @@ class BuildShipView(
   val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
 
   val btnStartStopConstruction = new Button{
-    text <== createStringBinding(() => if(data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)) "Stop construction" else "Start construction", data)
+    def isShipBeingBuilt = data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)
+
+    text <== createStringBinding(() => if(isShipBeingBuilt) "Stop construction" else "Start construction", data)
+    visible <== createBooleanBinding(() => (!isShipBeingBuilt && isEnoughResources()) || isShipBeingBuilt, data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
     onAction = (e: ActionEvent) => startStopConstruction()
   }
 
@@ -151,11 +154,11 @@ class BuildShipView(
     new HBox {
       alignment = Pos.CenterRight
       children = Seq(
+        btnStartStopConstruction,
         new Button {
           text = "Exit"
           onAction = (e: ActionEvent) => handleExitButton()
-        },
-        btnStartStopConstruction
+        }
       )
     }
   )
@@ -177,7 +180,17 @@ class BuildShipView(
     }
   }
 
+  private def isEnoughResources(): Boolean = {
+    data.value.map(base => {
+      val calc = base.shipCostAtStarbase(
+        selectedHull.value, selectedEngine.value,
+        selectedBeam.value, beamsToBuild.value,
+        selectedLauncher.value, launchersToBuild.value)
+      val remaining = base.remainsAtPlanet(calc)
 
+      remaining.money >= 0 && remaining.tri >= 0 && remaining.dur >= 0 && remaining.mol >= 0
+    }).getOrElse(false)
+  }
 
   private def bindedLabel(extractor: (Starbase) => String) = new Label("???") {
     text <== createStringBinding(() => {
