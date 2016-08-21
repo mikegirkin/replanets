@@ -1,6 +1,18 @@
-.infoGrid Button {
-    -fx-pref-height: 20;
+.infoGrid Button, .inGridButton {
+    -fx-max-height: 20;
     -fx-padding: 0 3 0 3;
+}
+
+.inGridButton {
+    -fx-padding: 0 3 0 3;
+    -fx-max-height: 20;
+    -fx-min-height: 20;
+    -fx-min-width: 20;
+    -fx-min-width: 20;
+}
+
+.inGridButton Label {
+    -fx-padding: 0;
 }
 
 .infoGrid Label, .infoGrid TextFlow {

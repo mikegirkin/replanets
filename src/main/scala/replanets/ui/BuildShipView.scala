@@ -6,7 +6,7 @@ import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
-import scalafx.beans.property.ObjectProperty
+import scalafx.beans.property.{IntegerProperty, ObjectProperty}
 import scalafx.event.ActionEvent
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Button, Label}
@@ -23,6 +23,13 @@ class BuildShipView(
   val selectedEngine = ObjectProperty[EngspecItem](game.specs.engineSpecs.head)
   val selectedBeam = ObjectProperty[BeamspecItem](game.specs.beamSpecs.head)
   val selectedLauncher = ObjectProperty[TorpspecItem](game.specs.torpSpecs.head)
+  val beamsToBuild = IntegerProperty(selectedHull.value.maxBeamWeapons)
+  val launchersToBuild = IntegerProperty(selectedHull.value.maxTorpedoLaunchers)
+
+  selectedHull.onChange({
+    beamsToBuild.value = selectedHull.value.maxBeamWeapons
+    launchersToBuild.value = selectedHull.value.maxTorpedoLaunchers
+  })
 
   styleClass = Seq("buildShipView")
 
@@ -108,9 +115,9 @@ class BuildShipView(
     styleClass.append("launcherList")
   }
 
-  val info = new CurrentHullInfoView(selectedHull)
+  val info = new CurrentHullInfoView(selectedHull, beamsToBuild, launchersToBuild)
 
-  val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, selectedLauncher)
+  val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
 
   children = Seq(
     new HBox(

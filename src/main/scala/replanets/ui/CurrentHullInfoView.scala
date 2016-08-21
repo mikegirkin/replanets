@@ -2,13 +2,17 @@ package replanets.ui
 
 import replanets.common.HullspecItem
 
-import scalafx.beans.property.ObjectProperty
-import scalafx.geometry.HPos
+import scalafx.Includes._
+import scalafx.beans.property.{IntegerProperty, ObjectProperty}
+import scalafx.event.ActionEvent
+import scalafx.geometry.{HPos, Pos}
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{ColumnConstraints, GridPane, VBox}
 
 class CurrentHullInfoView(
-  val currentHull: ObjectProperty[HullspecItem]
+  val currentHull: ObjectProperty[HullspecItem],
+  val beamsToBuild: IntegerProperty,
+  val launchersToBuild: IntegerProperty
 ) extends VBox {
 
   styleClass = Seq("currentHullInfoView")
@@ -27,12 +31,65 @@ class CurrentHullInfoView(
   val lblSpecialFunction = new Label("???") {
     styleClass = Seq("specialFunction")
   }
-  val lblTorpedoTubesHeader = new Label("???")
-  val lblBeamWeaponsHeader = new Label("???")
+  val lblLaunchersHeader = new Label("???")
+  val lblBeamWeaponsHeader = new Label("Beam weapons:")
+
+  val btnAddBeam = new Button("+") {
+    styleClass = Seq("inGridButton")
+    onAction = (e: ActionEvent) => {
+      if(beamsToBuild.value < currentHull.value.maxBeamWeapons) beamsToBuild.value = beamsToBuild.value + 1
+    }
+  }
+  val btnRemoveBeam = new Button("-") {
+    styleClass = Seq("inGridButton")
+    onAction = (e: ActionEvent) => {
+      if(beamsToBuild.value > 0) beamsToBuild.value = beamsToBuild.value - 1
+    }
+  }
+  val btnAddLauncher = new Button("+") {
+    styleClass = Seq("inGridButton")
+    onAction = (e: ActionEvent) => {
+      if(launchersToBuild.value < currentHull.value.maxTorpedoLaunchers) launchersToBuild.value = launchersToBuild.value + 1
+    }
+  }
+  val btnRemoveLauncher = new Button("-"){
+    styleClass = Seq("inGridButton")
+    onAction = (e: ActionEvent) => {
+      if(launchersToBuild.value > 0) launchersToBuild.value = launchersToBuild.value - 1
+    }
+  }
+
+  val bottomGrid = new GridPane {
+    fillWidth = false
+    alignment = Pos.Center
+    columnConstraints = Seq(
+      new ColumnConstraints {
+        halignment = HPos.Right
+      },
+      new ColumnConstraints {
+        minWidth = 40
+      },
+      new ColumnConstraints {
+        halignment = HPos.Right
+      },
+      new ColumnConstraints {
+        minWidth = 40
+      }
+    )
+    add(new Label("Hull mass:"), 0, 0)
+    add(lblHullMass, 1, 0)
+    add(new Label("Crew:"), 0, 1)
+    add(lblCrew, 1, 1)
+    add(new Label("Fuel tank:"), 2, 0)
+    add(lblFueltank, 3, 0)
+    add(new Label("Cargo space:"), 2, 1)
+    add(lblCargoSpace, 3, 1)
+  }
 
   children = Seq(
     lblHullName,
     new GridPane {
+      fillWidth = true
       columnConstraints = Seq(
         new ColumnConstraints {
           minWidth = 150
@@ -46,44 +103,43 @@ class CurrentHullInfoView(
       add(lblEnginesNumber, 1, 1)
       add(lblBeamWeaponsHeader, 0, 2)
       add(lblBeamsNumber, 1, 2)
-      add(lblTorpedoTubesHeader, 0, 3)
+      add(btnAddBeam, 2, 2)
+      add(btnRemoveBeam, 3, 2)
+      add(lblLaunchersHeader, 0, 3)
       add(lblLaunchersNumber, 1, 3)
-      add(new Label("Hull mass:"), 0, 4)
-      add(lblHullMass, 1, 4)
-      add(new Label("Crew:"), 0, 5)
-      add(lblCrew, 1, 5)
-      add(new Label("Fuel tank:"), 0, 6)
-      add(lblFueltank, 1, 6)
-      add(new Label("Cargo space:"), 0, 7)
-      add(lblCargoSpace, 1, 7)
+      add(btnAddLauncher, 2, 3)
+      add(btnRemoveLauncher, 3, 3)
     },
+    bottomGrid,
     lblSpecialFunction
   )
 
+  val beamWeaponsVisibility = createBooleanBinding(() => currentHull.value.maxBeamWeapons > 0, currentHull)
+  btnAddBeam.visible <== beamWeaponsVisibility
+  btnRemoveBeam.visible <== beamWeaponsVisibility
+  lblBeamWeaponsHeader.visible <== beamWeaponsVisibility
+  lblBeamsNumber.visible <== beamWeaponsVisibility
+
+  val launchersButtonVisibility = createBooleanBinding(() => currentHull.value.maxTorpedoLaunchers > 0, currentHull)
+  btnAddLauncher.visible <== launchersButtonVisibility
+  btnRemoveLauncher.visible <== launchersButtonVisibility
+  val launchersTextsVisibility = createBooleanBinding(() => currentHull.value.maxTorpedoLaunchers > 0 || currentHull.value.fighterBaysNumber > 0, currentHull)
+  lblLaunchersNumber.visible <== launchersTextsVisibility
+  lblLaunchersHeader.visible <== launchersTextsVisibility
 
   private def renewData(): Unit = {
     val hull = currentHull.value
     lblHullName.text = hull.name
     lblTechLevel.text = hull.techLevel.toString
     lblEnginesNumber.text = hull.enginesNumber.toString
-
-    if(hull.maxBeamWeapons > 0) {
-      lblBeamWeaponsHeader.text = "Beam weapons:"
-      lblBeamsNumber.text = hull.maxBeamWeapons.toString
-    } else {
-      lblBeamWeaponsHeader.text = ""
-      lblBeamsNumber.text = ""
-    }
+    lblBeamsNumber.text = beamsToBuild.value.toString
 
     if(hull.maxTorpedoLaunchers > 0) {
-      lblTorpedoTubesHeader.text = "Torpedo launchers:"
-      lblLaunchersNumber.text = hull.maxTorpedoLaunchers.toString
+      lblLaunchersHeader.text = "Torpedo launchers:"
+      lblLaunchersNumber.text = launchersToBuild.value.toString
     } else if(hull.fighterBaysNumber > 0) {
-      lblTorpedoTubesHeader.text = "Fighter bays:"
+      lblLaunchersHeader.text = "Fighter bays:"
       lblLaunchersNumber.text = hull.fighterBaysNumber.toString
-    } else {
-      lblTorpedoTubesHeader.text = ""
-      lblLaunchersNumber.text = ""
     }
 
     lblHullMass.text = hull.mass.toString
@@ -93,6 +149,8 @@ class CurrentHullInfoView(
   }
 
   currentHull.onChange(renewData())
+  beamsToBuild.onChange(renewData())
+  launchersToBuild.onChange(renewData())
 
   renewData()
 }

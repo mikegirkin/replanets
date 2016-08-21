@@ -2,7 +2,7 @@ package replanets.ui
 
 import replanets.common._
 
-import scalafx.beans.property.ObjectProperty
+import scalafx.beans.property.{IntegerProperty, ObjectProperty, ReadOnlyIntegerProperty, ReadOnlyObjectProperty}
 import scalafx.geometry.HPos
 import scalafx.scene.control.Label
 import scalafx.scene.layout.{ColumnConstraints, GridPane}
@@ -21,11 +21,13 @@ class NonNegativeIntLabel(initial: Int = 0) extends Label {
 }
 
 class CalculationsView(
-  base: ObjectProperty[Option[Starbase]],
-  selectedHull: ObjectProperty[HullspecItem],
-  selectedEngines: ObjectProperty[EngspecItem],
-  selectedBeams: ObjectProperty[BeamspecItem],
-  selectedLaunchers: ObjectProperty[TorpspecItem]
+  base: ReadOnlyObjectProperty[Option[Starbase]],
+  selectedHull: ReadOnlyObjectProperty[HullspecItem],
+  selectedEngines: ReadOnlyObjectProperty[EngspecItem],
+  selectedBeams: ReadOnlyObjectProperty[BeamspecItem],
+  numberOfBeams: ReadOnlyIntegerProperty,
+  selectedLaunchers: ReadOnlyObjectProperty[TorpspecItem],
+  numberOfLaunchers: ReadOnlyIntegerProperty
 ) extends GridPane {
 
   columnConstraints = Seq(
@@ -146,16 +148,12 @@ class CalculationsView(
   }
 
   private def renewData(): Unit = {
-    val hull = selectedHull.value
-    val engine = selectedEngines.value
-    val beam = selectedBeams.value
-    val torps = selectedLaunchers.value
-    val numberOfBeams = hull.maxBeamWeapons
-    val numberOfLaunchers = hull.maxTorpedoLaunchers
-
     for (
       thisbase <- base.value;
-      shipCost = thisbase.shipCostAtStarbase(hull, engine, beam, numberOfBeams, torps, numberOfLaunchers)
+      shipCost = thisbase.shipCostAtStarbase(
+        selectedHull.value, selectedEngines.value,
+        selectedBeams.value, numberOfBeams.value,
+        selectedLaunchers.value, numberOfLaunchers.value)
     ) {
       bindCostLabels(lblHullMoneyCost, lblHullTriCost, lblHullDurCost, lblHullMolCost, shipCost.hullCost)
       bindCostLabels(lblEngineMoneyCost, lblEngineTriCost, lblEngineDurCost, lblEngineMolCost, shipCost.enginesCost)
@@ -183,6 +181,8 @@ class CalculationsView(
   selectedEngines.onChange(renewData())
   selectedBeams.onChange(renewData())
   selectedLaunchers.onChange(renewData())
+  numberOfBeams.onChange(renewData())
+  numberOfLaunchers.onChange(renewData())
 
   renewData()
 }
