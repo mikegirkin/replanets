@@ -67,6 +67,7 @@ class BuildShipView(
     "Available hulls:",
     data,
     selectedHull,
+    _.hull,
     game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel),
     _.techLevel,
     _.name,
@@ -80,6 +81,7 @@ class BuildShipView(
     "Engines:",
     data,
     selectedEngine,
+    _.engine,
     game.specs.engineSpecs,
     _.techLevel,
     _.name,
@@ -93,6 +95,7 @@ class BuildShipView(
     "Beams:",
     data,
     selectedBeam,
+    _.beam,
     game.specs.beamSpecs,
     _.techLevel,
     _.name,
@@ -106,6 +109,7 @@ class BuildShipView(
     "Launchers:",
     data,
     selectedLauncher,
+    _.launchers,
     game.specs.torpSpecs,
     _.techLevel,
     _.name,
@@ -118,6 +122,11 @@ class BuildShipView(
   val info = new CurrentHullInfoView(selectedHull, beamsToBuild, launchersToBuild)
 
   val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
+
+  val btnStartStopConstruction = new Button{
+    text <== createStringBinding(() => if(data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)) "Start construction" else "Stop construction")
+    onAction = (e: ActionEvent) => startStopConstruction()
+  }
 
   children = Seq(
     new HBox(
@@ -143,12 +152,20 @@ class BuildShipView(
           text = "Exit"
           onAction = (e: ActionEvent) => handleExitButton()
         },
-        new Button {
-          text = "Start construction"
-        }
+        btnStartStopConstruction
       )
     }
   )
+
+  private def startStopConstruction() = {
+    for(base <- data.value) {
+      if(base.shipBeingBuilt.isDefined) {
+        //stop order
+      } else {
+        //crete new order
+      }
+    }
+  }
 
   private def bindedLabel(extractor: (Starbase) => String) = new Label("???") {
     text <== createStringBinding(() => {

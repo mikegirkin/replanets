@@ -12,6 +12,15 @@ case class ShipCost(
   def total: Cost = hullCost.add(enginesCost).add(beamsCost).add(launcherCost).add(techCost)
 }
 
+case class ShipBuildOrder(
+  hull: HullspecItem,
+  engine: EngspecItem,
+  beam: BeamspecItem,
+  beamCount: Int,
+  launchers: TorpspecItem,
+  launcherCount: Int
+)
+
 case class Starbase(
   id: PlanetId,
   planet: PlanetRecord,
@@ -35,12 +44,13 @@ case class Starbase(
   actionedShipId: Short,
   shipAction: Short,
   primaryOrder: Short,
-  buildShipType: Short,
-  engineType: Short,
-  beamType: Short,
-  beamCount: Short,
-  launcherType: Short,
-  launchersCount: Short
+  shipBeingBuilt: Option[ShipBuildOrder]
+//  buildShipType: Short,
+//  engineType: Short,
+//  beamType: Short,
+//  beamCount: Short,
+//  launcherType: Short,
+//  launchersCount: Short
 ) {
 
   def shipCostAtStarbase(

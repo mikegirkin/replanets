@@ -5,7 +5,7 @@ package replanets.common
   */
 class ImpossibleOneBasedIndex(value: Int) extends Exception
 
-trait OneBasedIndex {
+sealed trait OneBasedIndex {
   val value: Int
   if (!OneBasedIndex.isValidValue(value)) throw new ImpossibleOneBasedIndex(value)
 }

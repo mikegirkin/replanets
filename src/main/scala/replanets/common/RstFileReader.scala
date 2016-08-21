@@ -44,17 +44,29 @@ object RstFileReader {
 
     val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
 
-    val bases = BasesReader.read(buffer.iterator.drop(pointers(3) - 1)).map { br =>
-      val storedHulls = br.storedHulls.zipWithIndex
-        .filter { case (numberStored, index) => numberStored != 0 }
-        .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id, numberStored) }
-        .toMap
-      PlanetId(br.baseId) -> Starbase(PlanetId(br.baseId), planets.find(p => p.planetId == br.baseId).get, RaceId(br.owner),
-        br.defences, br.damage, br.engineTech, br.hullsTech, br.beamTech, br.torpedoTech,
-        br.storedEngines, storedHulls, br.storedBeams, br.storedLaunchers, br.storedTorpedoes,
-        br.fightersNumber, br.actionedShipId, br.shipAction, br.primaryOrder, br.buildShipType,
-        br.engineType, br.beamType, br.beamCount, br.launcherType, br.launchersCount)
-    }.toMap
+    val bases: Map[PlanetId, Starbase] = {
+      val baseRecords = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))
+
+      baseRecords.map { br =>
+        val storedHulls = br.storedHulls.zipWithIndex
+          .filter { case (numberStored, index) => numberStored != 0 }
+          .map { case (numberStored, index) => (specs.getRaceHulls(race)(index).id, numberStored) }
+          .toMap
+        PlanetId(br.baseId) -> Starbase(
+          PlanetId(br.baseId), planets.find(p => p.planetId == br.baseId).get, RaceId(br.owner),
+          br.defences, br.damage, br.engineTech, br.hullsTech, br.beamTech, br.torpedoTech,
+          br.storedEngines, storedHulls, br.storedBeams, br.storedLaunchers, br.storedTorpedoes,
+          br.fightersNumber, br.actionedShipId, br.shipAction, br.primaryOrder,
+          if(br.buildShipType == 0) None else Some(
+            ShipBuildOrder(
+              specs.getRaceHulls(race)(br.buildShipType - 1), specs.engineSpecs(br.engineType - 1),
+              specs.beamSpecs(br.beamType - 1), br.beamCount,
+              specs.torpSpecs(br.launcherType - 1), br.launchersCount
+            )
+          )
+        )
+      }.toMap
+    }
 
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
     val shipCoords = ShipCoordsReader.read(buffer.iterator.drop(pointers(5) - 1))

@@ -2,7 +2,7 @@ package replanets.ui
 
 import javafx.scene.{paint => jfxsp}
 
-import replanets.common.Starbase
+import replanets.common.{ShipBuildOrder, Starbase}
 
 import scalafx.Includes._
 import scalafx.beans.property.{IntegerProperty, ObjectProperty}
@@ -15,6 +15,7 @@ class ShipItemsView[T](
   headerText: String,
   base: ObjectProperty[Option[Starbase]],
   selectedItem: ObjectProperty[T],
+  itemBeingBuilt: ShipBuildOrder => T,
   things: Seq[T],
   techLevel: T => Int,
   name: T => String,
@@ -38,6 +39,7 @@ class ShipItemsView[T](
     things.zipWithIndex.map { case (thing, idx) =>
       val colorBinding = createObjectBinding[jfxsp.Color](() => {
         if(selectedItem.value == thing) jfxsp.Color.LIMEGREEN
+        else if(base.value.flatMap(_.shipBeingBuilt).map(itemBeingBuilt).contains(thing)) jfxsp.Color.GOLD
         else if(techLevel(thing) > base.value.map(baseTech).getOrElse(0)) jfxsp.Color.DARKGRAY
         else jfxsp.Color.WHITE
       }, base, selectedItem)
