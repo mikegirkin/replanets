@@ -100,7 +100,7 @@ object RstFileReader {
         ShipId(sc.id) -> OwnShip(
           ShipId(sr.shipId),
           RaceId(sr.ownerId),
-          sr.fcode,
+          Fcode(sr.fcode),
           sr.warp,
           sr.xDistanceToWaypoint,
           sr.yDistanceToWaypoint,

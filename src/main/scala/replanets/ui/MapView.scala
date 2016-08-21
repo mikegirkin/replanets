@@ -197,8 +197,8 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       )
     }
 
-    (0 until 500).foreach { idx =>
-      val planetCoords = Coords(game.map.planets(idx).x, game.map.planets(idx).y)
+    (1 to 500).foreach { idx =>
+      val planetCoords = game.map.planets(idx - 1).coords
       val planetInfo = currentTurnServerData.planets.get(PlanetId(idx))
       val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.planetId) }
 

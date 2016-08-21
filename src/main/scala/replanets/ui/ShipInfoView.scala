@@ -65,7 +65,7 @@ class ShipInfoView(
       ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hull.id))
     lblBurn.text = fuelBurn.toString
     lblMass.text = s"${ship.fullMass}"
-    lblFcode.text = ship.fcode
+    lblFcode.text = ship.fcode.value
     lblCrew.text = s"${ship.crew} / ${ship.hull.crewSize}"
     lblDamage.text = s"${ship.damage} %"
     lblMission.text = game.missions.get(ship.mission)

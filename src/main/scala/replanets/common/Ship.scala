@@ -45,7 +45,7 @@ case class Target(
 case class OwnShip(
   id: ShipId,
   owner: RaceId,
-  fcode: String,
+  fcode: Fcode,
   warp: Short,
   xDistanceToWaypoint: Short,
   yDistanceToWaypoint: Short,

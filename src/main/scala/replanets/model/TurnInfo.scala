@@ -1,6 +1,6 @@
 package replanets.model
 
-import replanets.common.{Fcode, PlanetId, PlanetRecord, ServerData}
+import replanets.common._
 
 import scala.collection.mutable
 
@@ -13,6 +13,7 @@ case class TurnInfo(
     commands.foldLeft(initialState)((state, command) => {
       command match {
         case SetPlanetFcode(planetId, newFcode) => handleSetPlanetFCode(planetId, newFcode)(state)
+        case SetShipFcode(shipId, newFcode) => handleSetShipFcode(shipId, newFcode)(state)
         case _ => state
       }
     })
@@ -22,6 +23,17 @@ case class TurnInfo(
     state.copy(
       planets = state.planets.updated(planetId, state.planets(planetId).copy(fcode = newFCode))
     )
+  }
+
+  private def handleSetShipFcode(shipId: ShipId, newFcode: Fcode)(state: ServerData): ServerData = {
+    val ship = state.ships(shipId)
+    if(!ship.isInstanceOf[OwnShip]) state
+    else {
+      val ownShip = ship.asInstanceOf[OwnShip]
+      state.copy(
+        ships = state.ships.updated(shipId, ownShip.copy(fcode = newFcode))
+      )
+    }
   }
 
   def getStarbaseState(baseId: PlanetId)(specs: Specs): Starbase = {
