@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common.{Constants, PlanetId}
+import replanets.common.{Constants, Starbase}
 import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
@@ -13,7 +13,7 @@ import scalafxml.core.macros.sfxml
 
 trait IBaseInfoView {
   def rootPane: Pane
-  def setData(starbaseId: PlanetId): Unit
+  def setData(base: Starbase): Unit
 }
 
 @sfxml
@@ -29,10 +29,10 @@ class BaseInfoView(
   val lblBeams: Label,
   val lblTorpedoes: Label,
 
-  val lvHulls: ListView[(Short, String)],
-  val lvDrives: ListView[(Short, String)],
-  val lvBeams: ListView[(Short, String)],
-  val lvLaunchers: ListView[(Short, String)],
+  val lvHulls: ListView[(Int, String)],
+  val lvDrives: ListView[(Int, String)],
+  val lvBeams: ListView[(Int, String)],
+  val lvLaunchers: ListView[(Int, String)],
 
   val actions: Actions,
   val game: Game,
@@ -50,8 +50,8 @@ class BaseInfoView(
       })
   }
 
-  private def lvCellFactory = { _: ListView[(Short, String)] =>
-    new ListCell[(Short, String)] {
+  private def lvCellFactory = { _: ListView[(Int, String)] =>
+    new ListCell[(Int, String)] {
       item.onChange { (_, _, item) =>
         if(item == null) graphic = null
         else graphic = lvItem(item._1, item._2)
@@ -64,8 +64,7 @@ class BaseInfoView(
   lvDrives.cellFactory = lvCellFactory
   lvLaunchers.cellFactory = lvCellFactory
 
-  override def setData(starbaseId: PlanetId): Unit = {
-    val base = game.turnSeverData(viewModel.turnShown).bases(starbaseId)
+  override def setData(base: Starbase): Unit = {
     lblStarbaseId.text = base.id.value.toString
     lblDefense.text = base.defences.toString
     lblDamage.text = base.damage.toString

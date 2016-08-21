@@ -72,7 +72,7 @@ class BuildShipView(
     _.techLevel,
     _.name,
     _.hullsTech,
-    (b, hull, _) => b.storedHulls.getOrElse(hull.id, 0.toShort).toInt
+    (b, hull, _) => b.storedHulls.getOrElse(hull.id, 0)
   ) {
     styleClass.append("hullList")
   }

@@ -25,32 +25,22 @@ case class Starbase(
   id: PlanetId,
   planet: PlanetRecord,
   owner: RaceId,
-  defences: Short,
-  damage: Short,
-  engineTech: Short,
-  hullsTech: Short,
-  beamTech: Short,
-  torpedoTech: Short,
-  storedEngines: IndexedSeq[Short],
-
-  /***
-    * hullspec.id => number stored
-    */
-  storedHulls: Map[HullId, Short],
-  storedBeams: IndexedSeq[Short],
-  storedLaunchers: IndexedSeq[Short],
-  storedTorpedoes: IndexedSeq[Short],
-  fightersNumber: Short,
-  actionedShipId: Short,
-  shipAction: Short,
-  primaryOrder: Short,
+  defences: Int,
+  damage: Int,
+  engineTech: Int,
+  hullsTech: Int,
+  beamTech: Int,
+  torpedoTech: Int,
+  storedEngines: IndexedSeq[Int],
+  storedHulls: Map[HullId, Int],
+  storedBeams: IndexedSeq[Int],
+  storedLaunchers: IndexedSeq[Int],
+  storedTorpedoes: IndexedSeq[Int],
+  fightersNumber: Int,
+  actionedShipId: Int,
+  shipAction: Int,
+  primaryOrder: Int,
   shipBeingBuilt: Option[ShipBuildOrder]
-//  buildShipType: Short,
-//  engineType: Short,
-//  beamType: Short,
-//  beamCount: Short,
-//  launcherType: Short,
-//  launchersCount: Short
 ) {
 
   def shipCostAtStarbase(

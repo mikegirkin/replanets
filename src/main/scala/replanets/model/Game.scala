@@ -33,6 +33,10 @@ case class Game(
     turns(turn)(playingRace).rst
   }
 
+  def turnInfo(turn: TurnId) = {
+    turns(turn)(playingRace)
+  }
+
   def lastTurn = turns.keys.maxBy(_.value)
 
   def addCommand(cmd: PlayerCommand) = {
