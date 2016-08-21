@@ -1,7 +1,7 @@
 package replanets.ui.actions
 
 import replanets.common.{ShipBuildOrder, Starbase}
-import replanets.model.{BuildShip, Game}
+import replanets.model.{StartShipConstruction, Game, StopShipConstruction}
 import replanets.ui.viewmodels.ViewModel
 
 class Actions(game: Game, viewModel: ViewModel)(
@@ -14,12 +14,21 @@ class Actions(game: Game, viewModel: ViewModel)(
   val setFcode: SetFcode
 ) {
 
-  val buildShip = (starbase: Starbase, buildOrder: ShipBuildOrder) => {
-    val command = BuildShip(starbase.id, buildOrder)
-    game.addCommand(command)
+  private def fireSelectedObjectChanged() = {
     viewModel.selectedObject.foreach(x =>
       viewModel.objectChanged.fire(x)
     )
   }
 
+  def buildShip(starbase: Starbase, buildOrder: ShipBuildOrder) = {
+    val command = new StartShipConstruction(starbase.id, buildOrder)
+    game.addCommand(command)
+    fireSelectedObjectChanged()
+  }
+
+  def stopShipConstruction(starbase: Starbase) = {
+    val command = StopShipConstruction(starbase.id)
+    game.addCommand(command)
+    fireSelectedObjectChanged()
+  }
 }

@@ -74,7 +74,7 @@ case class Starbase(
 
   def applyCommand(command: PlayerCommand)(specs: Specs): Starbase = {
     command match {
-      case x: BuildShip if x.objectId == this.id => {
+      case x: StartShipConstruction if x.objectId == this.id => {
         val order = x.getBuildOrder(specs)
         val hullTechLevel = Math.max(order.hull.techLevel, this.hullsTech)
         val engineTechLevel = Math.max(order.engine.techLevel, this.engineTech)
@@ -87,6 +87,9 @@ case class Starbase(
           beamTech = beamTechLevel,
           torpedoTech = torpsTechLevel
         )
+      }
+      case x: StopShipConstruction if x.objectId == this.id => {
+        this.copy(shipBeingBuilt = None)
       }
       case _ => this
     }

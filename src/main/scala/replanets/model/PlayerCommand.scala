@@ -5,7 +5,7 @@ import replanets.common._
 trait PlayerCommand {
   def objectId: OneBasedIndex
   def isReplacableBy(other: PlayerCommand): Boolean
-  def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean
+  def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean
 }
 
 trait PlanetPlayerCommand extends PlayerCommand {
@@ -27,7 +27,7 @@ case class SetPlanetFcode(
     }
   }
 
-  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = {
+  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
     val changed = for(
       turn <- game.turns.get(turn);
       raceTurn <- turn.get(race);
@@ -49,11 +49,11 @@ case class SetShipFcode(
     }
   }
 
-  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = true
+  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = true
 
 }
 
-case class BuildShip(
+case class StartShipConstruction(
   objectId: PlanetId, hullId: HullId, engineId: EngineId,
   beamId: BeamId, beamsCount: Int,
   launcherId: LauncherId, launcherCount: Int
@@ -79,13 +79,32 @@ case class BuildShip(
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case BuildShip(baseId, _, _, _, _, _, _) if baseId == objectId => true
+      case StartShipConstruction(baseId, _, _, _, _, _, _) if baseId == objectId => true
+      case StopShipConstruction(baseId) if baseId == objectId => true
       case _ => false
     }
   }
 
-  override def changesSomething(game: Game, turn: TurnId, race: RaceId): Boolean = {
+  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
     val base = game.turnInfo(turn).getStarbaseState(objectId)(game.specs)
     if(base.shipBeingBuilt.contains(getBuildOrder(game.specs))) false else true
   }
+}
+
+case class StopShipConstruction(
+  objectId: PlanetId
+) extends PlayerCommand {
+
+  override def isReplacableBy(other: PlayerCommand): Boolean = {
+    other match {
+      case StartShipConstruction(baseId, _, _, _, _, _, _) if baseId == objectId => true
+      case _ => false
+    }
+  }
+
+  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
+    val base = game.turnInfo(turn).getStarbaseInitial(objectId)
+    if(base.shipBeingBuilt.isDefined) true else false
+  }
+
 }

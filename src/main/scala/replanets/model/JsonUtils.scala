@@ -30,29 +30,31 @@ object JsonUtils {
 
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]
+  val buildShipFormat = format[StartShipConstruction]
+  implicit val stopShipConstructionFormat = format[StopShipConstruction]
 
-  val buildShipFormat = format[BuildShip]
-
-  val playerCommandWrites = Writes[PlayerCommand] {
-    case x: SetPlanetFcode => JsObject(Seq(
-      "type" -> toJson("SetPlanetFcode"),
-      "value" -> toJson(x)(setPlanetFcodeFormat)))
-    case x: SetShipFcode => JsObject(Seq(
-      "type" -> toJson("SetShipFcode"),
-      "value" -> toJson(x)(setShipFcodeFormat)))
-    case x: BuildShip => JsObject(Seq(
-      "type" -> toJson("BuildShip"),
-      "value" -> toJson(x)(buildShipFormat)
-    ))
+  val playerCommandWrites = Writes[PlayerCommand] { cmd =>
+    val typeRow = "type" -> JsString(cmd.getClass.getSimpleName)
+    val valueRow = cmd match {
+      case x: SetPlanetFcode =>
+        "value" -> toJson(x)(setPlanetFcodeFormat)
+      case x: SetShipFcode =>
+        "value" -> toJson(x)(setShipFcodeFormat)
+      case x: StartShipConstruction =>
+        "value" -> toJson(x)(buildShipFormat)
+      case x: StopShipConstruction =>
+        "value" -> toJson(x)(stopShipConstructionFormat)
+    }
+    JsObject(Seq(typeRow, valueRow))
   }
 
   val playerCommandReads = Reads[PlayerCommand] { json =>
     val commandType = (json \ "type").as[String]
-    commandType match {
-      case "SetPlanetFcode" => (json \ "value").validate[SetPlanetFcode](setPlanetFcodeFormat)
-      case "SetShipFcode" => (json \ "value").validate[SetShipFcode](setShipFcodeFormat)
-      case "BuildShip" => (json \ "value").validate[BuildShip](buildShipFormat)
-    }
+    if(commandType == classOf[SetPlanetFcode].getSimpleName) (json \ "value").validate[SetPlanetFcode](setPlanetFcodeFormat)
+    else if(commandType == classOf[SetShipFcode].getSimpleName) (json \ "value").validate[SetShipFcode](setShipFcodeFormat)
+    else if(commandType == classOf[StartShipConstruction].getSimpleName) (json \ "value").validate[StartShipConstruction](buildShipFormat)
+    else if(commandType == classOf[StopShipConstruction].getSimpleName) (json \ "value").validate[StopShipConstruction]
+    else JsError()
   }
 
   implicit val playerCommandFormat: Format[PlayerCommand] = Format(playerCommandReads, playerCommandWrites)

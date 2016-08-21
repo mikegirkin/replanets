@@ -163,7 +163,9 @@ class BuildShipView(
   private def startStopConstruction() = {
     for(base <- data.value) {
       if(base.shipBeingBuilt.isDefined) {
-        //stop order
+        data.value.foreach( base =>
+          actions.stopShipConstruction(base)
+        )
       } else {
         data.value.foreach(base =>
           actions.buildShip(base, ShipBuildOrder(

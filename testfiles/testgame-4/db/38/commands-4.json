@@ -1,16 +1,10 @@
 {
   "version" : "v1",
   "commands" : [ {
-    "type" : "SetPlanetFcode",
+    "type" : "StartShipConstruction",
     "value" : {
       "objectId" : 303,
-      "newFcode" : "rDZ"
-    }
-  }, {
-    "type" : "BuildShip",
-    "value" : {
-      "objectId" : 303,
-      "hullId" : 14,
+      "hullId" : 16,
       "engineId" : 1,
       "beamId" : 1,
       "beamsCount" : 0,
@@ -18,21 +12,32 @@
       "launcherCount" : 0
     }
   }, {
-    "type" : "BuildShip",
+    "type" : "SetPlanetFcode",
     "value" : {
-      "objectId" : 295,
-      "hullId" : 34,
-      "engineId" : 1,
-      "beamId" : 1,
-      "beamsCount" : 4,
-      "launcherId" : 1,
-      "launcherCount" : 0
+      "objectId" : 175,
+      "newFcode" : "J5V"
     }
   }, {
     "type" : "SetPlanetFcode",
     "value" : {
       "objectId" : 236,
-      "newFcode" : "3nn"
+      "newFcode" : "kML"
+    }
+  }, {
+    "type" : "StopShipConstruction",
+    "value" : {
+      "objectId" : 16
+    }
+  }, {
+    "type" : "StartShipConstruction",
+    "value" : {
+      "objectId" : 295,
+      "hullId" : 40,
+      "engineId" : 1,
+      "beamId" : 1,
+      "beamsCount" : 6,
+      "launcherId" : 1,
+      "launcherCount" : 0
     }
   } ],
   "additionalData" : [ ]
