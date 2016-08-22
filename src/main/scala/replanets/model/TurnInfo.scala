@@ -15,6 +15,7 @@ case class TurnInfo(
         case x:SetPlanetFcode => handle(x)(state)
         case x:SetShipFcode => handle(x)(state)
         case x:StartShipConstruction => handle(x, specs)(state)
+        case x:StopShipConstruction => handle(x)(state)
         case _ => state
       }
     })
@@ -67,6 +68,15 @@ case class TurnInfo(
         ),
         money = newPlanetMoney,
         supplies = newPlanetSupplies
+      ))
+    )
+  }
+
+  private def handle(command: StopShipConstruction)(state: ServerData): ServerData = {
+    val base = state.bases(command.objectId)
+    state.copy(
+      bases = state.bases.updated(command.objectId, base.copy(
+        shipBeingBuilt = None
       ))
     )
   }

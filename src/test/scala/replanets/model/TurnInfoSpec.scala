@@ -56,7 +56,7 @@ class TurnInfoSpec extends WordSpec with Matchers {
 
     val after = turnInfo.stateAfterCommands(gs.specs)
 
-    "set build order ot starbase" in {
+    "set build order on starbase" in {
       after.bases(planetId).shipBeingBuilt should not be empty
       val order = after.bases(planetId).shipBeingBuilt.get
       order.hull.id should be (HullId(33))
@@ -74,11 +74,24 @@ class TurnInfoSpec extends WordSpec with Matchers {
       planet.supplies should be(492)
     }
   }
-//
-//  "stop ship construction command" should {
-//    val gs = gameState
-//    val planetId = PlanetId(303)
-//
-//    ""
-//  }
+
+  "stop ship construction command" when {
+    "the build ship was in rst file" should {
+      val gs = gameState
+      val planetId = PlanetId(16)
+      val cmd = StopShipConstruction(planetId)
+      val ti = TurnInfo(gs.rst, buildCommands(cmd))
+
+      val after = ti.stateAfterCommands(gs.specs)
+
+      "should leave empty build order " in {
+        gs.rst.bases(planetId).shipBeingBuilt should not be empty
+        after.bases(planetId).shipBeingBuilt shouldBe empty
+      }
+
+      "should return resources to the planet" in {
+        pending
+      }
+    }
+  }
 }

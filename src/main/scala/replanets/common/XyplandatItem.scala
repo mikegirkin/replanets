@@ -2,7 +2,6 @@ package replanets.common
 
 import replanets.recipes.{RecordRecipe, WORD}
 
-
 case class XyplandatItem(
   x: Short,
   y: Short,
