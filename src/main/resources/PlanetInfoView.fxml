@@ -12,24 +12,29 @@
 <?import javafx.scene.control.TextField?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-      maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView">
+      maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView"
+      snapToPixel="true">
     <HBox>
-        <Label fx:id="lblName" text="name" />
+        <Label fx:id="lblOwner" text="owner"/>
+        <Label fx:id="lblPlanetId" text="???"/>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-            <Label text="Climate:" />
+            <Label text="Temp:" />
             <Label fx:id="lblClimate" text="???" />
         </HBox>
     </HBox>
-    <Label fx:id="lblWhen" text="when" />
+    <HBox>
+        <Label fx:id="lblName" text="name" />
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblWhen" text="when"/>
+        </HBox>
+    </HBox>
     <VBox fx:id="pnGeneralInfo">
         <GridPane maxWidth="Infinity" styleClass="infoGrid">
             <columnConstraints>
-                <ColumnConstraints percentWidth="30" halignment="RIGHT" minWidth="10.0" />
-                <ColumnConstraints percentWidth="70" halignment="LEFT" minWidth="10.0" />
+                <ColumnConstraints percentWidth="50" halignment="RIGHT" minWidth="10.0" />
+                <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
             </columnConstraints>
             <children>
-                <Label text="Owner:" GridPane.rowIndex="0"/>
-                <Label fx:id="lblOwner" text="owner" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <TextFlow textAlignment="RIGHT" GridPane.rowIndex="1">
                     <Text styleClass="actionSymbol" text="F"/>
                     <Text text="Code:"/>
@@ -49,9 +54,14 @@
         </GridPane>
     </VBox>
     <VBox fx:id="pnNatives">
-        <Label text="Natives:" />
-        <Label fx:id="lblNatives" />
-        <Label fx:id="lblGovernment" />
+        <HBox>
+            <Label text="Natives:" />
+            <Label fx:id="lblNatives" />
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblGovernment" />
+                <Label fx:id="lblTaxPerformance" />
+            </HBox>
+        </HBox>
         <GridPane styleClass="infoGrid">
             <columnConstraints>
                 <ColumnConstraints percentWidth="50" halignment="RIGHT"/>

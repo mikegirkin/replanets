@@ -17,7 +17,9 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
 
   private val mainLayout = new BorderPane {
     minWidth = 600
+    snapToPixel = true
   }
+
 
   private val actions = new Actions(game, viewModel)(
     new SelectBase(game, viewModel),

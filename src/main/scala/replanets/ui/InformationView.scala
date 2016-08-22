@@ -23,10 +23,11 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   val enemyShipColor = Color.Red
   val mineFieldColor = Color.MediumPurple
 
+  minWidth = 275
+  maxWidth = 275
+
   val objectDetailsView = new VBox {
     minHeight = 400
-    minWidth = 275
-    maxWidth = 275
   }
 
   val objectListView = new ListView[MapObject] {

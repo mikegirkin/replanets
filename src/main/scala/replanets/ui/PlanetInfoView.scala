@@ -21,17 +21,19 @@ trait IPlanetInfoView {
 @sfxml
 class PlanetInfoView(
   val rootPane: VBox,
-  private val lblName: Label,
-  private val lblWhen: Label,
-  private val lblOwner: Label,
-  private val lblFcode: Label,
-  private val lblClimate: Label,
+  val lblName: Label,
+  val lblPlanetId: Label,
+  val lblWhen: Label,
+  val lblOwner: Label,
+  val lblFcode: Label,
+  val lblClimate: Label,
   val lblColonistPopulation: Label,
   val lblColonistTax: Label,
   val lblColonistHappiness: Label,
   val lblNatives: Label,
   val lblGovernment: Label,
   val lblPopulation: Label,
+  val lblTaxPerformance: Label,
   val lblTax: Label,
   val lblHappiness: Label,
   val lblMines: Label,
@@ -78,13 +80,14 @@ class PlanetInfoView(
     btnStarbase.visible = false
 
     val data = game.turnInfo(turnId).stateAfterCommands
-    lblName.text = s"${game.map.planets(planetId).name} ($planetId)"
+    lblPlanetId.text = planetId.toString
+    lblName.text = game.map.planets(planetId).name
     lblWhen.text = "(now)"
+    lblOwner.text = "Planet"
     data.planets.get(PlanetId(planetId)).foreach(p => {
       val vm = new PlanetInfoVM(game, viewModel.turnShown, p.planetId)
 
-      if(vm.ownerId != 0) lblOwner.text = game.races(vm.ownerId - 1).shortname
-        else lblOwner.text = "(none)"
+      if(vm.ownerId != 0) lblOwner.text = s"${game.races(vm.ownerId - 1).adjective} planet"
       lblFcode.text = vm.fcode.value
       edFcode.text = vm.fcode.value
       lblClimate.text = vm.temperature.toString
@@ -93,6 +96,7 @@ class PlanetInfoView(
       if(vm.nativeRace != 0) {
         lblNatives.text = Constants.natives(p.nativeRace)
         lblGovernment.text = Constants.nativeGovernments(p.nativeGovernment)
+        lblTaxPerformance.text = "???"
         lblPopulation.text = s"${vm.nativeClans} cl"
         lblTax.text = s"${vm.nativeTax} %"
         lblHappiness.text = s"${vm.nativeHappiness} %"
