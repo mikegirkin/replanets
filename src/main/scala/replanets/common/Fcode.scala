@@ -6,22 +6,19 @@ import scala.util.Random
   */
 class ImpossibleFcode extends Exception
 
-trait Fcode {
-  def value: String
-
-  override def toString: String = s"Fcode($value)"
+case class Fcode(
+  value: String
+) {
+  if(!Fcode.acceptableFcode(value)) throw new ImpossibleFcode
 }
 
 object Fcode {
   import NumberExtensions._
 
-  def apply(value: String): Fcode =
-    Fcode.tryConvert(value).getOrElse {
-      throw new ImpossibleFcode
-    }
+  def acceptableFcode(string: String) = string.length == 3 && string.forall(c => c.toInt.between(32, 122))
 
   def tryConvert(string: String): Option[Fcode] = {
-    if(string.length == 3 && string.forall(c => c.toInt.between(32, 122))) Some(new Fcode { val value = string })
+    if(acceptableFcode(string)) Some(new Fcode(string))
     else None
   }
 

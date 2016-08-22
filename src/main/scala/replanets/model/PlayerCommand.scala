@@ -38,7 +38,9 @@ case class SetShipFcode(
     }
   }
 
-  override def isAddDiffToInitialState(initial: ServerData): Boolean = true
+  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+    if(initial.ships(objectId).asInstanceOf[OwnShip].fcode != newFcode) true else false
+  }
 
 }
 

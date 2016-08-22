@@ -40,6 +40,35 @@ class TurnInfoSpec extends WordSpec with Matchers {
 
       after.ships(shipId).asInstanceOf[OwnShip].fcode should be (newFcode)
     }
+
+    "replace another command for the same ship" in {
+      val gs = gameState
+      val shipId = ShipId(1)
+      val newFcode = Fcode("082")
+      val turnInfo = TurnInfo(gs.specs, gs.rst).withCommands(
+        SetShipFcode(shipId, Fcode("mkt")),
+        SetShipFcode(shipId, newFcode)
+      )
+
+      val after = turnInfo.stateAfterCommands
+
+      after.ships(shipId).asInstanceOf[OwnShip].fcode should be (newFcode)
+      turnInfo.commands should have size 1
+    }
+
+    "annihilate commands if sets fcode as it was initially" in {
+      val gs = gameState
+      val shipId = ShipId(1)
+      val turnInfo = TurnInfo(gs.specs, gs.rst).withCommands(
+        SetShipFcode(shipId, Fcode("mkt")),
+        SetShipFcode(shipId, Fcode("md1"))
+      )
+
+      val after = turnInfo.stateAfterCommands
+
+      after.ships(shipId).asInstanceOf[OwnShip].fcode should be (Fcode("md1"))
+      turnInfo.commands shouldBe empty
+    }
   }
 
   "start ship construction command" should {
