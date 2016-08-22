@@ -41,9 +41,9 @@ class RstFileReaderSpec extends WordSpec with Matchers {
         "MERLIN CLASS ALCHEMY SHIP"
       )
 
-      base.storedHulls(HullId(14)) should be (1)
-      base.storedHulls(HullId(15)) should be (1)
-      base.storedHulls(HullId(104)) should be (1)
+      base.storedHulls(HullId(15)) should be (1) //SDSF
+      base.storedHulls(HullId(34)) should be (1) //D7a painmaker
+      base.storedHulls(HullId(35)) should be (1) //Victorious
     }
   }
 

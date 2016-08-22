@@ -14,7 +14,7 @@ case class Specs(
 ) {
   def getRaceHulls(race: RaceId): IndexedSeq[HullspecItem] = {
     val hullIndexes = raceHulls.getRaceHullIds(race.value - 1)
-    hullSpecs.filter(h => hullIndexes.contains(h.id.value))
+    hullIndexes.map(idx => hullSpecs(idx - 1))
   }
 
   def isGravitonic(hullId: HullId): Boolean = {
