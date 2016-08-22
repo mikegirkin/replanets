@@ -16,17 +16,17 @@ object JsonUtils {
 
   implicit val fcodeFormat = Format(fcodeReads, fcodeWrites)
 
-  def oneBasedIndexFormat[T <: OneBasedIndex](creation: Int => T) = Format[T](
+  def fromSingleIntFormat[T <: Index](creation: Int => T) = Format[T](
     Reads { json => json.validate[Int].map(x => creation(x)) },
     Writes { id => JsNumber(id.value)}
   )
 
-  implicit val planetIdFormat = oneBasedIndexFormat(x => PlanetId(x))
-  implicit val shipIdFormat = oneBasedIndexFormat(x => ShipId(x))
-  implicit val hullIdFormat = oneBasedIndexFormat(x => HullId(x))
-  implicit val engineIdFormat = oneBasedIndexFormat(x => EngineId(x))
-  implicit val beamIdFormat = oneBasedIndexFormat(x => BeamId(x))
-  implicit val launcherIdFormat = oneBasedIndexFormat(x => LauncherId(x))
+  implicit val planetIdFormat = fromSingleIntFormat(x => PlanetId(x))
+  implicit val shipIdFormat = fromSingleIntFormat(x => ShipId(x))
+  implicit val hullIdFormat = fromSingleIntFormat(x => HullId(x))
+  implicit val engineIdFormat = fromSingleIntFormat(x => EngineId(x))
+  implicit val beamIdFormat = fromSingleIntFormat(x => BeamId(x))
+  implicit val launcherIdFormat = fromSingleIntFormat(x => LauncherId(x))
 
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]

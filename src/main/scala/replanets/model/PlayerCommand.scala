@@ -56,17 +56,17 @@ case class StartShipConstruction(
     buildOrder: ShipBuildOrder) =
     this(
       objectId, buildOrder.hull.id, buildOrder.engine.id,
-      buildOrder.beam.id, buildOrder.beamCount,
-      buildOrder.launchers.id, buildOrder.launcherCount
+      buildOrder.beams.map(_.spec.id).getOrElse(BeamId.Nothing),
+      buildOrder.beams.map(_.count).getOrElse(0),
+      buildOrder.launchers.map(_.spec.id).getOrElse(LauncherId.Nothing),
+      buildOrder.launchers.map(_.count).getOrElse(0)
     )
 
   def getBuildOrder(specs: Specs) = ShipBuildOrder(
     specs.hullSpecs.find(_.id == hullId).get,
     specs.engineSpecs.find(_.id == engineId).get,
-    specs.beamSpecs.find(_.id == beamId).get,
-    beamsCount,
-    specs.torpSpecs.find(_.id == launcherId).get,
-    launcherCount
+    if(beamId != BeamId.Nothing) Some(BeamsOrder(specs.beamSpecs.find(_.id == beamId).get, beamsCount)) else None,
+    if(launcherId != LauncherId.Nothing) Some(LaunchersOrder(specs.torpSpecs.find(_.id == launcherId).get, launcherCount)) else None
   )
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {

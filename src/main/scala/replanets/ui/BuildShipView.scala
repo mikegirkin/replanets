@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, ShipBuildOrder, Starbase}
+import replanets.model._
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
@@ -70,7 +70,7 @@ class BuildShipView(
     "Available hulls:",
     data,
     selectedHull,
-    _.hull,
+    bo => Some(bo.hull),
     game.specs.getRaceHulls(game.playingRace).sortBy(_.techLevel),
     _.techLevel,
     _.name,
@@ -84,7 +84,7 @@ class BuildShipView(
     "Engines:",
     data,
     selectedEngine,
-    _.engine,
+    bo => Some(bo.engine),
     game.specs.engineSpecs,
     _.techLevel,
     _.name,
@@ -98,7 +98,7 @@ class BuildShipView(
     "Beams:",
     data,
     selectedBeam,
-    _.beam,
+    bo => bo.beams.map(_.spec),
     game.specs.beamSpecs,
     _.techLevel,
     _.name,
@@ -112,7 +112,7 @@ class BuildShipView(
     "Launchers:",
     data,
     selectedLauncher,
-    _.launchers,
+    bo => bo.launchers.map(_.spec),
     game.specs.torpSpecs,
     _.techLevel,
     _.name,
@@ -171,10 +171,7 @@ class BuildShipView(
         )
       } else {
         data.value.foreach(base =>
-          actions.buildShip(base, ShipBuildOrder(
-            selectedHull.value, selectedEngine.value,
-            selectedBeam.value, beamsToBuild.value,
-            selectedLauncher.value, launchersToBuild.value))
+          actions.buildShip(base, constructShipBuildOrder())
         )
       }
     }
@@ -182,15 +179,18 @@ class BuildShipView(
 
   private def isEnoughResources(): Boolean = {
     data.value.map(base => {
-      val calc = base.shipCostAtStarbase(
-        selectedHull.value, selectedEngine.value,
-        selectedBeam.value, beamsToBuild.value,
-        selectedLauncher.value, launchersToBuild.value)
+      val calc = base.shipCostAtStarbase(constructShipBuildOrder())
       val remaining = base.remainsAtPlanet(calc)
 
       remaining.money >= 0 && remaining.tri >= 0 && remaining.dur >= 0 && remaining.mol >= 0
     }).getOrElse(false)
   }
+
+  private def constructShipBuildOrder() = ShipBuildOrder(
+    selectedHull.value, selectedEngine.value,
+    Some(BeamsOrder(selectedBeam.value, beamsToBuild.value)),
+    Some(LaunchersOrder(selectedLauncher.value, launchersToBuild.value))
+  )
 
   private def bindedLabel(extractor: (Starbase) => String) = new Label("???") {
     text <== createStringBinding(() => {

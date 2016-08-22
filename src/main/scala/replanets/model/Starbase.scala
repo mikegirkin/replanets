@@ -24,27 +24,27 @@ case class Starbase(
   shipBeingBuilt: Option[ShipBuildOrder]
 ) {
 
-  def shipCostAtStarbase(
-    hullspec: HullspecItem,
-    engspec: EngspecItem,
-    beamspec: BeamspecItem,
-    numberOfBeams: Int,
-    torpspec: TorpspecItem,
-    numberOfLaunchers: Int): ShipCost = {
+  def shipCostAtStarbase(buildOrder: ShipBuildOrder): ShipCost = {
 
-    val hullCost = if(storedHulls.getOrElse(hullspec.id, 0) != 0) Cost.zero else hullspec.cost
-    val enginesToBuild = lowerLimit(hullspec.enginesNumber - storedEngines(engspec.id.value - 1), 0)
-    val enginesCost = engspec.cost.mul(enginesToBuild)
-    val beamsToBuild = lowerLimit(numberOfBeams - storedBeams(beamspec.id.value - 1), 0)
-    val beamsCost = beamspec.cost.mul(beamsToBuild)
-    val launchersToBuild = lowerLimit(numberOfLaunchers - storedLaunchers(torpspec.id.value - 1), 0)
-    val launcherCost = torpspec.launcherCost.mul(launchersToBuild)
+    val hullCost = if(storedHulls.getOrElse(buildOrder.hull.id, 0) != 0) Cost.zero else buildOrder.hull.cost
+    val enginesToBuild = lowerLimit(buildOrder.hull.enginesNumber - storedEngines(buildOrder.engine.id.value - 1), 0)
+    val enginesCost = buildOrder.engine.cost.mul(enginesToBuild)
+    val beamsToBuild = buildOrder.beams
+      .map(bm => lowerLimit(bm.count - storedBeams(bm.spec.id.value - 1), 0))
+      .getOrElse(0)
+    val beamsCost = buildOrder.beams
+      .map(_.spec.cost.mul(beamsToBuild)).getOrElse(Cost.zero)
+    val launchersToBuild = buildOrder.launchers
+      .map(l => lowerLimit(l.count - storedLaunchers(l.spec.id.value - 1), 0))
+      .getOrElse(0)
+    val launcherCost = buildOrder.launchers
+      .map(_.spec.launcherCost.mul(launchersToBuild)).getOrElse(Cost.zero)
 
     val techCost =
-      THostFormulas.techUpgradeCost(hullsTech, hullspec.techLevel) +
-      THostFormulas.techUpgradeCost(engineTech, engspec.techLevel) +
-      THostFormulas.techUpgradeCost(beamTech, beamspec.techLevel) +
-      THostFormulas.techUpgradeCost(torpedoTech, torpspec.techLevel)
+      THostFormulas.techUpgradeCost(hullsTech, buildOrder.hull.techLevel) +
+      THostFormulas.techUpgradeCost(engineTech, buildOrder.engine.techLevel) +
+      THostFormulas.techUpgradeCost(beamTech, buildOrder.beams.map(_.spec.techLevel).getOrElse(1)) +
+      THostFormulas.techUpgradeCost(torpedoTech, buildOrder.launchers.map(_.spec.techLevel).getOrElse(1))
 
     ShipCost(hullCost, enginesCost, beamsCost, launcherCost, Cost(0, 0, 0, techCost))
   }
@@ -60,28 +60,5 @@ case class Starbase(
 
   private def lowerLimit(number: Int, limit: Int): Int = {
     if(number<limit) limit else number
-  }
-
-  def applyCommand(command: PlayerCommand)(specs: Specs): Starbase = {
-    command match {
-      case x: StartShipConstruction if x.objectId == this.id => {
-        val order = x.getBuildOrder(specs)
-        val hullTechLevel = Math.max(order.hull.techLevel, this.hullsTech)
-        val engineTechLevel = Math.max(order.engine.techLevel, this.engineTech)
-        val beamTechLevel = Math.max(order.beam.techLevel, this.beamTech)
-        val torpsTechLevel = Math.max(order.launchers.techLevel, this.torpedoTech)
-        this.copy(
-          shipBeingBuilt = Some(x.getBuildOrder(specs)),
-          hullsTech = hullTechLevel,
-          engineTech = engineTechLevel,
-          beamTech = beamTechLevel,
-          torpedoTech = torpsTechLevel
-        )
-      }
-      case x: StopShipConstruction if x.objectId == this.id => {
-        this.copy(shipBeingBuilt = None)
-      }
-      case _ => this
-    }
   }
 }

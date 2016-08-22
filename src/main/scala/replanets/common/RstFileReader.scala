@@ -2,7 +2,7 @@ package replanets.common
 
 import java.nio.file.{Files, Path}
 
-import replanets.model.{ShipBuildOrder, Specs, Starbase}
+import replanets.model._
 import replanets.recipes.{DWORD, SpacePaddedString}
 
 case class ServerData(
@@ -61,8 +61,8 @@ object RstFileReader {
           if(br.buildShipType == 0) None else Some(
             ShipBuildOrder(
               specs.getRaceHulls(race)(br.buildShipType - 1), specs.engineSpecs(br.engineType - 1),
-              specs.beamSpecs(br.beamType - 1), br.beamCount,
-              specs.torpSpecs(br.launcherType - 1), br.launchersCount
+              if(br.beamType != 0) Some(BeamsOrder(specs.beamSpecs(br.beamType - 1), br.beamCount)) else None,
+              if(br.launcherType != 0) Some(LaunchersOrder(specs.torpSpecs(br.launcherType - 1), br.launchersCount)) else None
             )
           )
         )

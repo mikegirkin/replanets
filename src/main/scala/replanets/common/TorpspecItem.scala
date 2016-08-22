@@ -10,7 +10,7 @@ case class TorpspecItem(
   torpedoMoneyCost: Short,
   launcherCost: Cost,
   mass: Short,
-  techLevel: Short,
+  techLevel: Int,
   kill: Short,
   damage: Short
 )

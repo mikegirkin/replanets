@@ -9,7 +9,7 @@ case class BeamspecItem(
   name: String,
   cost: Cost,
   mass: Short,
-  techLevel: Short,
+  techLevel: Int,
   killValue: Short,
   damageValue: Short
 )

@@ -43,9 +43,9 @@ case class TurnInfo(
     val base = state.bases(command.objectId)
     val hullTechLevel = Math.max(order.hull.techLevel, base.hullsTech)
     val engineTechLevel = Math.max(order.engine.techLevel, base.engineTech)
-    val beamTechLevel = Math.max(order.beam.techLevel, base.beamTech)
-    val torpsTechLevel = Math.max(order.launchers.techLevel, base.torpedoTech)
-    val cost = base.shipCostAtStarbase(order.hull, order.engine, order.beam, order.beamCount, order.launchers, order.launcherCount)
+    val beamTechLevel = Math.max(order.beams.map(_.spec.techLevel).getOrElse(1), base.beamTech)
+    val torpsTechLevel = Math.max(order.launchers.map(_.spec.techLevel).getOrElse(1), base.torpedoTech)
+    val cost = base.shipCostAtStarbase(order)
     val planet = state.planets(command.objectId)
     val newPlanetMoney = if(planet.money >= cost.total.money) planet.money - cost.total.money else 0
     val newPlanetSupplies = {
@@ -82,15 +82,15 @@ case class TurnInfo(
   }
 
   def getStarbaseState(baseId: PlanetId)(specs: Specs): Starbase = {
-    commands.foldLeft(getStarbaseInitial(baseId))((base, command) => base.applyCommand(command)(specs))
+    stateAfterCommands(specs).bases(baseId)
   }
 
   def getStarbaseInitial(baseId: PlanetId): Starbase = {
     initialState.bases(baseId)
   }
 
-  def getPlanetState(planetId: PlanetId): PlanetRecord = {
-    getPlanetInitial(planetId)
+  def getPlanetState(planetId: PlanetId)(specs: Specs): PlanetRecord = {
+    stateAfterCommands(specs).planets(planetId)
   }
 
   def getPlanetInitial(planetId: PlanetId): PlanetRecord = {

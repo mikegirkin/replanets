@@ -60,8 +60,8 @@ class TurnInfoSpec extends WordSpec with Matchers {
       after.bases(planetId).shipBeingBuilt should not be empty
       val order = after.bases(planetId).shipBeingBuilt.get
       order.hull.id should be (HullId(33))
-      order.launcherCount should be (4)
-      order.beamCount should be (6)
+      order.launchers.get.count should be (4)
+      order.beams.get.count should be (6)
       order.engine.id should be (EngineId(9))
     }
 

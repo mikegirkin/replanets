@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.Starbase
+import replanets.model.{BeamsOrder, LaunchersOrder, ShipBuildOrder, Starbase}
 
 import scalafx.beans.property.{IntegerProperty, ObjectProperty, ReadOnlyIntegerProperty, ReadOnlyObjectProperty}
 import scalafx.geometry.HPos
@@ -152,9 +152,12 @@ class CalculationsView(
     for (
       thisbase <- base.value;
       shipCost = thisbase.shipCostAtStarbase(
-        selectedHull.value, selectedEngines.value,
-        selectedBeams.value, numberOfBeams.value,
-        selectedLaunchers.value, numberOfLaunchers.value)
+        ShipBuildOrder(
+          selectedHull.value, selectedEngines.value,
+          Some(BeamsOrder(selectedBeams.value, numberOfBeams.value)),
+          Some(LaunchersOrder(selectedLaunchers.value, numberOfLaunchers.value))
+        )
+      )
     ) {
       bindCostLabels(lblHullMoneyCost, lblHullTriCost, lblHullDurCost, lblHullMolCost, shipCost.hullCost)
       bindCostLabels(lblEngineMoneyCost, lblEngineTriCost, lblEngineDurCost, lblEngineMolCost, shipCost.enginesCost)

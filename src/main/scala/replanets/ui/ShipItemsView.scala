@@ -15,7 +15,7 @@ class ShipItemsView[T](
   headerText: String,
   base: ObjectProperty[Option[Starbase]],
   selectedItem: ObjectProperty[T],
-  itemBeingBuilt: ShipBuildOrder => T,
+  itemBeingBuilt: ShipBuildOrder => Option[T],
   things: Seq[T],
   techLevel: T => Int,
   name: T => String,
