@@ -107,7 +107,7 @@ case class TurnInfo(
     this
   }
 
-  def getStarbaseState(baseId: PlanetId)(specs: Specs): Starbase = {
+  def getStarbaseState(baseId: PlanetId): Starbase = {
     stateAfterCommands.bases(baseId)
   }
 
@@ -115,7 +115,7 @@ case class TurnInfo(
     initialState.bases(baseId)
   }
 
-  def getPlanetState(planetId: PlanetId)(specs: Specs): PlanetRecord = {
+  def getPlanetState(planetId: PlanetId): PlanetRecord = {
     stateAfterCommands.planets(planetId)
   }
 

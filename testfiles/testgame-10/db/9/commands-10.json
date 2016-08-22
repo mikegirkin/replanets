@@ -1,0 +1,11 @@
+{
+  "version" : "v1",
+  "commands" : [ {
+    "type" : "SetPlanetFcode",
+    "value" : {
+      "objectId" : 495,
+      "newFcode" : "CCU"
+    }
+  } ],
+  "additionalData" : [ ]
+}

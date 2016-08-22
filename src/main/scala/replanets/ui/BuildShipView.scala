@@ -220,7 +220,7 @@ class BuildShipView(
   }
 
   private def rebindTo(id: PlanetId) = {
-    val base = game.turnInfo(viewModel.turnShown).getStarbaseState(id)(game.specs)
+    val base = game.turnInfo(viewModel.turnShown).getStarbaseState(id)
     data.value = Some(base)
   }
 }

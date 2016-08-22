@@ -69,17 +69,18 @@
         </children>
     </GridPane>
     <Label text="Base storage:"/>
-    <ListView fx:id="lvHulls" styleClass="storageList"/>
-    <ListView fx:id="lvDrives" styleClass="storageList"/>
-    <ListView fx:id="lvBeams" styleClass="storageList"/>
-    <ListView fx:id="lvLaunchers" styleClass="storageList"/>
+    <ListView fx:id="lvStorage" styleClass="storageList"/>
     <GridPane hgap="5" vgap="5">
         <columnConstraints>
-            <ColumnConstraints percentWidth="50" fillWidth="true"/>
-            <ColumnConstraints percentWidth="50" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
         </columnConstraints>
         <children>
-            <Button styleClass="gridButton" onAction="#handleBuildShipButton">
+            <Button styleClass="gridButton" GridPane.columnSpan="3" onAction="#handleBuildShipButton">
                 <graphic>
                     <TextFlow>
                         <Text text="B" styleClass="actionSymbol"/>
@@ -87,15 +88,7 @@
                     </TextFlow>
                 </graphic>
             </Button>
-            <Button styleClass="gridButton" GridPane.columnIndex="1">
-                <graphic>
-                    <TextFlow>
-                        <Text text="C" styleClass="actionSymbol"/>
-                        <Text text="lone"/>
-                    </TextFlow>
-                </graphic>
-            </Button>
-            <Button styleClass="gridButton" GridPane.rowIndex="1" GridPane.columnSpan="2">
+            <Button styleClass="gridButton" GridPane.columnIndex="3" GridPane.columnSpan="3">
                 <graphic>
                     <TextFlow>
                         <Text text="Bu"/>
@@ -104,7 +97,15 @@
                     </TextFlow>
                 </graphic>
             </Button>
-            <Button styleClass="gridButton" GridPane.rowIndex="2">
+            <Button styleClass="gridButton" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                <graphic>
+                    <TextFlow>
+                        <Text text="C" styleClass="actionSymbol"/>
+                        <Text text="lone"/>
+                    </TextFlow>
+                </graphic>
+            </Button>
+            <Button styleClass="gridButton" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.columnSpan="2">
                 <graphic>
                     <TextFlow>
                         <Text text="F" styleClass="actionSymbol"/>
@@ -112,7 +113,7 @@
                     </TextFlow>
                 </graphic>
             </Button>
-            <Button styleClass="gridButton" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <Button styleClass="gridButton" GridPane.rowIndex="1" GridPane.columnIndex="4" GridPane.columnSpan="2">
                 <graphic>
                     <TextFlow>
                         <Text text="R" styleClass="actionSymbol"/>

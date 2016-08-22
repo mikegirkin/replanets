@@ -29,10 +29,7 @@ class BaseInfoView(
   val lblBeams: Label,
   val lblTorpedoes: Label,
 
-  val lvHulls: ListView[(Int, String)],
-  val lvDrives: ListView[(Int, String)],
-  val lvBeams: ListView[(Int, String)],
-  val lvLaunchers: ListView[(Int, String)],
+  val lvStorage: ListView[(Int, String)],
 
   val actions: Actions,
   val game: Game,
@@ -59,10 +56,7 @@ class BaseInfoView(
     }
   }
 
-  lvHulls.cellFactory = lvCellFactory
-  lvBeams.cellFactory = lvCellFactory
-  lvDrives.cellFactory = lvCellFactory
-  lvLaunchers.cellFactory = lvCellFactory
+  lvStorage.cellFactory = lvCellFactory
 
   override def setData(base: Starbase): Unit = {
     lblStarbaseId.text = base.id.value.toString
@@ -91,10 +85,11 @@ class BaseInfoView(
       .filter { case (launcherCount, idx) => launcherCount > 0 }
       .map { case (launcherCount, idx) => (launcherCount, game.specs.torpSpecs(idx).name) }
 
-    lvHulls.items = ObservableBuffer(hulls)
-    lvBeams.items = ObservableBuffer(beams)
-    lvDrives.items = ObservableBuffer(drives)
-    lvLaunchers.items = ObservableBuffer(launchers)
+    val torpedoes = base.storedTorpedoes.zipWithIndex
+      .filter { case (torpedoCount, idx) => torpedoCount > 0 }
+      .map { case (torpedoCount, idx) => (torpedoCount, s"${game.specs.torpSpecs(idx).name} torpedoes")}
+
+    lvStorage.items = ObservableBuffer(hulls ++ beams ++ drives ++ launchers ++ torpedoes)
   }
 
   def handlePlanetButton(e: ActionEvent) = actions.selectPlanet.execute()
