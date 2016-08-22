@@ -19,7 +19,7 @@ case class HullId(value: Int) extends OneBasedIndex
 case class EngineId(value: Int) extends OneBasedIndex
 case class BeamId(value: Int) extends OneBasedIndex
 case class LauncherId(value: Int) extends OneBasedIndex
-case class RaceId(value: Int) extends OneBasedIndex
+case class RaceId(value: Int)
 case class TurnId(value: Int) extends OneBasedIndex
 case class PlanetId(value: Int) extends OneBasedIndex
 case class ShipId(value: Int) extends OneBasedIndex

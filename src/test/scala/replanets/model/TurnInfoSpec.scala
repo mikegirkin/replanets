@@ -74,4 +74,11 @@ class TurnInfoSpec extends WordSpec with Matchers {
       planet.supplies should be(492)
     }
   }
+//
+//  "stop ship construction command" should {
+//    val gs = gameState
+//    val planetId = PlanetId(303)
+//
+//    ""
+//  }
 }
