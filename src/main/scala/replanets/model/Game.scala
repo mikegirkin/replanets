@@ -33,23 +33,13 @@ case class Game(
     turns(turn)(playingRace).initialState
   }
 
-  def turnInfo(turn: TurnId) = {
+  def turnInfo(turn: TurnId): TurnInfo = {
     turns(turn)(playingRace)
   }
 
   def lastTurn = turns.keys.maxBy(_.value)
 
-  def addCommand(cmd: PlayerCommand) = {
-    val commands = turns(lastTurn)(playingRace).commands
-    val oldCommandIndex = commands.indexWhere(p => p.isReplacableBy(cmd))
-    val changesSomething = cmd.isAddDiffToInitialState(this, lastTurn, playingRace)
-    if(oldCommandIndex >= 0 && changesSomething)
-      commands(oldCommandIndex) = cmd
-    else if (oldCommandIndex >= 0 && !changesSomething)
-      commands.remove(oldCommandIndex)
-    else if (changesSomething)
-      commands.append(cmd)
-  }
+  def addCommand(cmd: PlayerCommand) = turns(lastTurn)(playingRace).addCommand(cmd)
 
   def saveCommands() = {
     gameDb.saveCommands(lastTurn, playingRace, turns(lastTurn)(playingRace).commands)

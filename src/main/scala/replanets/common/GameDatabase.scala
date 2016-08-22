@@ -8,7 +8,6 @@ import replanets.model.{PlayerCommand, Specs, TurnInfo}
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-
 import replanets.model.JsonUtils._
 
 class GameDatabase(gamePath: Path, val playingRace: RaceId) {
@@ -32,7 +31,7 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
       })
     }.map {
       case (turnNumber, data) => TurnId(turnNumber) -> data.map {
-        case (raceId, (rst, commands)) => RaceId(raceId) -> TurnInfo(rst, ArrayBuffer(commands: _*))
+        case (raceId, (rst, commands)) => RaceId(raceId) -> TurnInfo(specs, rst).withCommands(commands: _*)
       }.toMap
     }
 
@@ -64,7 +63,7 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
     implicit val fmt = play.api.libs.json.Json.format[PlayerActionsData]
   }
 
-  def saveCommands(turnId: TurnId, raceId: RaceId, commands: mutable.Buffer[PlayerCommand]) = {
+  def saveCommands(turnId: TurnId, raceId: RaceId, commands: Seq[PlayerCommand]) = {
     val data = PlayerActionsData("v1", commands, Seq())
     val json = Json.prettyPrint(Json.toJson(data))
     Files.write(commandsFilePath(turnId.value, raceId.value), json.getBytes)

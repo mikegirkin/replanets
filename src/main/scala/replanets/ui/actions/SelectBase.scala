@@ -13,7 +13,7 @@ class SelectBase(
     for(
       so <- viewModel.selectedObject;
       planet <- game.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y);
-      base <- game.turnSeverData(viewModel.turnShown).bases.get(PlanetId(planet.id))
+      base <- game.turnInfo(viewModel.turnShown).stateAfterCommands.bases.get(PlanetId(planet.id))
     ) {
       if(base.owner == game.playingRace) viewModel.selectedObject = Some(MapObject.forStarbase(game)(base))
     }

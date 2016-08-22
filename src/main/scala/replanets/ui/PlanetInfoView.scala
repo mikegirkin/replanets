@@ -77,7 +77,7 @@ class PlanetInfoView(
     pnMinerals.visible = false
     btnStarbase.visible = false
 
-    val data = game.turnInfo(turnId).stateAfterCommands(game.specs)
+    val data = game.turnInfo(turnId).stateAfterCommands
     lblName.text = s"${game.map.planets(planetId).name} ($planetId)"
     lblWhen.text = "(now)"
     data.planets.get(PlanetId(planetId)).foreach(p => {

@@ -5,12 +5,14 @@ import replanets.common._
 import scala.collection.mutable
 
 case class TurnInfo(
-  initialState: ServerData,
-  commands: mutable.Buffer[PlayerCommand]
+  specs: Specs,
+  initialState: ServerData
 ) {
 
-  def stateAfterCommands(specs: Specs): ServerData = {
-    commands.foldLeft(initialState)((state, command) => {
+  private val _commands: mutable.Buffer[PlayerCommand] = mutable.Buffer()
+
+  def stateAfterCommands: ServerData = {
+    _commands.foldLeft(initialState)((state, command) => {
       command match {
         case x:SetPlanetFcode => handle(x)(state)
         case x:SetShipFcode => handle(x)(state)
@@ -39,7 +41,8 @@ case class TurnInfo(
   }
 
   private def handle(command: StartShipConstruction, specs: Specs)(state: ServerData): ServerData = {
-    val order = command.getBuildOrder(specs)
+    val order = ShipBuildOrder.getBuildOrder(specs)(
+      command.hullId, command.engineId, command.beamId, command.beamsCount, command.launcherId, command.launcherCount)
     val base = state.bases(command.objectId)
     val hullTechLevel = Math.max(order.hull.techLevel, base.hullsTech)
     val engineTechLevel = Math.max(order.engine.techLevel, base.engineTech)
@@ -54,7 +57,7 @@ case class TurnInfo(
     }
     state.copy(
       bases = state.bases.updated(command.objectId, base.copy(
-        shipBeingBuilt = Some(command.getBuildOrder(specs)),
+        shipBeingBuilt = Some(order),
         hullsTech = hullTechLevel,
         engineTech = engineTechLevel,
         beamTech = beamTechLevel,
@@ -81,8 +84,28 @@ case class TurnInfo(
     )
   }
 
+  def commands: Seq[PlayerCommand] = Seq(_commands:_*)
+
+  def addCommand(cmds: PlayerCommand*): Unit = {
+    cmds.foreach( cmd => {
+      val oldCommandIndex = _commands.indexWhere(p => p.isReplacableBy(cmd))
+      val changesSomething = cmd.isAddDiffToInitialState(initialState)
+      if (oldCommandIndex >= 0 && changesSomething)
+        _commands(oldCommandIndex) = cmd
+      else if (oldCommandIndex >= 0 && !changesSomething)
+        _commands.remove(oldCommandIndex)
+      else if (changesSomething)
+        _commands.append(cmd)
+    })
+  }
+
+  def withCommands(cmds: PlayerCommand*): TurnInfo = {
+    addCommand(cmds:_*)
+    this
+  }
+
   def getStarbaseState(baseId: PlanetId)(specs: Specs): Starbase = {
-    stateAfterCommands(specs).bases(baseId)
+    stateAfterCommands.bases(baseId)
   }
 
   def getStarbaseInitial(baseId: PlanetId): Starbase = {
@@ -90,7 +113,7 @@ case class TurnInfo(
   }
 
   def getPlanetState(planetId: PlanetId)(specs: Specs): PlanetRecord = {
-    stateAfterCommands(specs).planets(planetId)
+    stateAfterCommands.planets(planetId)
   }
 
   def getPlanetInitial(planetId: PlanetId): PlanetRecord = {

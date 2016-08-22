@@ -5,8 +5,6 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
 
-import scala.collection.mutable
-
 class CommandsSpec extends WordSpec with Matchers with MockitoSugar {
   "SetPlanetFcode" should {
     "Correctly detect if other command is a replacement" in {
@@ -27,6 +25,7 @@ class CommandsSpec extends WordSpec with Matchers with MockitoSugar {
       val changing = SetPlanetFcode(planetId2, Fcode("NUK"))
       val turnId = TurnId(8)
       val raceId = RaceId(6)
+      val specs = mock[Specs]
       val planet1 = mock[PlanetRecord]
       when(planet1.fcode).thenReturn(Fcode("AAB"))
       val planet2 = mock[PlanetRecord]
@@ -39,16 +38,14 @@ class CommandsSpec extends WordSpec with Matchers with MockitoSugar {
         )
       )
       val turns: Map[TurnId, Map[RaceId, TurnInfo]] = Map(turnId ->
-        Map(raceId -> TurnInfo(
-          serverData,
-          mutable.Buffer(nonChanging))
-        )
+        Map(raceId -> TurnInfo(specs, serverData).withCommands(nonChanging))
       )
+
       val game = mock[Game]
       when(game.turns).thenReturn(turns)
 
-      nonChanging.isAddDiffToInitialState(game, turnId, raceId) should be (false)
-      changing.isAddDiffToInitialState(game, turnId, raceId) should be (true)
+      nonChanging.isAddDiffToInitialState(serverData) should be (false)
+      changing.isAddDiffToInitialState(serverData) should be (true)
     }
   }
 

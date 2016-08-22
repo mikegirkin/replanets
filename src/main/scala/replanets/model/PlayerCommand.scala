@@ -5,7 +5,7 @@ import replanets.common._
 sealed trait PlayerCommand {
   def objectId: OneBasedIndex
   def isReplacableBy(other: PlayerCommand): Boolean
-  def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean
+  def isAddDiffToInitialState(initial: ServerData): Boolean
 }
 
 case class SetPlanetFcode(
@@ -19,12 +19,9 @@ case class SetPlanetFcode(
     }
   }
 
-  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
+  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
     val changed = for(
-      turn <- game.turns.get(turn);
-      raceTurn <- turn.get(race);
-      rst = raceTurn.initialState;
-      planet <- rst.planets.get(objectId)
+      planet <- initial.planets.get(objectId)
     ) yield planet.fcode.value != newFcode.value
     changed.getOrElse(false)
   }
@@ -41,7 +38,7 @@ case class SetShipFcode(
     }
   }
 
-  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = true
+  override def isAddDiffToInitialState(initial: ServerData): Boolean = true
 
 }
 
@@ -62,12 +59,6 @@ case class StartShipConstruction(
       buildOrder.launchers.map(_.count).getOrElse(0)
     )
 
-  def getBuildOrder(specs: Specs) = ShipBuildOrder(
-    specs.hullSpecs.find(_.id == hullId).get,
-    specs.engineSpecs.find(_.id == engineId).get,
-    if(beamId != BeamId.Nothing) Some(BeamsOrder(specs.beamSpecs.find(_.id == beamId).get, beamsCount)) else None,
-    if(launcherId != LauncherId.Nothing) Some(LaunchersOrder(specs.torpSpecs.find(_.id == launcherId).get, launcherCount)) else None
-  )
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
@@ -77,9 +68,26 @@ case class StartShipConstruction(
     }
   }
 
-  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
-    val base = game.turnInfo(turn).getStarbaseState(objectId)(game.specs)
-    if(base.shipBeingBuilt.contains(getBuildOrder(game.specs))) false else true
+  private def areEqualOrders(order: ShipBuildOrder,
+    hullId: HullId, engineId: EngineId,
+    beamId: BeamId, beamCount: Int, launcherId: LauncherId, launcherCount: Int
+  ): Boolean = {
+    val hullsEqual = order.hull.id == hullId
+    val enginesEqual = order.engine.id == engineId
+    val beamsEqual = {
+      (order.beams.isEmpty && beamId == BeamId.Nothing) ||
+      order.beams.exists(bo => bo.spec.id == beamId && bo.count == beamCount)
+    }
+    val launchersEqual = {
+      (order.launchers.isEmpty && launcherId == LauncherId.Nothing) ||
+      order.launchers.exists(lo => lo.spec.id == launcherId && lo.count == launcherCount)
+    }
+    hullsEqual && enginesEqual && beamsEqual && launchersEqual
+  }
+
+  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+    val base = initial.bases(objectId)
+    !base.shipBeingBuilt.exists(bo => areEqualOrders(bo, hullId, engineId, beamId, beamsCount, launcherId, launcherCount))
   }
 }
 
@@ -94,8 +102,8 @@ case class StopShipConstruction(
     }
   }
 
-  override def isAddDiffToInitialState(game: Game, turn: TurnId, race: RaceId): Boolean = {
-    val base = game.turnInfo(turn).getStarbaseInitial(objectId)
+  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+    val base = initial.bases(objectId)
     if(base.shipBeingBuilt.isDefined) true else false
   }
 
