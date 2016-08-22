@@ -38,9 +38,9 @@ class ShipItemsView[T](
   private def createRows(): Seq[(Int, Pane)] = {
     things.zipWithIndex.map { case (thing, idx) =>
       val colorBinding = createObjectBinding[jfxsp.Color](() => {
-        if(selectedItem.value == thing && base.value.flatMap(_.shipBeingBuilt).map(itemBeingBuilt).contains(thing)) jfxsp.Color.GREENYELLOW
+        if(selectedItem.value == thing && base.value.flatMap(_.shipBeingBuilt).map(itemBeingBuilt).contains(Some(thing))) jfxsp.Color.GREENYELLOW
         else if(selectedItem.value == thing) jfxsp.Color.LIMEGREEN
-        else if(base.value.flatMap(_.shipBeingBuilt).map(itemBeingBuilt).contains(thing)) jfxsp.Color.GOLD
+        else if(base.value.flatMap(_.shipBeingBuilt).map(itemBeingBuilt).contains(Some(thing))) jfxsp.Color.GOLD
         else if(techLevel(thing) > base.value.map(baseTech).getOrElse(0)) jfxsp.Color.DARKGRAY
         else jfxsp.Color.WHITE
       }, base, selectedItem)

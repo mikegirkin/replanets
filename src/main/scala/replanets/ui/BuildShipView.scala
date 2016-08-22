@@ -127,7 +127,7 @@ class BuildShipView(
   val calculations = new CalculationsView(data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
 
   val btnStartStopConstruction = new Button{
-    def isShipBeingBuilt = data.value.map(_.shipBeingBuilt.isDefined).getOrElse(false)
+    def isShipBeingBuilt = data.value.exists(_.shipBeingBuilt.isDefined)
 
     text <== createStringBinding(() => if(isShipBeingBuilt) "Stop construction" else "Start construction", data)
     visible <== createBooleanBinding(() => (!isShipBeingBuilt && isEnoughResources()) || isShipBeingBuilt, data, selectedHull, selectedEngine, selectedBeam, beamsToBuild, selectedLauncher, launchersToBuild)
