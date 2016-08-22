@@ -11,16 +11,18 @@ case class TurnInfo(
 
   private val _commands: mutable.Buffer[PlayerCommand] = mutable.Buffer()
 
-  def stateAfterCommands: ServerData = {
-    _commands.foldLeft(initialState)((state, command) => {
-      command match {
-        case x:SetPlanetFcode => handle(x)(state)
-        case x:SetShipFcode => handle(x)(state)
-        case x:StartShipConstruction => handle(x, specs)(state)
-        case x:StopShipConstruction => handle(x)(state)
-        case _ => state
-      }
-    })
+  private var _stateAfterCommands: ServerData = initialState
+
+  def stateAfterCommands: ServerData = _stateAfterCommands
+
+  private def applyCommand(state: ServerData, command: PlayerCommand): ServerData = {
+    command match {
+      case x:SetPlanetFcode => handle(x)(state)
+      case x:SetShipFcode => handle(x)(state)
+      case x:StartShipConstruction => handle(x)(state)
+      case x:StopShipConstruction => handle(x)(state)
+      case _ => state
+    }
   }
 
   private def handle(command: SetPlanetFcode)(state: ServerData): ServerData = {
@@ -40,7 +42,7 @@ case class TurnInfo(
     }
   }
 
-  private def handle(command: StartShipConstruction, specs: Specs)(state: ServerData): ServerData = {
+  private def handle(command: StartShipConstruction)(state: ServerData): ServerData = {
     val order = ShipBuildOrder.getBuildOrder(specs)(
       command.hullId, command.engineId, command.beamId, command.beamsCount, command.launcherId, command.launcherCount)
     val base = state.bases(command.objectId)
@@ -97,6 +99,7 @@ case class TurnInfo(
       else if (changesSomething)
         _commands.append(cmd)
     })
+    _stateAfterCommands = commands.foldLeft(initialState)(applyCommand)
   }
 
   def withCommands(cmds: PlayerCommand*): TurnInfo = {
