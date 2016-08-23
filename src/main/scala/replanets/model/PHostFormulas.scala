@@ -18,7 +18,5 @@ object PHostFormulas extends Formulas {
 
   override def maxMines(colonistClans: Int): Int = ???
 
-  override def miningRate(density: Int, mines: Int, raceId: Int, nativeId: Int): Int = ???
-
   override def maxDefences(colonistClans: Int): Int = ???
 }

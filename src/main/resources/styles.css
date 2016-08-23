@@ -1,3 +1,8 @@
+Label, TextFlow, Text, ListCell, Button {
+    -fx-font-weight: 100;
+    -fx-font-size: 9pt;
+}
+
 .infoGrid Button, .inGridButton {
     -fx-max-height: 20;
     -fx-padding: 0 3 0 3;
@@ -7,7 +12,7 @@
     -fx-padding: 0 3 0 3;
     -fx-max-height: 20;
     -fx-min-height: 20;
-    -fx-min-width: 20;
+    -fx-max-width: 20;
     -fx-min-width: 20;
 }
 
@@ -44,8 +49,6 @@
 }
 
 Label, TextFlow, Text {
-    -fx-font-weight: 100;
-    -fx-font-size:9pt;
     -fx-padding: 0 3 0 3;
     -fx-fill: lime;
     -fx-text-fill: lime;
@@ -164,7 +167,8 @@ ListView ListCell {
 }
 
 
-.buildShipView .itemsListItem {
+.buildShipView .itemsListItem Label {
+    -fx-font-size: 9pt;
 }
 
 .buildShipView .itemsListItem:hover {

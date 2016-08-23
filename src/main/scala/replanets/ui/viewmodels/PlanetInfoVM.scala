@@ -1,6 +1,6 @@
 package replanets.ui.viewmodels
 
-import replanets.common.{Fcode, Minerals, PlanetId, TurnId}
+import replanets.common._
 import replanets.model.{Game, SetPlanetFcode}
 
 /**
@@ -31,12 +31,32 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   def coreMinerals: Minerals = planetRecord.coreMinerals
   def densityMinerals: Minerals = planetRecord.densityMinerals
   def colonistTax: Short = planetRecord.colonistTax
+  def colonistIncome: Int = game.formulas.colonistTaxIncome(
+    game.playingRace, planetRecord.colonistClans, planetRecord.colonistTax, planetRecord.colonistHappiness
+  )
   def nativeTax: Short = planetRecord.nativeTax
+  def nativeIncome: Int = game.formulas.nativeTaxIncome(
+    game.playingRace, planetRecord.nativeRace, planetRecord.nativeGovernment,
+    planetRecord.nativeClans, planetRecord.nativeTax, planetRecord.nativeHappiness,
+    planetRecord.colonistClans
+  )
   def colonistHappiness: Short = planetRecord.colonistHappiness
+  def colonistHappinessChange = game.formulas.colonistHappinessChange(
+    game.playingRace, planetRecord.colonistClans,
+    planetRecord.temperature,
+    planetRecord.minesNumber, planetRecord.factoriesNumber,
+    planetRecord.colonistTax
+  )
+
   def nativeHappiness: Short = planetRecord.nativeHappiness
-  def nativeGovernment: Short = planetRecord.nativeGovernment
+  def nativeHappinessChange = game.formulas.nativeHappinessChange(
+    planetRecord.nativeRace, planetRecord.nativeGovernment,
+    planetRecord.nativeClans, planetRecord.minesNumber,
+    planetRecord.factoriesNumber, planetRecord.nativeTax
+  )
+  def nativeGovernment = planetRecord.nativeGovernment
   def nativeClans: Int = planetRecord.nativeClans
-  def nativeRace: Short = planetRecord.nativeRace
+  def nativeRace = planetRecord.nativeRace
   def temperature: Short = planetRecord.temperature
   def buildBase: Short = planetRecord.buildBase
 }

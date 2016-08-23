@@ -19,9 +19,9 @@ case class PlanetRecord(
   nativeTax: Short,
   colonistHappiness: Short,
   nativeHappiness: Short,
-  nativeGovernment: Short,
+  nativeGovernment: NativeGovernment,
   nativeClans: Int,
-  nativeRace: Short,
+  nativeRace: NativeRace,
   temperature: Short,
   buildBase: Short
 )
@@ -60,9 +60,9 @@ object PlanetsReader {
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
-      WORD.read(it),
+      Constants.nativeGovernments(Id(WORD.read(it))),
       DWORD.read(it),
-      WORD.read(it),
+      Constants.natives(Id(WORD.read(it))),
       WORD.read(it),
       WORD.read(it)
     )

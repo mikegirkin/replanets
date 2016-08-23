@@ -1,6 +1,6 @@
 package replanets.ui
 
-import replanets.common.{Constants, Fcode, PlanetId, TurnId}
+import replanets.common._
 import replanets.model.Game
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
@@ -29,16 +29,22 @@ class PlanetInfoView(
   val lblClimate: Label,
   val lblColonistPopulation: Label,
   val lblColonistTax: Label,
+  val lblColonistIncome: Label,
   val lblColonistHappiness: Label,
+  val lblColonistHappinessChange: Label,
   val lblNatives: Label,
   val lblGovernment: Label,
   val lblPopulation: Label,
   val lblTaxPerformance: Label,
   val lblTax: Label,
+  val lblNativesIncome: Label,
   val lblHappiness: Label,
+  val lblNativeHappinessChange: Label,
   val lblMines: Label,
   val lblFactories: Label,
   val lblDefenses: Label,
+  val lblSupplies: Label,
+  val lblMoney: Label,
 
   val lblNeuMined: Label,
   val lblNeuCore: Label,
@@ -93,19 +99,23 @@ class PlanetInfoView(
       lblClimate.text = vm.temperature.toString
       pnGeneralInfo.visible = true
 
-      if(vm.nativeRace != 0) {
-        lblNatives.text = Constants.natives(p.nativeRace)
-        lblGovernment.text = Constants.nativeGovernments(p.nativeGovernment)
-        lblTaxPerformance.text = "???"
+      if(vm.nativeRace != NativeRace.None) {
+        lblNatives.text = p.nativeRace.name
+        lblGovernment.text = p.nativeGovernment.name
+        lblTaxPerformance.text = s"${p.nativeGovernment.taxPercentage}%"
         lblPopulation.text = s"${vm.nativeClans} cl"
         lblTax.text = s"${vm.nativeTax} %"
+        lblNativesIncome.text = s"${vm.nativeIncome}"
         lblHappiness.text = s"${vm.nativeHappiness} %"
+        lblNativeHappinessChange.text = s"${vm.nativeHappinessChange}"
         pnNatives.visible = true
       }
 
       lblColonistPopulation.text = s"${vm.colonistClans} cl"
       lblColonistTax.text = s"${vm.colonistTax} %"
+      lblColonistIncome.text = s"${vm.colonistIncome}"
       lblColonistHappiness.text = s"${vm.colonistHappiness} %"
+      lblColonistHappinessChange.text = s"${vm.colonistHappinessChange}"
       pnColonists.visible = true
 
       lblMines.text = s"${vm.minesNumber} / ${game.formulas.maxMines(vm.colonistClans)}"
@@ -113,7 +123,10 @@ class PlanetInfoView(
       lblDefenses.text = s"${vm.defencesNumber} / ${game.formulas.maxDefences(vm.colonistClans)}"
       pnStructures.visible = true
 
-      val miningRate = (density: Int) => game.formulas.miningRate(density, vm.minesNumber, game.playingRace.value, vm.nativeRace)
+      lblSupplies.text = s"${vm.supplies}"
+      lblMoney.text =s"${vm.money}"
+
+      val miningRate = (density: Int) => game.formulas.miningRate(density, vm.minesNumber, game.playingRace, vm.nativeRace)
 
       lblNeuMined.text = vm.surfaceMinerals.neutronium.toString
       lblNeuCore.text = vm.coreMinerals.neutronium.toString

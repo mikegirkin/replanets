@@ -18,7 +18,7 @@ object OneBasedIndex {
   def isValidValue(value: Int) = value > 0
 }
 
-case class Id(value: Int) extends OneBasedIndex
+case class Id(value: Int) extends Index
 case class HullId(value: Int) extends OneBasedIndex
 case class EngineId(value: Int) extends OneBasedIndex
 

@@ -64,16 +64,21 @@
         </HBox>
         <GridPane styleClass="infoGrid">
             <columnConstraints>
-                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
-                <ColumnConstraints percentWidth="50" halignment="LEFT"/>
+                <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="35" halignment="LEFT"/>
+                <ColumnConstraints percentWidth="35" halignment="LEFT"/>
             </columnConstraints>
             <children>
                 <Label text="Population:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Label fx:id="lblPopulation" text="pop"  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Taxes:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <Label fx:id="lblTax" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <Label fx:id="lblTax"/>
+                </HBox>
+                <Label fx:id="lblNativesIncome" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
                 <Label text="Happiness:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <Label fx:id="lblHappiness" text="happiness" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblHappiness" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblNativeHappinessChange" text="???" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
             </children>
         </GridPane>
     </VBox>
@@ -81,16 +86,19 @@
         <Label text="Colonists" />
         <GridPane styleClass="infoGrid">
             <columnConstraints>
-                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
-                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="35"/>
+                <ColumnConstraints percentWidth="35"/>
             </columnConstraints>
             <children>
                 <Label text="Population:" GridPane.rowIndex="0"/>
                 <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Tax:" GridPane.rowIndex="1"/>
                 <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label fx:id="lblColonistIncome" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
                 <Label text="Happiness:" GridPane.rowIndex="2"/>
-                <Label fx:id="lblColonistHappiness" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblColonistHappiness" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label fx:id="lblColonistHappinessChange" text="???" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
             </children>
         </GridPane>
     </VBox>
@@ -98,8 +106,8 @@
         <Label text="Structures"/>
         <GridPane styleClass="infoGrid">
             <columnConstraints>
-                <ColumnConstraints percentWidth="50" halignment="RIGHT"/>
-                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="40" halignment="RIGHT"/>
+                <ColumnConstraints percentWidth="60"/>
             </columnConstraints>
             <children>
                 <Label text="Mines:" GridPane.rowIndex="0"/>
@@ -111,6 +119,18 @@
             </children>
         </GridPane>
     </VBox>
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints percentWidth="40" halignment="RIGHT"/>
+            <ColumnConstraints percentWidth="60"/>
+        </columnConstraints>
+        <children>
+            <Label text="Supplies:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label fx:id="lblSupplies" text="???" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Money:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label fx:id="lblMoney" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        </children>
+    </GridPane>
     <VBox fx:id="pnMinerals">
         <Label text="Minerals"/>
         <GridPane gridLinesVisible="true" styleClass="infoGrid">

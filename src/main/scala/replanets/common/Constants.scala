@@ -23,31 +23,20 @@ object Constants {
 
   val techLevelsCost = IndexedSeq(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
 
-  val natives = Map[Int, String](
-    0 -> "none",
-    1 -> "Humanoid",
-    2 -> "Bovinoid",
-    3 -> "Reptilian",
-    4 -> "Avian",
-    5 -> "Amorphous",
-    6 -> "Insectoid",
-    7 -> "Amphibian",
-    8 -> "Ghipsoldal",
-    9 -> "Siliconoid"
-  )
+  val natives: Map[Id, NativeRace] = Seq(
+    NativeRace.None, NativeRace.Humanoid, NativeRace.Bovinoid,
+    NativeRace.Reptilian, NativeRace.Avian, NativeRace.Amorphous,
+    NativeRace.Insectoid, NativeRace.Amphibian, NativeRace.Ghipsoldal,
+    NativeRace.Siliconoid
+  ).map(x => (x.id, x)).toMap
 
-  val nativeGovernments = Map[Int, String](
-    0 -> "none",
-    1 -> "Anarchy",
-    2 -> "Pre-Tribal",
-    3 -> "Early-Tribal",
-    4 -> "Tribal",
-    5 -> "Feudal",
-    6 -> "Monarchy",
-    7 -> "Representative",
-    8 -> "Participatory",
-    9 -> "Unity"
-  )
+
+  val nativeGovernments: Map[Id, NativeGovernment] = Seq(
+    NativeGovernment.None, NativeGovernment.Anarchy, NativeGovernment.PreTribal,
+    NativeGovernment.EarlyTribal, NativeGovernment.Tribal, NativeGovernment.Feudal,
+    NativeGovernment.Monarchy, NativeGovernment.Representative,
+    NativeGovernment.Participatory, NativeGovernment.Unity
+  ).map(x => (x.id, x)).toMap
 
   val StormCategoryText = Map[Int, String](
     0 -> "Inexistent",

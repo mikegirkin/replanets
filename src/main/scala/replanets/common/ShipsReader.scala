@@ -21,7 +21,7 @@ case class ShipRecord(
   yDistanceToWaypoint: Short,
   x: Short,
   y: Short,
-  engineTypeId: OneBasedIndex,
+  engineTypeId: Id,
   hullTypeId: Short,
   beamType: Short,
   numberOfBeams: Short,
