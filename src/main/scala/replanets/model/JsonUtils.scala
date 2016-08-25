@@ -3,7 +3,7 @@ package replanets.model
 import play.api.libs.json.Json._
 import play.api.libs.json._
 import replanets.common._
-import replanets.model.commands._
+import replanets.model.commands.{SetNativeTax, _}
 
 object JsonUtils {
 
@@ -32,30 +32,40 @@ object JsonUtils {
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]
   val buildShipFormat = format[StartShipConstruction]
-  implicit val stopShipConstructionFormat = format[StopShipConstruction]
+  val stopShipConstructionFormat = format[StopShipConstruction]
+  val setColonistTaxFormat = format[SetColonistTax]
+  val setNativeTaxFormat = format[SetNativeTax]
 
   val playerCommandWrites = Writes[PlayerCommand] { cmd =>
-    val typeRow = "type" -> JsString(cmd.getClass.getSimpleName)
-    val valueRow = cmd match {
-      case x: SetPlanetFcode =>
-        "value" -> toJson(x)(setPlanetFcodeFormat)
-      case x: SetShipFcode =>
-        "value" -> toJson(x)(setShipFcodeFormat)
-      case x: StartShipConstruction =>
-        "value" -> toJson(x)(buildShipFormat)
-      case x: StopShipConstruction =>
-        "value" -> toJson(x)(stopShipConstructionFormat)
+    val typeValue = JsString(cmd.getClass.getSimpleName)
+    val value= cmd match {
+      case x: SetPlanetFcode => toJson(x)(setPlanetFcodeFormat)
+      case x: SetShipFcode => toJson(x)(setShipFcodeFormat)
+      case x: StartShipConstruction => toJson(x)(buildShipFormat)
+      case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
+      case x: SetColonistTax => toJson(x)(setColonistTaxFormat)
+      case x: SetNativeTax => toJson(x)(setNativeTaxFormat)
     }
-    JsObject(Seq(typeRow, valueRow))
+    JsObject(Seq(
+      "type" -> typeValue,
+      "value" -> value
+    ))
   }
+
+  val readers = Map[String, (JsLookupResult) => JsResult[PlayerCommand]](
+    classOf[SetPlanetFcode].getSimpleName -> { _.validate[SetPlanetFcode](setPlanetFcodeFormat) },
+    classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
+    classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
+    classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
+    classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
+    classOf[SetColonistTax].getSimpleName -> { _.validate[SetColonistTax](setColonistTaxFormat) },
+    classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) }
+  )
 
   val playerCommandReads = Reads[PlayerCommand] { json =>
     val commandType = (json \ "type").as[String]
-    if(commandType == classOf[SetPlanetFcode].getSimpleName) (json \ "value").validate[SetPlanetFcode](setPlanetFcodeFormat)
-    else if(commandType == classOf[SetShipFcode].getSimpleName) (json \ "value").validate[SetShipFcode](setShipFcodeFormat)
-    else if(commandType == classOf[StartShipConstruction].getSimpleName) (json \ "value").validate[StartShipConstruction](buildShipFormat)
-    else if(commandType == classOf[StopShipConstruction].getSimpleName) (json \ "value").validate[StopShipConstruction]
-    else JsError()
+    val valueJson = json \ "value"
+    readers.get(commandType).map(_.apply(valueJson))getOrElse(JsError())
   }
 
   implicit val playerCommandFormat: Format[PlayerCommand] = Format(playerCommandReads, playerCommandWrites)

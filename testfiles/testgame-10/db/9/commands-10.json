@@ -4,7 +4,30 @@
     "type" : "SetPlanetFcode",
     "value" : {
       "objectId" : 495,
-      "newFcode" : "CCU"
+      "newFcode" : "29N"
+    }
+  }, {
+    "type" : "SetColonistTax",
+    "value" : {
+      "planetId" : 495,
+      "newTax" : 10
+    }
+  }, {
+    "type" : "SetNativeTax",
+    "value" : {
+      "planetId" : 293,
+      "newTax" : 20
+    }
+  }, {
+    "type" : "StartShipConstruction",
+    "value" : {
+      "objectId" : 495,
+      "hullId" : 59,
+      "engineId" : 3,
+      "beamId" : 1,
+      "beamsCount" : 0,
+      "launcherId" : 1,
+      "launcherCount" : 0
     }
   } ],
   "additionalData" : [ ]

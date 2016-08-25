@@ -8,7 +8,7 @@ import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
 
 import scalafx.beans.property.IntegerProperty
 import scalafx.event.ActionEvent
-import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.control.{Button, CheckBox, Label, TextField}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
 import scalafx.scene.layout.{GridPane, Pane, VBox}
 import scalafxml.core.macros.sfxml
@@ -21,6 +21,7 @@ trait IPlanetInfoView {
 @sfxml
 class PlanetInfoView(
   val rootPane: VBox,
+  val cbDone: CheckBox,
   val lblName: Label,
   val lblPlanetId: Label,
   val lblWhen: Label,

@@ -10,6 +10,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView"
@@ -18,12 +19,15 @@
         <Label fx:id="lblOwner" text="owner"/>
         <Label fx:id="lblPlanetId" text="???"/>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-            <Label text="Temp:" />
-            <Label fx:id="lblClimate" text="???" />
+            <CheckBox fx:id="cbDone" />
         </HBox>
     </HBox>
     <HBox>
         <Label fx:id="lblName" text="name" />
+    </HBox>
+    <HBox>
+        <Label text="Temp:" />
+        <Label fx:id="lblClimate" text="???" />
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
             <Label fx:id="lblWhen" text="when"/>
         </HBox>
