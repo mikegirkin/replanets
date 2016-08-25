@@ -4,8 +4,9 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
+import replanets.model.commands.{SetPlanetFcode, SetShipFcode}
 
-class CommandsSpec extends WordSpec with Matchers with MockitoSugar {
+class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar {
   "SetPlanetFcode" should {
     "Correctly detect if other command is a replacement" in {
       val cmd = SetPlanetFcode(PlanetId(213), Fcode("AAB"))
@@ -50,3 +51,4 @@ class CommandsSpec extends WordSpec with Matchers with MockitoSugar {
   }
 
 }
+

@@ -1,7 +1,8 @@
 package replanets.ui.actions
 
 import replanets.common.{Fcode, PlanetId}
-import replanets.model.{Game, SetPlanetFcode}
+import replanets.model.Game
+import replanets.model.commands.SetPlanetFcode
 import replanets.ui.MapObject
 import replanets.ui.viewmodels.ViewModel
 

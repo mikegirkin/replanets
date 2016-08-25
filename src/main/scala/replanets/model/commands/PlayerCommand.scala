@@ -1,8 +1,9 @@
-package replanets.model
+package replanets.model.commands
 
 import replanets.common._
+import replanets.model.ShipBuildOrder
 
-sealed trait PlayerCommand {
+trait PlayerCommand {
   def objectId: OneBasedIndex
   def isReplacableBy(other: PlayerCommand): Boolean
   def isAddDiffToInitialState(initial: ServerData): Boolean

@@ -4,7 +4,7 @@ import replanets.recipes._
 
 case class PlanetRecord(
   ownerId: RaceId,
-  planetId: PlanetId,
+  id: PlanetId,
   fcode: Fcode,
   minesNumber: Short,
   factoriesNumber: Short,
@@ -15,7 +15,7 @@ case class PlanetRecord(
   money: Int,
   coreMinerals: Minerals,
   densityMinerals: Minerals,
-  colonistTax: Short,
+  colonistTax: Int,
   nativeTax: Short,
   colonistHappiness: Short,
   nativeHappiness: Short,
@@ -70,6 +70,6 @@ object PlanetsReader {
 
   def read(it: Iterator[Byte]): Map[PlanetId, PlanetRecord] = {
     val recordsNum = WORD.read(it)
-    ArrayRecipe(recordsNum, planetRecipe).read(it).map { x => x.planetId -> x }.toMap
+    ArrayRecipe(recordsNum, planetRecipe).read(it).map { x => x.id -> x }.toMap
   }
 }

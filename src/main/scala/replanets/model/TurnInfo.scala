@@ -1,6 +1,7 @@
 package replanets.model
 
 import replanets.common._
+import replanets.model.commands._
 
 import scala.collection.mutable
 
@@ -21,6 +22,7 @@ case class TurnInfo(
       case x:SetShipFcode => handle(x)(state)
       case x:StartShipConstruction => handle(x)(state)
       case x:StopShipConstruction => handle(x)(state)
+      case x:SetColonistTax => x.apply(state)
       case _ => state
     }
   }

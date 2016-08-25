@@ -5,7 +5,8 @@ import java.nio.file.Paths
 import java.nio.{ByteBuffer, ByteOrder}
 
 import replanets.common.{ByteExtensions, PlanetId, Reg}
-import replanets.model.{Game, PlayerCommand}
+import replanets.model.Game
+import replanets.model.commands.PlayerCommand
 import replanets.recipes.{BYTE, DWORD}
 import replanets.ui.viewmodels.PlanetInfoVM
 

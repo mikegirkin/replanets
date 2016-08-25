@@ -4,6 +4,7 @@ import java.nio.file.Paths
 
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
+import replanets.model.commands.{SetPlanetFcode, SetShipFcode, StartShipConstruction, StopShipConstruction}
 
 class TurnInfoSpec extends WordSpec with Matchers {
 

@@ -1,19 +1,17 @@
 Label, TextFlow, Text, ListCell, Button {
+    -fx-font-family: Helvetica, Arial, sans-serif;
     -fx-font-weight: 100;
     -fx-font-size: 9pt;
 }
 
-.infoGrid Button, .inGridButton {
-    -fx-max-height: 20;
-    -fx-padding: 0 3 0 3;
-}
-
 .inGridButton {
-    -fx-padding: 0 3 0 3;
-    -fx-max-height: 20;
-    -fx-min-height: 20;
-    -fx-max-width: 20;
-    -fx-min-width: 20;
+    -fx-padding: 0 0 0 0;
+    -fx-max-height: 18;
+    -fx-min-height: 18;
+    -fx-max-width: 18;
+    -fx-min-width: 18;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 }
 
 .inGridButton Label {

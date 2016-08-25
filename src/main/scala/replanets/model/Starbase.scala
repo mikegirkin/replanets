@@ -24,18 +24,20 @@ case class Starbase(
   shipBeingBuilt: Option[ShipBuildOrder]
 ) {
 
+  import NumberExtensions._
+
   def shipCostAtStarbase(buildOrder: ShipBuildOrder): ShipCost = {
 
     val hullCost = if(storedHulls.getOrElse(buildOrder.hull.id, 0) != 0) Cost.zero else buildOrder.hull.cost
-    val enginesToBuild = lowerLimit(buildOrder.hull.enginesNumber - storedEngines(buildOrder.engine.id.value - 1), 0)
+    val enginesToBuild = (buildOrder.hull.enginesNumber - storedEngines(buildOrder.engine.id.value - 1)).lowerBound(0)
     val enginesCost = buildOrder.engine.cost.mul(enginesToBuild)
     val beamsToBuild = buildOrder.beams
-      .map(bm => lowerLimit(bm.count - storedBeams(bm.spec.id.value - 1), 0))
+      .map(bm => (bm.count - storedBeams(bm.spec.id.value - 1)).lowerBound(0))
       .getOrElse(0)
     val beamsCost = buildOrder.beams
       .map(_.spec.cost.mul(beamsToBuild)).getOrElse(Cost.zero)
     val launchersToBuild = buildOrder.launchers
-      .map(l => lowerLimit(l.count - storedLaunchers(l.spec.id.value - 1), 0))
+      .map(l => (l.count - storedLaunchers(l.spec.id.value - 1)).lowerBound(0))
       .getOrElse(0)
     val launcherCost = buildOrder.launchers
       .map(_.spec.launcherCost.mul(launchersToBuild)).getOrElse(Cost.zero)
@@ -58,7 +60,4 @@ case class Starbase(
     )
   }
 
-  private def lowerLimit(number: Int, limit: Int): Int = {
-    if(number<limit) limit else number
-  }
 }

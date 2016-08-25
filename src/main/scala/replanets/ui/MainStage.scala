@@ -62,9 +62,9 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     onKeyPressed = (e:KeyEvent) => handleKeyPressed(e)
   }
   title = "rePlanets"
-  width = 1280
-  minHeight = 650
-  height = 700
+  width = 1200
+  minHeight = 740
+  height = 740
 
   mainLayout.bottom = new Toolbar {
     override def onMessages(e: ActionEvent): Unit = setMainView(messageView)

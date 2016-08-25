@@ -1,26 +1,15 @@
 package replanets.ui.viewmodels
 
 import replanets.common._
-import replanets.model.{Game, SetPlanetFcode}
+import replanets.model.Game
+import replanets.model.commands.SetPlanetFcode
 
-/**
-  * Created by mgirkin on 09/08/2016.
-  */
 class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
-  val planetRecord = game.turnSeverData(turn).planets.get(planetId).get
-  val commands = game.turns(turn)(game.playingRace).commands
+  val planetRecord = game.turnInfo(turn).stateAfterCommands.planets(planetId)
 
   def ownerId: Short = planetRecord.ownerId.value.toShort
 
-  def fcode: Fcode = {
-    commands.find {
-      case SetPlanetFcode(pId, newFcode) if pId == planetId => true
-      case _ => false
-    }.map {
-      case SetPlanetFcode(pId, newFcode) => newFcode
-    }.getOrElse(planetRecord.fcode)
-  }
-
+  def fcode: Fcode = planetRecord.fcode
   def minesNumber: Short = planetRecord.minesNumber
   def factoriesNumber: Short = planetRecord.factoriesNumber
   def defencesNumber: Short = planetRecord.defencesNumber
@@ -30,7 +19,7 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   def money: Int = planetRecord.money
   def coreMinerals: Minerals = planetRecord.coreMinerals
   def densityMinerals: Minerals = planetRecord.densityMinerals
-  def colonistTax: Short = planetRecord.colonistTax
+  def colonistTax = planetRecord.colonistTax
   def colonistIncome: Int = game.formulas.colonistTaxIncome(
     game.playingRace, planetRecord.colonistClans, planetRecord.colonistTax, planetRecord.colonistHappiness
   )

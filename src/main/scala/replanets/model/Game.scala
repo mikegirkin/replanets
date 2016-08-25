@@ -3,6 +3,7 @@ package replanets.model
 import java.nio.file.{Files, Path}
 
 import replanets.common._
+import replanets.model.commands.PlayerCommand
 import replanets.model.trn.TrnWriter
 
 case class Game(

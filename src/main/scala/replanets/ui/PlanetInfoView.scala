@@ -3,16 +3,16 @@ package replanets.ui
 import replanets.common._
 import replanets.model.Game
 import replanets.ui.actions.Actions
+import replanets.ui.controls.Spinner
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
 
+import scalafx.beans.property.IntegerProperty
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, Label, TextField}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
-import scalafx.scene.layout.{Pane, VBox}
+import scalafx.scene.layout.{GridPane, Pane, VBox}
 import scalafxml.core.macros.sfxml
-/**
-  * Created by mgirkin on 06/08/2016.
-  */
+
 trait IPlanetInfoView {
   def rootPane: VBox
   def setPlanet(turnId: TurnId, planetId: Int)
@@ -28,7 +28,6 @@ class PlanetInfoView(
   val lblFcode: Label,
   val lblClimate: Label,
   val lblColonistPopulation: Label,
-  val lblColonistTax: Label,
   val lblColonistIncome: Label,
   val lblColonistHappiness: Label,
   val lblColonistHappinessChange: Label,
@@ -64,20 +63,39 @@ class PlanetInfoView(
   val edFcode: TextField,
 
   val pnColonists: Pane,
+  val gpColonists: GridPane,
   val pnNatives: Pane,
   val pnGeneralInfo: Pane,
   val pnStructures: Pane,
   val pnMinerals: Pane,
-
 
   val game: Game,
   val viewModel: ViewModel,
   val commands: Actions
 ) extends IPlanetInfoView {
 
-  viewModel.objectChanged += { mapObject => handleObjectChanged(mapObject) }
+  viewModel.objectChanged += {
+    mapObject => handleObjectChanged(mapObject)
+  }
+
+  val colonistTax = IntegerProperty(0)
+  val colonistTaxSpinner = new Spinner(
+    colonistTax,
+    (delta) => {
+      planet.foreach(p =>
+        commands.changeColonistTax(p, colonistTax.value + delta)
+      )
+    }
+  )
+
+  private var planet: Option[PlanetRecord] = None
+
+  gpColonists.add(colonistTaxSpinner, 1, 1)
 
   override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
+    val data = game.turnInfo(turnId).stateAfterCommands
+    planet = data.planets.get(PlanetId(planetId))
+
     pnNatives.visible = false
     pnColonists.visible = false
     pnGeneralInfo.visible = false
@@ -85,13 +103,12 @@ class PlanetInfoView(
     pnMinerals.visible = false
     btnStarbase.visible = false
 
-    val data = game.turnInfo(turnId).stateAfterCommands
     lblPlanetId.text = planetId.toString
     lblName.text = game.map.planets(planetId).name
     lblWhen.text = "(now)"
     lblOwner.text = "Planet"
     data.planets.get(PlanetId(planetId)).foreach(p => {
-      val vm = new PlanetInfoVM(game, viewModel.turnShown, p.planetId)
+      val vm = new PlanetInfoVM(game, viewModel.turnShown, p.id)
 
       if(vm.ownerId != 0) lblOwner.text = s"${game.races(vm.ownerId - 1).adjective} planet"
       lblFcode.text = vm.fcode.value
@@ -112,7 +129,7 @@ class PlanetInfoView(
       }
 
       lblColonistPopulation.text = s"${vm.colonistClans} cl"
-      lblColonistTax.text = s"${vm.colonistTax} %"
+      colonistTax.value = vm.colonistTax
       lblColonistIncome.text = s"${vm.colonistIncome}"
       lblColonistHappiness.text = s"${vm.colonistHappiness} %"
       lblColonistHappinessChange.text = s"${vm.colonistHappinessChange}"
@@ -149,7 +166,8 @@ class PlanetInfoView(
 
   private def handleObjectChanged(mapObject: MapObject): Unit = {
     mapObject match {
-      case MapObject.Planet(id, coords, displayName) => setPlanet(viewModel.turnShown, id)
+      case MapObject.Planet(id, coords, displayName) if id == planet.map(_.id.value).getOrElse(0) =>
+        setPlanet(viewModel.turnShown, id)
       case _ =>
     }
   }

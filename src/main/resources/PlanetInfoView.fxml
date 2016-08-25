@@ -47,7 +47,7 @@
                     <children>
                         <Label fx:id="lblFcode" text="fcode" GridPane.columnIndex="0" onMouseClicked="#onFcodeLabelClicked" />
                         <TextField fx:id="edFcode" styleClass="inGridEditor" visible="false" GridPane.columnIndex="0" onAction="#onEdFcodeAction" onKeyPressed="#onEdFcodeKeyPressed"/>
-                        <Button fx:id="btnRandomFcode" text="R" onAction="#onRandomFcodeButton" GridPane.columnIndex="1"/>
+                        <Button fx:id="btnRandomFcode" styleClass="inGridButton" text="R" onAction="#onRandomFcodeButton" GridPane.columnIndex="1"/>
                     </children>
                 </GridPane>
             </children>
@@ -84,7 +84,7 @@
     </VBox>
     <VBox fx:id="pnColonists">
         <Label text="Colonists" />
-        <GridPane styleClass="infoGrid">
+        <GridPane fx:id="gpColonists" styleClass="infoGrid">
             <columnConstraints>
                 <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
                 <ColumnConstraints percentWidth="35"/>
@@ -94,7 +94,7 @@
                 <Label text="Population:" GridPane.rowIndex="0"/>
                 <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Tax:" GridPane.rowIndex="1"/>
-                <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <!-- <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/> -->
                 <Label fx:id="lblColonistIncome" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
                 <Label text="Happiness:" GridPane.rowIndex="2"/>
                 <Label fx:id="lblColonistHappiness" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>

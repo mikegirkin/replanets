@@ -3,12 +3,13 @@ package replanets.common
 import java.nio.file.{Files, Path}
 
 import play.api.libs.json._
-import replanets.model.{PlayerCommand, Specs, TurnInfo}
+import replanets.model.{Specs, TurnInfo}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import replanets.model.JsonUtils._
+import replanets.model.commands.PlayerCommand
 
 class GameDatabase(gamePath: Path, val playingRace: RaceId) {
   val dbFoldername = "db"

@@ -200,7 +200,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     (1 to 500).foreach { idx =>
       val planetCoords = game.map.planets(idx - 1).coords
       val planetInfo = currentTurnServerData.planets.get(PlanetId(idx))
-      val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.planetId) }
+      val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.id) }
 
       val coord = canvasCoord(planetCoords)
       gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
