@@ -2,7 +2,7 @@ package replanets.ui.actions
 
 import replanets.common.PlanetRecord
 import replanets.model._
-import replanets.model.commands.{SetColonistTax, StartShipConstruction, StopShipConstruction}
+import replanets.model.commands.{SetColonistTax, SetNativeTax, StartShipConstruction, StopShipConstruction}
 import replanets.ui.MapObject
 import replanets.ui.viewmodels.ViewModel
 
@@ -37,6 +37,11 @@ class Actions(game: Game, viewModel: ViewModel)(
   def changeColonistTax(planet: PlanetRecord, newTax: Int) = {
     val command = SetColonistTax(planet.id, newTax)
     game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forPlanet(game.map.planets(planet.id.value - 1)))
+  }
+
+  def changeNativeTax(planet: PlanetRecord, newTax: Int) = {
+    game.addCommand(SetNativeTax(planet.id, newTax))
     viewModel.objectChanged.fire(MapObject.forPlanet(game.map.planets(planet.id.value - 1)))
   }
 }

@@ -1,14 +1,12 @@
 package replanets.model
 
-import java.nio.file.Paths
-
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
-import replanets.model.commands.{SetColonistTax, SetPlanetFcode}
+import replanets.model.commands.{SetColonistTax, SetNativeTax, SetPlanetFcode}
 
-class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar {
+class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with TestGame_1 {
   "SetColonistTaxRateCommand" should {
     "correctly detect other command as a replacement" in {
       val planetId = PlanetId(213)
@@ -38,31 +36,23 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar {
     }
 
     "actually sets the tax" in {
-      val directory = Paths.get("testfiles/testgame-1")
-      val specs = Specs.fromDirectory(directory)
-      val path = directory.resolve("db/1/player1.rst")
-      val rst = RstFileReader.read(path, RaceId(1), specs)
-
-      val ti = TurnInfo(specs, rst)
+      val ti = game.turnInfo(TurnId(1))
       val planetId = PlanetId(213)
       val newTaxValue = 17
       val cmd = SetColonistTax(planetId, 17)
 
-      cmd.apply(rst).planets(planetId).colonistTax shouldBe newTaxValue
+      cmd.apply(ti.initialState).planets(planetId).colonistTax shouldBe newTaxValue
     }
 
     "tax is limited by [0, 100] interval" in {
-      val directory = Paths.get("testfiles/testgame-1")
-      val specs = Specs.fromDirectory(directory)
-      val path = directory.resolve("db/1/player1.rst")
-      val rst = RstFileReader.read(path, RaceId(1), specs)
-
-      val ti = TurnInfo(specs, rst)
+      val ti = game.turnInfo(TurnId(1))
       val planetId = PlanetId(213)
       val newTaxValue = 17
 
-      SetColonistTax(planetId, -500).apply(rst).planets(planetId).colonistTax shouldBe 0
-      SetColonistTax(planetId, 100500).apply(rst).planets(planetId).colonistTax shouldBe 100
+      SetColonistTax(planetId, -500).apply(ti.initialState).planets(planetId).colonistTax shouldBe 0
+      SetColonistTax(planetId, 100500).apply(ti.initialState).planets(planetId).colonistTax shouldBe 100
     }
   }
 }
+
+

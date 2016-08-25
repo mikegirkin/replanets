@@ -27,7 +27,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   maxWidth = 275
 
   val objectDetailsView = new VBox {
-    minHeight = 400
+    minHeight = 450
   }
 
   val objectListView = new ListView[MapObject] {

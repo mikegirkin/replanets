@@ -23,6 +23,7 @@ case class TurnInfo(
       case x:StartShipConstruction => handle(x)(state)
       case x:StopShipConstruction => handle(x)(state)
       case x:SetColonistTax => x.apply(state)
+      case x:SetNativeTax => x.apply(state)
       case _ => state
     }
   }

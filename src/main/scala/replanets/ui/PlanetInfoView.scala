@@ -35,7 +35,6 @@ class PlanetInfoView(
   val lblGovernment: Label,
   val lblPopulation: Label,
   val lblTaxPerformance: Label,
-  val lblTax: Label,
   val lblNativesIncome: Label,
   val lblHappiness: Label,
   val lblNativeHappinessChange: Label,
@@ -65,6 +64,7 @@ class PlanetInfoView(
   val pnColonists: Pane,
   val gpColonists: GridPane,
   val pnNatives: Pane,
+  val gpNatives: GridPane,
   val pnGeneralInfo: Pane,
   val pnStructures: Pane,
   val pnMinerals: Pane,
@@ -78,7 +78,11 @@ class PlanetInfoView(
     mapObject => handleObjectChanged(mapObject)
   }
 
+  private var planet: Option[PlanetRecord] = None
+
   val colonistTax = IntegerProperty(0)
+  val nativeTax = IntegerProperty(0)
+
   val colonistTaxSpinner = new Spinner(
     colonistTax,
     (delta) => {
@@ -88,9 +92,17 @@ class PlanetInfoView(
     }
   )
 
-  private var planet: Option[PlanetRecord] = None
+  val nativeTaxSpinner = new Spinner(
+    nativeTax,
+    (delta) => {
+      planet.foreach(p =>
+        commands.changeNativeTax(p, nativeTax.value + delta)
+      )
+    }
+  )
 
   gpColonists.add(colonistTaxSpinner, 1, 1)
+  gpNatives.add(nativeTaxSpinner, 1, 1)
 
   override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
     val data = game.turnInfo(turnId).stateAfterCommands
@@ -121,7 +133,7 @@ class PlanetInfoView(
         lblGovernment.text = p.nativeGovernment.name
         lblTaxPerformance.text = s"${p.nativeGovernment.taxPercentage}%"
         lblPopulation.text = s"${vm.nativeClans} cl"
-        lblTax.text = s"${vm.nativeTax} %"
+        nativeTax.value = vm.nativeTax
         lblNativesIncome.text = s"${vm.nativeIncome}"
         lblHappiness.text = s"${vm.nativeHappiness} %"
         lblNativeHappinessChange.text = s"${vm.nativeHappinessChange}"

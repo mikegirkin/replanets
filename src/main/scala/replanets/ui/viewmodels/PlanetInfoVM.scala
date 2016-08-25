@@ -23,7 +23,7 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   def colonistIncome: Int = game.formulas.colonistTaxIncome(
     game.playingRace, planetRecord.colonistClans, planetRecord.colonistTax, planetRecord.colonistHappiness
   )
-  def nativeTax: Short = planetRecord.nativeTax
+  def nativeTax = planetRecord.nativeTax
   def nativeIncome: Int = game.formulas.nativeTaxIncome(
     game.playingRace, planetRecord.nativeRace, planetRecord.nativeGovernment,
     planetRecord.nativeClans, planetRecord.nativeTax, planetRecord.nativeHappiness,

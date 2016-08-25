@@ -62,7 +62,7 @@
                 <Label fx:id="lblTaxPerformance" />
             </HBox>
         </HBox>
-        <GridPane styleClass="infoGrid">
+        <GridPane fx:id="gpNatives" styleClass="infoGrid">
             <columnConstraints>
                 <ColumnConstraints percentWidth="30" halignment="RIGHT"/>
                 <ColumnConstraints percentWidth="35" halignment="LEFT"/>
@@ -72,9 +72,6 @@
                 <Label text="Population:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                 <Label fx:id="lblPopulation" text="pop"  GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Taxes:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <HBox GridPane.rowIndex="1" GridPane.columnIndex="1">
-                    <Label fx:id="lblTax"/>
-                </HBox>
                 <Label fx:id="lblNativesIncome" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
                 <Label text="Happiness:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
                 <Label fx:id="lblHappiness" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
@@ -94,7 +91,6 @@
                 <Label text="Population:" GridPane.rowIndex="0"/>
                 <Label fx:id="lblColonistPopulation" text="???" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
                 <Label text="Tax:" GridPane.rowIndex="1"/>
-                <!-- <Label fx:id="lblColonistTax" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/> -->
                 <Label fx:id="lblColonistIncome" text="???" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
                 <Label text="Happiness:" GridPane.rowIndex="2"/>
                 <Label fx:id="lblColonistHappiness" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>

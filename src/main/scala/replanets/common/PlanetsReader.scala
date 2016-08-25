@@ -16,7 +16,7 @@ case class PlanetRecord(
   coreMinerals: Minerals,
   densityMinerals: Minerals,
   colonistTax: Int,
-  nativeTax: Short,
+  nativeTax: Int,
   colonistHappiness: Short,
   nativeHappiness: Short,
   nativeGovernment: NativeGovernment,
