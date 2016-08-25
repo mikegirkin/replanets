@@ -11,7 +11,6 @@ case class Game(
   gameDb: GameDatabase,
   playingRace: RaceId,
   races: IndexedSeq[RacenmItem],
-  map: ClusterMap,
   specs: Specs,
   hostType: HostType
 ) {
@@ -23,12 +22,6 @@ case class Game(
   }
 
   val missions = new Missions(playingRace, hostType)
-
-  override def toString: String = {
-    String.join(
-      sys.props("line.separator") + sys.props("line.separator"),
-      name.toString, races.toString, map.toString, specs.toString)
-  }
 
   def turnSeverData(turn: TurnId) = {
     turns(turn)(playingRace).initialState
@@ -59,11 +52,10 @@ object Game {
   import ResourcesExtension._
 
   def apply(gameDirectory: Path)(gameDb: GameDatabase): Game = {
-    val map = ClusterMap.fromDirectory(gameDirectory)
     val specs = Specs.fromDirectory(gameDirectory)
     val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
-    Game("Test game", gameDb, gameDb.playingRace, races, map, specs, THost)
+    Game("Test game", gameDb, gameDb.playingRace, races, specs, THost)
   }
 }
 

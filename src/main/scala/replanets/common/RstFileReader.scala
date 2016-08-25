@@ -42,7 +42,7 @@ object RstFileReader {
 
     val targets = TargetReader.readDosRecords(buffer) ++ (if(isWinplan) TargetReader.readWinplanRecords(buffer) else IndexedSeq())
 
-    val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1))
+    val planets = PlanetsReader.read(buffer.iterator.drop(pointers(2) - 1), specs.map)
 
     val bases: Map[PlanetId, Starbase] = {
       val baseRecords = BasesReader.read(buffer.iterator.drop(pointers(3) - 1))

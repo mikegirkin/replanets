@@ -14,7 +14,7 @@ class SelectPlanet(
   override def execute(): Unit = {
     for(
       so <- viewModel.selectedObject;
-      planet <- game.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y)
+      planet <- game.specs.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y)
     ) viewModel.selectedObject = Some(MapObject.forPlanet(planet))
   }
 }

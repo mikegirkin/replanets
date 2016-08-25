@@ -91,7 +91,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
   private def closestObjectTo(coords: IntCoords): MapObject = {
     //planets
-    val closestPlanet = game.map.planets.minBy(x => distSqr(coords, x.coords))
+    val closestPlanet = game.specs.map.planets.minBy(x => distSqr(coords, x.coords))
     //ships
     val closestShip = if(currentTurnServerData.ships.isEmpty) None else Some(currentTurnServerData.ships.values.minBy(x => distSqr(coords, x.coords)))
     //minefields
@@ -198,7 +198,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     }
 
     (1 to 500).foreach { idx =>
-      val planetCoords = game.map.planets(idx - 1).coords
+      val planetCoords = game.specs.map.planets(idx - 1).coords
       val planetInfo = currentTurnServerData.planets.get(PlanetId(idx))
       val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.id) }
 
@@ -216,7 +216,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
     val shipsByCoords = ships.values.groupBy(_.coords)
 
     shipsByCoords.foreach { case (coords, localShips) =>
-      if(game.map.planets.exists(_.coords == coords)) {
+      if(game.specs.map.planets.exists(_.coords == coords)) {
         drawLocalShipsOrbitingPlanet(coords, localShips.toSeq)
       } else {
         drawLocalShipsNotOrbitingPlanet(coords, localShips.toSeq)

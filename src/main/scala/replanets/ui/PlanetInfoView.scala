@@ -117,7 +117,7 @@ class PlanetInfoView(
     btnStarbase.visible = false
 
     lblPlanetId.text = planetId.toString
-    lblName.text = game.map.planets(planetId - 1).name
+    lblName.text = game.specs.map.planets(planetId - 1).name
     lblWhen.text = "(now)"
     lblOwner.text = "Planet"
     data.planets.get(PlanetId(planetId)).foreach(p => {

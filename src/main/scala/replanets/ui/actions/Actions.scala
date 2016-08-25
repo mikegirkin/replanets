@@ -37,11 +37,11 @@ class Actions(game: Game, viewModel: ViewModel)(
   def changeColonistTax(planet: PlanetRecord, newTax: Int) = {
     val command = SetColonistTax(planet.id, newTax)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forPlanet(game.map.planets(planet.id.value - 1)))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
   }
 
   def changeNativeTax(planet: PlanetRecord, newTax: Int) = {
     game.addCommand(SetNativeTax(planet.id, newTax))
-    viewModel.objectChanged.fire(MapObject.forPlanet(game.map.planets(planet.id.value - 1)))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
   }
 }

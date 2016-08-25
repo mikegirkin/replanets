@@ -10,7 +10,7 @@
     "type" : "SetColonistTax",
     "value" : {
       "planetId" : 495,
-      "newTax" : 10
+      "newTax" : 12
     }
   }, {
     "type" : "SetNativeTax",

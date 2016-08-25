@@ -12,8 +12,8 @@ class SelectBase(
   override def execute(): Unit = {
     for(
       so <- viewModel.selectedObject;
-      planet <- game.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y);
-      base <- game.turnInfo(viewModel.turnShown).stateAfterCommands.bases.get(PlanetId(planet.id))
+      //planet <- game.specs.map.planets.find(p => p.x == so.coords.x && p.y == so.coords.y);
+      base <- game.turnInfo(viewModel.turnShown).stateAfterCommands.bases.get(PlanetId(so.id))
     ) {
       if(base.owner == game.playingRace) viewModel.selectedObject = Some(MapObject.forStarbase(game)(base))
     }

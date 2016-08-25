@@ -1,9 +1,9 @@
-package replanets.model
+package replanets.model.commands
 
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common.{PlanetId, TurnId}
-import replanets.model.commands.SetNativeTax
+import replanets.model.TestGame_10
 
 class SetNativeTaxSpec extends WordSpec with Matchers with MockitoSugar with TestGame_10 {
   "SetNativeTax command" should {

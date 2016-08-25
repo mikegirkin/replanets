@@ -1,10 +1,10 @@
-package replanets.model
+package replanets.model.commands
 
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
-import replanets.model.commands.{SetColonistTax, SetNativeTax, SetPlanetFcode}
+import replanets.model.TestGame_1
 
 class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with TestGame_1 {
   "SetColonistTaxRateCommand" should {

@@ -37,8 +37,8 @@ object MapObject {
   }
 
   def forStarbase(game: Game)(base: model.Starbase): MapObject = {
-    val planet = game.map.planets.find(_.id == base.id.value)
-    MapObject.Starbase(base.id.value, planet.get.coords, s"Starbase ${base.id.value}")
+    val planet = base.planet.mapData
+    MapObject.Starbase(base.id.value, planet.coords, s"Starbase ${base.id.value}")
   }
 
   def forPlanet(planet: replanets.model.Planet) = {
@@ -63,7 +63,7 @@ object MapObject {
       .filter(ship => ship.coords == coords)
       .map { ship => forShip(ship) }
     //planets
-    val planets = game.map.planets
+    val planets = game.specs.map.planets
       .find(p => p.coords == coords)
       .map(p => forPlanet(p))
       .toIndexedSeq

@@ -9,36 +9,21 @@ import replanets.model._
 import replanets.ui.viewmodels.ViewModel
 import replanets.ui.MapObject
 
-class SelectBaseSpec extends WordSpec with Matchers with MockitoSugar {
+class SelectBaseSpec extends WordSpec with Matchers with MockitoSugar with TestGame_1 {
   "Sets desired base as selected" in {
-    val planet = Planet(10, 350, 213, "Tatooin")
-    val turnNumber = 15
-    val playingRace = RaceId(2)
-
-    val specs = mock[Specs]
-
-    val base = mock[Starbase]
-    when(base.id).thenReturn(PlanetId(planet.id))
-    when(base.owner).thenReturn(playingRace)
-
-    val rst = mock[ServerData]
-    when(rst.bases).thenReturn(Map(PlanetId(planet.id) -> base))
-
-    val game = mock[Game]
-    when(game.turnInfo(any[TurnId]()))
-      .thenReturn(TurnInfo(specs, rst))
-    when(game.map).thenReturn(ClusterMap(4000, 4000, IndexedSeq(planet)))
-    when(game.turnSeverData(TurnId(turnNumber))).thenReturn(rst)
-    when(game.playingRace).thenReturn(playingRace)
+    val planet = game.specs.map.planets(213 - 1)
+    val turn = TurnId(1)
+    val playingRace = RaceId(1)
 
     val viewModel = ViewModel(
-      TurnId(turnNumber),
+      turn,
       Some(MapObject.forPlanet(planet))
     )
 
     val action = new SelectBase(game, viewModel)
     action.execute()
 
-    viewModel.selectedObject should be (Some(MapObject.forStarbase(game)(base)))
+    viewModel.selectedObject.get.id should be (planet.id)
+    viewModel.selectedObject.get shouldBe a [MapObject.Starbase]
   }
 }
