@@ -5,7 +5,7 @@ import scalafx.beans.property.IntegerProperty
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.{ColumnConstraints, GridPane}
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Pane}
 import scalafx.scene.text.TextAlignment
 
 class Spinner(
@@ -21,16 +21,7 @@ class Spinner(
     alignment = Pos.CenterLeft
     textAlignment = TextAlignment.Left
   }
-  val btnPlus = new Button {
-    styleClass = Seq("inGridButton")
-    text = "+"
-    onMouseClicked = (e: MouseEvent) => handlePlusClicked(e)
-  }
-  val btnMinus = new Button {
-    styleClass = Seq("inGridButton")
-    text = "-"
-    onMouseClicked = (e: MouseEvent) => handleMinusClicked(e)
-  }
+  val buttons = new SpinnerButtons(onDiff)
 
   alignment = Pos.CenterLeft
 
@@ -39,21 +30,5 @@ class Spinner(
   )
 
   add(lblValue, 0, 0)
-  add(btnPlus, 1, 0)
-  add(btnMinus, 2, 0)
-
-  private def getDelta(e: MouseEvent) = {
-    if(e.isControlDown) 10
-    else if(e.isAltDown) 100
-    else if(e.isShiftDown) 1000
-    else 1
-  }
-
-  private def handlePlusClicked(e: MouseEvent) = {
-    onDiff(getDelta(e))
-  }
-
-  private def handleMinusClicked(e: MouseEvent) = {
-    onDiff(-getDelta(e))
-  }
+  add(buttons, 1, 0)
 }

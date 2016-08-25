@@ -39,9 +39,6 @@ class PlanetInfoView(
   val lblNativesIncome: Label,
   val lblHappiness: Label,
   val lblNativeHappinessChange: Label,
-  val lblMines: Label,
-  val lblFactories: Label,
-  val lblDefenses: Label,
   val lblSupplies: Label,
   val lblMoney: Label,
 
@@ -68,6 +65,7 @@ class PlanetInfoView(
   val gpNatives: GridPane,
   val pnGeneralInfo: Pane,
   val pnStructures: Pane,
+  val gpStructures: GridPane,
   val pnMinerals: Pane,
 
   val game: Game,
@@ -79,16 +77,19 @@ class PlanetInfoView(
     mapObject => handleObjectChanged(mapObject)
   }
 
-  private var planet: Option[PlanetRecord] = None
+  private var planet: Option[PlanetInfoVM] = None
 
   val colonistTax = IntegerProperty(0)
   val nativeTax = IntegerProperty(0)
+  val factories = IntegerProperty(0)
+  val mines = IntegerProperty(0)
+  val defences = IntegerProperty(0)
 
   val colonistTaxSpinner = new Spinner(
     colonistTax,
     (delta) => {
-      planet.foreach(p =>
-        commands.changeColonistTax(p, colonistTax.value + delta)
+      planet.foreach( p =>
+        commands.changeColonistTax(p.planetRecord, colonistTax.value + delta)
       )
     }
   )
@@ -96,18 +97,60 @@ class PlanetInfoView(
   val nativeTaxSpinner = new Spinner(
     nativeTax,
     (delta) => {
-      planet.foreach(p =>
-        commands.changeNativeTax(p, nativeTax.value + delta)
+      planet.foreach( p =>
+        commands.changeNativeTax(p.planetRecord, nativeTax.value + delta)
       )
     }
   )
 
+  val factoriesSpinner = new Spinner(
+    factories,
+    onDiff = (delta) => {
+      planet.foreach( p =>
+        println(s"Changing factories to: ${p.factoriesNumber + delta}")
+      )
+    },
+    formatter = (value) => {
+      planet.map(p => s"${p.factoriesNumber} / ${p.maxFactories}").getOrElse("")
+    },
+    minLabelWidth = 70
+  )
+
+  val minesSpinner = new Spinner(
+    mines,
+    onDiff = (delta) => {
+      planet.foreach( p =>
+        println(s"Changing mines to: ${p.minesNumber + delta}")
+      )
+    },
+    formatter = (value) => {
+      planet.map(p => s"${p.minesNumber} / ${p.maxMines}").getOrElse("")
+    },
+    minLabelWidth = 70
+  )
+
+  val defencesSpinner = new Spinner(
+    defences,
+    onDiff = (delta) => {
+      planet.foreach( p =>
+        println(s"Changing defences to: ${p.defencesNumber + delta}")
+      )
+    },
+    formatter = (value) => {
+      planet.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse("")
+    },
+    minLabelWidth = 70
+  )
+
   gpColonists.add(colonistTaxSpinner, 1, 1)
   gpNatives.add(nativeTaxSpinner, 1, 1)
+  gpStructures.add(minesSpinner, 1, 0)
+  gpStructures.add(factoriesSpinner, 1, 1)
+  gpStructures.add(defencesSpinner, 1, 2)
 
   override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
     val data = game.turnInfo(turnId).stateAfterCommands
-    planet = data.planets.get(PlanetId(planetId))
+    planet = data.planets.get(PlanetId(planetId)).map(_ => new PlanetInfoVM(game, viewModel.turnShown, PlanetId(planetId)))
 
     pnNatives.visible = false
     pnColonists.visible = false
@@ -148,9 +191,9 @@ class PlanetInfoView(
       lblColonistHappinessChange.text = s"${vm.colonistHappinessChange}"
       pnColonists.visible = true
 
-      lblMines.text = s"${vm.minesNumber} / ${game.formulas.maxMines(vm.colonistClans)}"
-      lblFactories.text = s"${vm.factoriesNumber} / ${game.formulas.maxFactories(vm.colonistClans)}"
-      lblDefenses.text = s"${vm.defencesNumber} / ${game.formulas.maxDefences(vm.colonistClans)}"
+      mines.value = vm.minesNumber
+      factories.value = vm.factoriesNumber
+      defences.value = vm.defencesNumber
       pnStructures.visible = true
 
       lblSupplies.text = s"${vm.supplies}"
@@ -179,7 +222,7 @@ class PlanetInfoView(
 
   private def handleObjectChanged(mapObject: MapObject): Unit = {
     mapObject match {
-      case MapObject.Planet(id, coords, displayName) if id == planet.map(_.id.value).getOrElse(0) =>
+      case MapObject.Planet(id, coords, displayName) if id == planet.map(_.planetRecord.id.value).getOrElse(0) =>
         setPlanet(viewModel.turnShown, id)
       case _ =>
     }

@@ -1,13 +1,11 @@
 package replanets.ui.actions
 
-import org.mockito.Mockito._
-import org.mockito.Matchers.any
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
 import replanets.model._
-import replanets.ui.viewmodels.ViewModel
 import replanets.ui.MapObject
+import replanets.ui.viewmodels.ViewModel
 
 class SelectBaseSpec extends WordSpec with Matchers with MockitoSugar with TestGame_1 {
   "Sets desired base as selected" in {

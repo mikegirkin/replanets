@@ -10,9 +10,12 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   def ownerId: Short = planetRecord.ownerId.value.toShort
 
   def fcode: Fcode = planetRecord.fcode
-  def minesNumber: Short = planetRecord.minesNumber
-  def factoriesNumber: Short = planetRecord.factoriesNumber
-  def defencesNumber: Short = planetRecord.defencesNumber
+  def minesNumber = planetRecord.minesNumber
+  def maxMines = game.formulas.maxMines(colonistClans)
+  def factoriesNumber = planetRecord.factoriesNumber
+  def maxFactories = game.formulas.maxFactories(colonistClans)
+  def defencesNumber = planetRecord.defencesNumber
+  def maxDefences = game.formulas.maxDefences(colonistClans)
   def surfaceMinerals: Minerals = planetRecord.surfaceMinerals
   def colonistClans: Int = planetRecord.colonistClans
   def supplies: Int = planetRecord.supplies
