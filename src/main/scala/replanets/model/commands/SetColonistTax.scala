@@ -2,6 +2,7 @@ package replanets.model.commands
 
 import replanets.common.{PlanetId, ServerData}
 import replanets.common.NumberExtensions._
+import replanets.model.Specs
 
 case class SetColonistTax(
   planetId: PlanetId,
@@ -20,7 +21,7 @@ case class SetColonistTax(
     else true
   }
 
-  def apply(state: ServerData): ServerData = {
+  def apply(state: ServerData, specs: Specs): ServerData = {
     val planet = state.planets(planetId)
     state.copy(
       planets = state.planets.updated(planetId, planet.copy(

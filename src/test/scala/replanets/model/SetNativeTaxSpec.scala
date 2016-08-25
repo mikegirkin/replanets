@@ -12,15 +12,15 @@ class SetNativeTaxSpec extends WordSpec with Matchers with MockitoSugar with Tes
       val planetId = PlanetId(219)
       val taxValue = 17
 
-      SetNativeTax(planetId, taxValue).apply(ti.initialState).planets(planetId).nativeTax shouldBe 17
+      SetNativeTax(planetId, taxValue).apply(ti.initialState, specs).planets(planetId).nativeTax shouldBe 17
     }
 
     "tax in limited by [0, 100]" in {
       val ti = game.turnInfo(TurnId(8))
       val planetId = PlanetId(219)
 
-      SetNativeTax(planetId, -123).apply(ti.initialState).planets(planetId).nativeTax shouldBe 0
-      SetNativeTax(planetId, 123).apply(ti.initialState).planets(planetId).nativeTax shouldBe 100
+      SetNativeTax(planetId, -123).apply(ti.initialState, specs).planets(planetId).nativeTax shouldBe 0
+      SetNativeTax(planetId, 123).apply(ti.initialState, specs).planets(planetId).nativeTax shouldBe 100
     }
 
     "correctly determine if the command replaceable by another" in {

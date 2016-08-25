@@ -41,7 +41,7 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with T
       val newTaxValue = 17
       val cmd = SetColonistTax(planetId, 17)
 
-      cmd.apply(ti.initialState).planets(planetId).colonistTax shouldBe newTaxValue
+      cmd.apply(ti.initialState, specs).planets(planetId).colonistTax shouldBe newTaxValue
     }
 
     "tax is limited by [0, 100] interval" in {
@@ -49,8 +49,8 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with T
       val planetId = PlanetId(213)
       val newTaxValue = 17
 
-      SetColonistTax(planetId, -500).apply(ti.initialState).planets(planetId).colonistTax shouldBe 0
-      SetColonistTax(planetId, 100500).apply(ti.initialState).planets(planetId).colonistTax shouldBe 100
+      SetColonistTax(planetId, -500).apply(ti.initialState, specs).planets(planetId).colonistTax shouldBe 0
+      SetColonistTax(planetId, 100500).apply(ti.initialState, specs).planets(planetId).colonistTax shouldBe 100
     }
   }
 }
