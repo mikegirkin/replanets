@@ -34,9 +34,9 @@ class MinefieldInfoView(
     //TODO: lblTurnObserved
     lblCenter.text = s"(${minefield.x}, ${minefield.y})"
     lblRadius.text = minefield.radius.toString
-    val units = game.formulas.unitsInMinefieldByRadius(minefield.radius)
+    val units = game.specs.formulas.unitsInMinefieldByRadius(minefield.radius)
     lblUnits.text = units.toString
-    lblUnitsNextTurn.text = game.formulas.minefieldUnitsNextTurn(units).toString
+    lblUnitsNextTurn.text = game.specs.formulas.minefieldUnitsNextTurn(units).toString
   }
 
 }

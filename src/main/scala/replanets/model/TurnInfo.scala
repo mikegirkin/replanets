@@ -21,7 +21,7 @@ case class TurnInfo(
   def addCommand(cmds: PlayerCommand*): Unit = {
     cmds.foreach( cmd => {
       val oldCommandIndex = _commands.indexWhere(p => p.isReplacableBy(cmd))
-      val changesSomething = cmd.isAddDiffToInitialState(initialState)
+      val changesSomething = cmd.isAddDiffToInitialState(initialState, specs)
       if (oldCommandIndex >= 0 && changesSomething)
         _commands(oldCommandIndex) = cmd
       else if (oldCommandIndex >= 0 && !changesSomething)

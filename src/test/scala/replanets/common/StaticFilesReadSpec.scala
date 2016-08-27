@@ -3,7 +3,7 @@ package replanets.common
 import java.nio.file.Paths
 
 import org.scalatest.{Matchers, WordSpec}
-import replanets.model.Specs
+import replanets.model.{Specs, THostFormulas}
 
 class StaticFilesReadSpec extends WordSpec with Matchers {
 
@@ -86,7 +86,7 @@ class StaticFilesReadSpec extends WordSpec with Matchers {
 
   "hull assignments should work correctly" in {
     val dir = Paths.get("./testfiles/testgame-4")
-    val specs = Specs.fromDirectory(dir)
+    val specs = Specs.fromDirectory(dir)(THostFormulas, new Missions(RaceId(4), THost))
 
     val vic = specs.getRaceHulls(RaceId(4))(16)
     vic.name should be ("VICTORIOUS CLASS BATTLESHIP")

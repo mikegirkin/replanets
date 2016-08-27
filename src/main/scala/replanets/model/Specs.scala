@@ -5,6 +5,8 @@ import java.nio.file.Path
 import replanets.common._
 
 case class Specs(
+  formulas: Formulas,
+  missions: Missions,
   map: ClusterMap,
   beamSpecs: IndexedSeq[BeamspecItem],
   torpSpecs: IndexedSeq[TorpspecItem],
@@ -28,7 +30,7 @@ case class Specs(
 object Specs {
   import ResourcesExtension._
 
-  def fromDirectory(path: Path): Specs = {
+  def fromDirectory(path: Path)(formulas: Formulas, availableMissions: Missions): Specs = {
     val beams = BeamspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.beamspecFilename), "/files/beamspec.dat"))
     val torps = TorpspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.torpspecFilename), "/files/torpspec.dat"))
     val engines = EngspecItem.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.engspecFilename), "/files/engspec.dat"))
@@ -37,6 +39,6 @@ object Specs {
     val hullAssignment = HullAssignment.fromFile(getFromResourcesIfInexistent(path.resolve(Constants.hullsAssignmentFilename), "files/truehull.dat"))
     val map = ClusterMap.fromDirectory(path)
 
-    Specs(map, beams, torps, engines, hulls, hullAssignment, hullfuncs)
+    Specs(formulas, availableMissions, map, beams, torps, engines, hulls, hullAssignment, hullfuncs)
   }
 }

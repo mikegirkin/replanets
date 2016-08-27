@@ -107,7 +107,7 @@ class PlanetInfoView(
     factories,
     onDiff = (delta) => {
       planet.foreach( p =>
-        println(s"Changing factories to: ${p.factoriesNumber + delta}")
+        commands.buildFactories(p.planetRecord, p.factoriesNumber + delta)
       )
     },
     formatter = (value) => {
@@ -199,7 +199,7 @@ class PlanetInfoView(
       lblSupplies.text = s"${vm.supplies}"
       lblMoney.text =s"${vm.money}"
 
-      val miningRate = (density: Int) => game.formulas.miningRate(density, vm.minesNumber, game.playingRace, vm.nativeRace)
+      val miningRate = (density: Int) => game.specs.formulas.miningRate(density, vm.minesNumber, game.playingRace, vm.nativeRace)
 
       lblNeuMined.text = vm.surfaceMinerals.neutronium.toString
       lblNeuCore.text = vm.coreMinerals.neutronium.toString

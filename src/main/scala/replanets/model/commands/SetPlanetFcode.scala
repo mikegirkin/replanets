@@ -14,7 +14,7 @@ case class SetPlanetFcode(
     }
   }
 
-  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+  override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     val changed = for(
       planet <- initial.planets.get(objectId)
     ) yield planet.fcode.value != newFcode.value

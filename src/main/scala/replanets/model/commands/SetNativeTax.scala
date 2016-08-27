@@ -16,7 +16,7 @@ case class SetNativeTax(
     case _ => false
   }
 
-  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+  override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     if(initial.planets(planetId).nativeTax == newTax) false
     else true
   }

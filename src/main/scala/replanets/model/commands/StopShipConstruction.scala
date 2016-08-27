@@ -10,11 +10,12 @@ case class StopShipConstruction(
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
       case StartShipConstruction(baseId, _, _, _, _, _, _) if baseId == objectId => true
+      case StopShipConstruction(baseId) if baseId == objectId => true
       case _ => false
     }
   }
 
-  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+  override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     val base = initial.bases(objectId)
     if(base.shipBeingBuilt.isDefined) true else false
   }

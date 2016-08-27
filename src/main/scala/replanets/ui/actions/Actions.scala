@@ -2,7 +2,7 @@ package replanets.ui.actions
 
 import replanets.common.PlanetRecord
 import replanets.model._
-import replanets.model.commands.{SetColonistTax, SetNativeTax, StartShipConstruction, StopShipConstruction}
+import replanets.model.commands._
 import replanets.ui.MapObject
 import replanets.ui.viewmodels.ViewModel
 
@@ -15,7 +15,6 @@ class Actions(game: Game, viewModel: ViewModel)(
   //orders
   val setFcode: SetFcode
 ) {
-
   private def fireObjectChangedForSelectedObject() = {
     viewModel.selectedObject.foreach(x =>
       viewModel.objectChanged.fire(x)
@@ -44,4 +43,14 @@ class Actions(game: Game, viewModel: ViewModel)(
     game.addCommand(SetNativeTax(planet.id, newTax))
     viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
   }
+
+  def buildFactories(planet: PlanetRecord, newFactoriesNumber: Int): Unit = {
+    val ti = game.turnInfo(game.lastTurn)
+    val totalFactoriesToBuild = newFactoriesNumber - ti.initialState.planets(planet.id).factoriesNumber
+    game.addCommand(BuildFactories(planet.id, totalFactoriesToBuild))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
+  }
+
+
+
 }

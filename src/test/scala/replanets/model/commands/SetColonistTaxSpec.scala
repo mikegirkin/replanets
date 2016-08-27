@@ -31,8 +31,8 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with T
         )
       )
 
-      cmd.isAddDiffToInitialState(initialState) shouldBe true
-      cmd2.isAddDiffToInitialState(initialState) shouldBe false
+      cmd.isAddDiffToInitialState(initialState, specs) shouldBe true
+      cmd2.isAddDiffToInitialState(initialState, specs) shouldBe false
     }
 
     "actually sets the tax" in {

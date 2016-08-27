@@ -46,7 +46,7 @@ case class StartShipConstruction(
     hullsEqual && enginesEqual && beamsEqual && launchersEqual
   }
 
-  override def isAddDiffToInitialState(initial: ServerData): Boolean = {
+  override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     val base = initial.bases(objectId)
     !base.shipBeingBuilt.exists(bo => areEqualOrders(bo, hullId, engineId, beamId, beamsCount, launcherId, launcherCount))
   }

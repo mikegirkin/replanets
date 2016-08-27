@@ -107,4 +107,34 @@ trait Formulas {
       - (mines + factories).toDouble / 300
       - colonistTax * 0.8).toInt
   }
+
+  private def maxStructuresForMoney(
+    supplies: Int,
+    money: Int,
+    cost: Int
+  ) = {
+    val moneyCostPer1 = cost - 1
+    if(supplies * moneyCostPer1 <= money) supplies
+    else {
+      val forFullMoney: Int = money / moneyCostPer1
+      val moneyLeft = money % moneyCostPer1
+      val suppliesUsedForPartial = cost - moneyLeft
+      val suppliesLeft = supplies - forFullMoney - suppliesUsedForPartial
+      forFullMoney +
+        (if(suppliesLeft >= 0) 1 else 0) +
+        (if(suppliesLeft >= cost) suppliesLeft/cost else 0)
+    }
+  }
+
+  def maxFactoriesForMoney(supplies: Int, money: Int): Int = {
+    maxStructuresForMoney(supplies, money, 4)
+  }
+
+  def maxMinesForMoney(supplies: Int, money: Int): Int = {
+    maxStructuresForMoney(supplies, money, 5)
+  }
+
+  def maxDefencesForMoney(supplies: Int, money: Int): Int = {
+    maxStructuresForMoney(supplies, money, 11)
+  }
 }

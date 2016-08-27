@@ -11,17 +11,9 @@ case class Game(
   gameDb: GameDatabase,
   playingRace: RaceId,
   races: IndexedSeq[RacenmItem],
-  specs: Specs,
-  hostType: HostType
+  specs: Specs
 ) {
   val turns: Map[TurnId, Map[RaceId, TurnInfo]] = gameDb.loadDb(specs)
-
-  val formulas: Formulas = hostType match {
-    case THost => THostFormulas
-    case PHost3 | PHost4 => PHostFormulas
-  }
-
-  val missions = new Missions(playingRace, hostType)
 
   def turnSeverData(turn: TurnId) = {
     turns(turn)(playingRace).initialState
@@ -52,10 +44,19 @@ object Game {
   import ResourcesExtension._
 
   def apply(gameDirectory: Path)(gameDb: GameDatabase): Game = {
-    val specs = Specs.fromDirectory(gameDirectory)
     val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
-    Game("Test game", gameDb, gameDb.playingRace, races, specs, THost)
+    //TODO: Figure out a way to detect hosttype
+    val hostType: HostType = THost
+
+    val formulas: Formulas = hostType match {
+      case THost => THostFormulas
+      case PHost3 | PHost4 => PHostFormulas
+    }
+    val missions = new Missions(gameDb.playingRace, hostType)
+    val specs = Specs.fromDirectory(gameDirectory)(formulas, missions)
+
+    Game("Test game", gameDb, gameDb.playingRace, races, specs)
   }
 }
 

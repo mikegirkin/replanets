@@ -4,7 +4,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
-import replanets.model.{Game, Specs, TurnInfo}
+import replanets.model.{Game, Specs, TestGame_10, TurnInfo}
 
 class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar {
   "SetPlanetFcode" should {
@@ -45,10 +45,9 @@ class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar
       val game = mock[Game]
       when(game.turns).thenReturn(turns)
 
-      nonChanging.isAddDiffToInitialState(serverData) should be (false)
-      changing.isAddDiffToInitialState(serverData) should be (true)
+      nonChanging.isAddDiffToInitialState(serverData, specs) should be (false)
+      changing.isAddDiffToInitialState(serverData, specs) should be (true)
     }
   }
 
 }
-

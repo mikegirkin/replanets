@@ -136,4 +136,25 @@ class PHostFormulasSpec extends WordSpec with Matchers {
       change shouldBe -2
     }
   }
+
+  "maxFactories for given money" should {
+    "be correct" in {
+      f.maxFactoriesForMoney(4, 0) shouldBe 1
+      f.maxFactoriesForMoney(1, 3) shouldBe 1
+      f.maxFactoriesForMoney(0, 10) shouldBe 0
+      f.maxFactoriesForMoney(25, 100) shouldBe 25
+      f.maxFactoriesForMoney(25, 50) shouldBe (16 + 1 + 1)
+    }
+  }
+
+  "maxMinesForMoney" should {
+    "be correct" in {
+      f.maxMinesForMoney(5, 0) shouldBe 1
+      f.maxMinesForMoney(1, 4) shouldBe 1
+      f.maxMinesForMoney(0, 123) shouldBe 0
+      f.maxMinesForMoney(20, 101) shouldBe 20
+      f.maxMinesForMoney(20, 42) shouldBe (10 + 1 + 1)
+    }
+  }
 }
+

@@ -46,8 +46,8 @@ class TargetInfoView(
     lblLoadMass.text = (target.fullMass - target.hull.mass).toString
     lblFullMass.text = target.fullMass.toString
     lblMaxCrew.text = target.hull.crewSize.toString
-    lblMineHit.text = s"${game.formulas.mineHitDamage(target.hull).toString} %"
-    lblWebHit.text = s"${game.formulas.webHitDamage(target.hull).toString} %"
+    lblMineHit.text = s"${game.specs.formulas.mineHitDamage(target.hull).toString} %"
+    lblWebHit.text = s"${game.specs.formulas.webHitDamage(target.hull).toString} %"
     lblHullMass.text = target.hull.mass.toString
     lblEngineNumber.text = target.hull.enginesNumber.toString
     lblBeamNumber.text = target.hull.maxBeamWeapons.toString

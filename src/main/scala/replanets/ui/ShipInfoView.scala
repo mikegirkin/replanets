@@ -60,7 +60,7 @@ class ShipInfoView(
     lblDestination.text = s"(${ship.x + ship.xDistanceToWaypoint}, ${ship.y + ship.yDistanceToWaypoint})"
     lblWarp.text = ship.warp.toString
     lblFuel.text = s"${ship.minerals.neutronium} / ${ship.hull.fuelTankSize}"
-    val fuelBurn = game.formulas.fuelBurn(
+    val fuelBurn = game.specs.formulas.fuelBurn(
       ship.engines, ship.warp, ship.fullMass,
       ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hull.id))
     lblBurn.text = fuelBurn.toString
@@ -68,7 +68,7 @@ class ShipInfoView(
     lblFcode.text = ship.fcode.value
     lblCrew.text = s"${ship.crew} / ${ship.hull.crewSize}"
     lblDamage.text = s"${ship.damage} %"
-    lblMission.text = game.missions.get(ship.mission)
+    lblMission.text = game.specs.missions.get(ship.mission)
     lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
     lblEquipEngines.text = ship.engines.name
     lblEquipBeams.text = ship.beams.map { b => s"${ship.numberOfBeams} - ${b.name}" }.getOrElse("")

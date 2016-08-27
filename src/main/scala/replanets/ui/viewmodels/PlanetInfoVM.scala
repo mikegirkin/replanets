@@ -11,11 +11,11 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
 
   def fcode: Fcode = planetRecord.fcode
   def minesNumber = planetRecord.minesNumber
-  def maxMines = game.formulas.maxMines(colonistClans)
+  def maxMines = game.specs.formulas.maxMines(colonistClans)
   def factoriesNumber = planetRecord.factoriesNumber
-  def maxFactories = game.formulas.maxFactories(colonistClans)
+  def maxFactories = game.specs.formulas.maxFactories(colonistClans)
   def defencesNumber = planetRecord.defencesNumber
-  def maxDefences = game.formulas.maxDefences(colonistClans)
+  def maxDefences = game.specs.formulas.maxDefences(colonistClans)
   def surfaceMinerals: Minerals = planetRecord.surfaceMinerals
   def colonistClans: Int = planetRecord.colonistClans
   def supplies: Int = planetRecord.supplies
@@ -23,17 +23,17 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   def coreMinerals: Minerals = planetRecord.coreMinerals
   def densityMinerals: Minerals = planetRecord.densityMinerals
   def colonistTax = planetRecord.colonistTax
-  def colonistIncome: Int = game.formulas.colonistTaxIncome(
+  def colonistIncome: Int = game.specs.formulas.colonistTaxIncome(
     game.playingRace, planetRecord.colonistClans, planetRecord.colonistTax, planetRecord.colonistHappiness
   )
   def nativeTax = planetRecord.nativeTax
-  def nativeIncome: Int = game.formulas.nativeTaxIncome(
+  def nativeIncome: Int = game.specs.formulas.nativeTaxIncome(
     game.playingRace, planetRecord.nativeRace, planetRecord.nativeGovernment,
     planetRecord.nativeClans, planetRecord.nativeTax, planetRecord.nativeHappiness,
     planetRecord.colonistClans
   )
   def colonistHappiness: Short = planetRecord.colonistHappiness
-  def colonistHappinessChange = game.formulas.colonistHappinessChange(
+  def colonistHappinessChange = game.specs.formulas.colonistHappinessChange(
     game.playingRace, planetRecord.colonistClans,
     planetRecord.temperature,
     planetRecord.minesNumber, planetRecord.factoriesNumber,
@@ -41,7 +41,7 @@ class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   )
 
   def nativeHappiness: Short = planetRecord.nativeHappiness
-  def nativeHappinessChange = game.formulas.nativeHappinessChange(
+  def nativeHappinessChange = game.specs.formulas.nativeHappinessChange(
     planetRecord.nativeRace, planetRecord.nativeGovernment,
     planetRecord.nativeClans, planetRecord.minesNumber,
     planetRecord.factoriesNumber, planetRecord.nativeTax

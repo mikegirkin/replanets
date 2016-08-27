@@ -38,8 +38,8 @@ class SetNativeTaxSpec extends WordSpec with Matchers with MockitoSugar with Tes
       val planetId = PlanetId(219)
       val initialTaxValue = ti.initialState.planets(planetId).nativeTax
 
-      SetNativeTax(planetId, initialTaxValue).isAddDiffToInitialState(ti.initialState) shouldBe false
-      SetNativeTax(planetId, initialTaxValue + 3).isAddDiffToInitialState(ti.initialState) shouldBe true
+      SetNativeTax(planetId, initialTaxValue).isAddDiffToInitialState(ti.initialState, specs) shouldBe false
+      SetNativeTax(planetId, initialTaxValue + 3).isAddDiffToInitialState(ti.initialState, specs) shouldBe true
     }
   }
 }
