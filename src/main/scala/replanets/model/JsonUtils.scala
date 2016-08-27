@@ -35,6 +35,9 @@ object JsonUtils {
   val stopShipConstructionFormat = format[StopShipConstruction]
   val setColonistTaxFormat = format[SetColonistTax]
   val setNativeTaxFormat = format[SetNativeTax]
+  val buildFactoriesFormat = format[BuildFactories]
+  val buildMinesFormat = format[BuildMines]
+  val buildDefencesFormat = format[BuildDefences]
 
   val playerCommandWrites = Writes[PlayerCommand] { cmd =>
     val typeValue = JsString(cmd.getClass.getSimpleName)
@@ -45,6 +48,9 @@ object JsonUtils {
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
       case x: SetColonistTax => toJson(x)(setColonistTaxFormat)
       case x: SetNativeTax => toJson(x)(setNativeTaxFormat)
+      case x: BuildMines => toJson(x)(buildMinesFormat)
+      case x: BuildFactories => toJson(x)(buildFactoriesFormat)
+      case x: BuildDefences => toJson(x)(buildDefencesFormat)
     }
     JsObject(Seq(
       "type" -> typeValue,
@@ -59,7 +65,10 @@ object JsonUtils {
     classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
     classOf[SetColonistTax].getSimpleName -> { _.validate[SetColonistTax](setColonistTaxFormat) },
-    classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) }
+    classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) },
+    classOf[BuildMines].getSimpleName -> { _.validate[BuildMines](buildMinesFormat) },
+    classOf[BuildFactories].getSimpleName -> { _.validate[BuildFactories](buildFactoriesFormat) },
+    classOf[BuildDefences].getSimpleName -> { _.validate[BuildDefences](buildDefencesFormat) }
   )
 
   val playerCommandReads = Reads[PlayerCommand] { json =>
