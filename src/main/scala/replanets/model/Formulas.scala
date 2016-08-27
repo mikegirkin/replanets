@@ -1,19 +1,13 @@
 package replanets.model
 
 import replanets.common._
-
-/**
-  * Created by mgirkin on 27/07/2016.
-  */
+import NumberExtensions._
 
 trait Formulas {
   def minefieldUnitsNextTurn(units: Int): Int
   def unitsInMinefieldByRadius(radius: Int): Int
   def mineHitDamage(hull: HullspecItem): Int
   def webHitDamage(hull: HullspecItem): Int
-  def maxFactories(colonistClans: Int):Int
-  def maxMines(colonistClans: Int): Int
-  def maxDefences(colonistClans: Int): Int
   def fuelBurn(engine: EngspecItem, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int
 
   def erndDiv(dividend: Int, divisor: Int): Int = {
@@ -24,6 +18,21 @@ trait Formulas {
     } else {
       if(reminder*2 > divisor) whole + 1 else whole
     }
+  }
+
+  def maxFactories(colonistClans: Int):Int = {
+    if(colonistClans <= 100) colonistClans
+    else Math.round(100 + Math.sqrt(colonistClans - 100)).asInstanceOf[Int]
+  }
+
+  def maxMines(colonistClans: Int): Int = {
+    if(colonistClans <= 200) colonistClans
+    else Math.round(200 + Math.sqrt(colonistClans - 200)).asInstanceOf[Int]
+  }
+
+  def maxDefences(colonistClans: Int): Int = {
+    if(colonistClans <= 50) colonistClans
+    else Math.round(50 + Math.sqrt(colonistClans - 50)).asInstanceOf[Int]
   }
 
   def miningRate(density: Int, mines: Int, raceId: RaceId, nativeId: NativeRace) = {
@@ -136,5 +145,18 @@ trait Formulas {
 
   def maxDefencesForMoney(supplies: Int, money: Int): Int = {
     maxStructuresForMoney(supplies, money, 11)
+  }
+
+  def remainingResourcesAfterStructuresBuilt(
+    structureCost: Int
+  )(
+    structuresToBuild: Int, planetSupplies: Int, planetMoney: Int
+  ): (Int, Int) = {
+    val moneyCost = structureCost - 1
+    val moneyRemaining = (planetMoney - structuresToBuild * moneyCost).lowerBound(0)
+    val costUnpaid = structuresToBuild + (structuresToBuild * moneyCost - planetMoney).lowerBound(0)
+    val suppliesRemaining = planetSupplies - costUnpaid
+
+    (suppliesRemaining, moneyRemaining)
   }
 }

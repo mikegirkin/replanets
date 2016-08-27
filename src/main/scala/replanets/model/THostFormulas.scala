@@ -26,20 +26,6 @@ object THostFormulas extends Formulas{
     if(damage > 100) 100 else damage
   }
 
-  def maxFactories(colonistClans: Int):Int = {
-    if(colonistClans <= 100) colonistClans
-    else Math.round(100 + Math.sqrt(colonistClans - 100)).asInstanceOf[Int]
-  }
-
-  def maxMines(colonistClans: Int): Int = {
-    if(colonistClans <= 200) colonistClans
-    else Math.round(200 + Math.sqrt(colonistClans - 200)).asInstanceOf[Int]
-  }
-
-  def maxDefences(colonistClans: Int): Int = {
-    if(colonistClans <= 50) colonistClans
-    else Math.round(50 + Math.sqrt(colonistClans - 50)).asInstanceOf[Int]
-  }
 
   def fuelBurn(engine: EngspecItem, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int = {
     //TODO: This formula has to be validated

@@ -15,17 +15,20 @@ class BuildFactoriesSpec extends WordSpec with Matchers with TestGame_10 {
       cmd1.isReplacableBy(cmd3) shouldBe false
     }
 
-    "correctly detect if it adds something to state" in {
-      val cmd1 = new BuildFactories(PlanetId(495), 1)
-      val cmd2 = new BuildFactories(PlanetId(495), 2)
-    }
-
   }
 
   "Build factories command" when {
     "executed against state" should {
       val hwPlanetId = PlanetId(495)
       val ti = game.turnInfo(TurnId(11))
+
+      "correctly detect if it adds something to state" in {
+        val cmd1 = new BuildFactories(PlanetId(495), 1)
+        cmd1.isAddDiffToInitialState(ti.initialState, specs) shouldBe true
+
+        val cmd2 = new BuildFactories(PlanetId(245), 2)
+        cmd2.isAddDiffToInitialState(ti.initialState, specs) shouldBe false
+      }
 
       "build given number of factories" in {
         val cmd = new BuildFactories(hwPlanetId, 2)
@@ -64,5 +67,4 @@ class BuildFactoriesSpec extends WordSpec with Matchers with TestGame_10 {
       }
     }
   }
-
 }

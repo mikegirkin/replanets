@@ -51,6 +51,11 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
   }
 
-
+  def buildMines(planet: PlanetRecord, newMinesNumber: Int): Unit = {
+    val ti = game.turnInfo(game.lastTurn)
+    val totalMinesToBuild = newMinesNumber - ti.initialState.planets(planet.id).minesNumber
+    game.addCommand(BuildMines(planet.id, totalMinesToBuild))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
+  }
 
 }

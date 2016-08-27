@@ -4,34 +4,34 @@ import replanets.common.{PlanetId, PlanetRecord, ServerData}
 import replanets.model.Specs
 import replanets.common.NumberExtensions._
 
-case class BuildFactories(
+case class BuildMines(
   objectId: PlanetId,
   number: Int
 ) extends PlayerCommand {
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case BuildFactories(planetId, _) if planetId == objectId => true
+      case BuildMines(otherPlanetId, _) if otherPlanetId == objectId => true
       case _ => false
     }
   }
 
   override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     val planet = initial.planets(objectId)
-    maxPossible(planet, specs) > 0 && number > 0
+    maxMinesPossible(planet, specs) > 0 && number > 0
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
     val planet = state.planets(objectId)
-    val toBuild = number.bounded(0, maxPossible(planet, specs))
+    val toBuild = number.bounded(0, maxMinesPossible(planet, specs))
     val (suppliesRemaining, moneyRemaining) =
-      specs.formulas.remainingResourcesAfterStructuresBuilt(4)(toBuild, planet.supplies, planet.money)
+      specs.formulas.remainingResourcesAfterStructuresBuilt(5)(toBuild, planet.supplies, planet.money)
 
     if(toBuild == 0) state
     else {
       state.copy(
         planets = state.planets.updated(objectId, planet.copy(
-          factoriesNumber = planet.factoriesNumber + toBuild,
+          minesNumber = planet.minesNumber + toBuild,
           money = moneyRemaining,
           supplies = suppliesRemaining
         ))
@@ -39,9 +39,10 @@ case class BuildFactories(
     }
   }
 
-  private def maxPossible(planet: PlanetRecord, specs: Specs) =
+  private def maxMinesPossible(planet: PlanetRecord, specs: Specs) = {
     Math.min(
-      specs.formulas.maxFactories(planet.colonistClans) - planet.factoriesNumber,
-      specs.formulas.maxFactoriesForMoney(planet.supplies, planet.money)
+      specs.formulas.maxMines(planet.colonistClans) - planet.minesNumber,
+      specs.formulas.maxMinesForMoney(planet.supplies, planet.money)
     )
+  }
 }

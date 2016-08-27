@@ -12,11 +12,5 @@ object PHostFormulas extends Formulas {
 
   override def webHitDamage(hull: HullspecItem): Int = ???
 
-  override def maxFactories(colonistClans: Int): Int = ???
-
   override def fuelBurn(engine: EngspecItem, warp: Int, mass: Int, dx: Int, dy: Int, isGravitonic: Boolean): Int = ???
-
-  override def maxMines(colonistClans: Int): Int = ???
-
-  override def maxDefences(colonistClans: Int): Int = ???
 }

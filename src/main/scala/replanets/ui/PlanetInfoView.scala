@@ -120,7 +120,7 @@ class PlanetInfoView(
     mines,
     onDiff = (delta) => {
       planet.foreach( p =>
-        println(s"Changing mines to: ${p.minesNumber + delta}")
+        commands.buildMines(p.planetRecord, p.minesNumber + delta)
       )
     },
     formatter = (value) => {
@@ -192,6 +192,7 @@ class PlanetInfoView(
       pnColonists.visible = true
 
       mines.value = vm.minesNumber
+      mines.update(vm.minesNumber)
       factories.value = vm.factoriesNumber
       defences.value = vm.defencesNumber
       pnStructures.visible = true
