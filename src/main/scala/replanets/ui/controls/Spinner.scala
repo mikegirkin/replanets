@@ -1,5 +1,7 @@
 package replanets.ui.controls
 
+import javafx.beans.binding.IntegerBinding
+
 import scalafx.Includes._
 import scalafx.beans.property.IntegerProperty
 import scalafx.geometry.Pos
@@ -9,14 +11,17 @@ import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Pane}
 import scalafx.scene.text.TextAlignment
 
 class Spinner(
-  valueToBind: IntegerProperty,
+  binding: IntegerBinding,
   onDiff: (Int) => Unit,
   formatter: (Int) => String = _.toString,
   minLabelWidth: Int = 30
 ) extends GridPane {
 
+  val value: IntegerProperty = IntegerProperty(0)
+  value.bind(binding)
+
   val lblValue = new Label {
-    text <== createStringBinding(() => formatter(valueToBind.value), valueToBind)
+    text <== createStringBinding(() => formatter(value.value), value)
     alignmentInParent = Pos.CenterLeft
     alignment = Pos.CenterLeft
     textAlignment = TextAlignment.Left

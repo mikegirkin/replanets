@@ -6,7 +6,8 @@ import replanets.ui.actions.Actions
 import replanets.ui.controls.Spinner
 import replanets.ui.viewmodels.{PlanetInfoVM, ViewModel}
 
-import scalafx.beans.property.IntegerProperty
+import scalafx.Includes._
+import scalafx.beans.property.{IntegerProperty, ObjectProperty}
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, CheckBox, Label, TextField}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
@@ -77,67 +78,66 @@ class PlanetInfoView(
     mapObject => handleObjectChanged(mapObject)
   }
 
-  private var planet: Option[PlanetInfoVM] = None
-
   val colonistTax = IntegerProperty(0)
   val nativeTax = IntegerProperty(0)
   val factories = IntegerProperty(0)
   val mines = IntegerProperty(0)
   val defences = IntegerProperty(0)
+  val planet = ObjectProperty[Option[PlanetInfoVM]](None)
 
   val colonistTaxSpinner = new Spinner(
-    colonistTax,
+    createIntegerBinding(() => colonistTax.value, colonistTax, planet),
     (delta) => {
-      planet.foreach( p =>
+      planet.value.foreach( p =>
         commands.changeColonistTax(p.planetRecord, colonistTax.value + delta)
       )
     }
   )
 
   val nativeTaxSpinner = new Spinner(
-    nativeTax,
+    createIntegerBinding(() => nativeTax.value, nativeTax, planet),
     (delta) => {
-      planet.foreach( p =>
+      planet.value.foreach( p =>
         commands.changeNativeTax(p.planetRecord, nativeTax.value + delta)
       )
     }
   )
 
   val factoriesSpinner = new Spinner(
-    factories,
+    createIntegerBinding(() => factories.value, factories, planet),
     onDiff = (delta) => {
-      planet.foreach( p =>
+      planet.value.foreach( p =>
         commands.buildFactories(p.planetRecord, p.factoriesNumber + delta)
       )
     },
     formatter = (value) => {
-      planet.map(p => s"${p.factoriesNumber} / ${p.maxFactories}").getOrElse("")
+      planet.value.map(p => s"${p.factoriesNumber} / ${p.maxFactories}").getOrElse("")
     },
     minLabelWidth = 70
   )
 
   val minesSpinner = new Spinner(
-    mines,
+    createIntegerBinding(() => mines.value, mines, planet),
     onDiff = (delta) => {
-      planet.foreach( p =>
+      planet.value.foreach( p =>
         commands.buildMines(p.planetRecord, p.minesNumber + delta)
       )
     },
     formatter = (value) => {
-      planet.map(p => s"${p.minesNumber} / ${p.maxMines}").getOrElse("")
+      planet.value.map(p => s"${p.minesNumber} / ${p.maxMines}").getOrElse("")
     },
     minLabelWidth = 70
   )
 
   val defencesSpinner = new Spinner(
-    defences,
+    createIntegerBinding(() => defences.value, defences, planet),
     onDiff = (delta) => {
-      planet.foreach( p =>
+      planet.value.foreach( p =>
         commands.buildDefences(p.planetRecord, p.defencesNumber + delta)
       )
     },
     formatter = (value) => {
-      planet.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse("")
+      planet.value.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse("")
     },
     minLabelWidth = 70
   )
@@ -150,7 +150,8 @@ class PlanetInfoView(
 
   override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
     val data = game.turnInfo(turnId).stateAfterCommands
-    planet = data.planets.get(PlanetId(planetId)).map(_ => new PlanetInfoVM(game, viewModel.turnShown, PlanetId(planetId)))
+    val planetRecord = data.planets.get(PlanetId(planetId)).map(_ => new PlanetInfoVM(game, viewModel.turnShown, PlanetId(planetId)))
+    planet.update(planetRecord)
 
     pnNatives.visible = false
     pnColonists.visible = false
@@ -163,9 +164,7 @@ class PlanetInfoView(
     lblName.text = game.specs.map.planets(planetId - 1).name
     lblWhen.text = "(now)"
     lblOwner.text = "Planet"
-    data.planets.get(PlanetId(planetId)).foreach(p => {
-      val vm = new PlanetInfoVM(game, viewModel.turnShown, p.id)
-
+    planetRecord.foreach( vm => {
       if(vm.ownerId != 0) lblOwner.text = s"${game.races(vm.ownerId - 1).adjective} planet"
       lblFcode.text = vm.fcode.value
       edFcode.text = vm.fcode.value
@@ -173,9 +172,9 @@ class PlanetInfoView(
       pnGeneralInfo.visible = true
 
       if(vm.nativeRace != NativeRace.None) {
-        lblNatives.text = p.nativeRace.name
-        lblGovernment.text = p.nativeGovernment.name
-        lblTaxPerformance.text = s"${p.nativeGovernment.taxPercentage}%"
+        lblNatives.text = vm.nativeRace.name
+        lblGovernment.text = vm.nativeGovernment.name
+        lblTaxPerformance.text = s"${vm.nativeGovernment.taxPercentage}%"
         lblPopulation.text = s"${vm.nativeClans} cl"
         nativeTax.value = vm.nativeTax
         lblNativesIncome.text = s"${vm.nativeIncome}"
@@ -192,7 +191,6 @@ class PlanetInfoView(
       pnColonists.visible = true
 
       mines.value = vm.minesNumber
-      mines.update(vm.minesNumber)
       factories.value = vm.factoriesNumber
       defences.value = vm.defencesNumber
       pnStructures.visible = true
@@ -205,14 +203,14 @@ class PlanetInfoView(
       lblNeuMined.text = vm.surfaceMinerals.neutronium.toString
       lblNeuCore.text = vm.coreMinerals.neutronium.toString
       lblNeuDensity.text = s"${miningRate(vm.densityMinerals.neutronium)} / ${vm.densityMinerals.neutronium}"
-      lblTriMined.text = p.surfaceMinerals.tritanium.toString
-      lblTriCore.text = p.coreMinerals.tritanium.toString
+      lblTriMined.text = vm.surfaceMinerals.tritanium.toString
+      lblTriCore.text = vm.coreMinerals.tritanium.toString
       lblTriDensity.text = s"${miningRate(vm.densityMinerals.tritanium)} / ${vm.densityMinerals.tritanium}"
-      lblDurMined.text = p.surfaceMinerals.duranium.toString
-      lblDurCore.text = p.coreMinerals.duranium.toString
+      lblDurMined.text = vm.surfaceMinerals.duranium.toString
+      lblDurCore.text = vm.coreMinerals.duranium.toString
       lblDurDensity.text = s"${miningRate(vm.densityMinerals.duranium)} / ${vm.densityMinerals.duranium}"
-      lblMolMined.text = p.surfaceMinerals.molybdenium.toString
-      lblMolCore.text = p.coreMinerals.molybdenium.toString
+      lblMolMined.text = vm.surfaceMinerals.molybdenium.toString
+      lblMolCore.text = vm.coreMinerals.molybdenium.toString
       lblMolDensity.text = s"${miningRate(vm.densityMinerals.molybdenium)} / ${vm.densityMinerals.molybdenium}"
       pnMinerals.visible = true
     })
@@ -223,7 +221,7 @@ class PlanetInfoView(
 
   private def handleObjectChanged(mapObject: MapObject): Unit = {
     mapObject match {
-      case MapObject.Planet(id, coords, displayName) if id == planet.map(_.planetRecord.id.value).getOrElse(0) =>
+      case MapObject.Planet(id, coords, displayName) if id == planet.value.map(_.planetRecord.id.value).getOrElse(0) =>
         setPlanet(viewModel.turnShown, id)
       case _ =>
     }
