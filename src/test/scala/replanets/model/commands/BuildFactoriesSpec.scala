@@ -26,7 +26,7 @@ class BuildFactoriesSpec extends WordSpec with Matchers with TestGame_10 {
         val cmd1 = new BuildFactories(PlanetId(495), 1)
         cmd1.isAddDiffToInitialState(ti.initialState, specs) shouldBe true
 
-        val cmd2 = new BuildFactories(PlanetId(245), 2)
+        val cmd2 = new BuildFactories(PlanetId(245), 0)
         cmd2.isAddDiffToInitialState(ti.initialState, specs) shouldBe false
       }
 

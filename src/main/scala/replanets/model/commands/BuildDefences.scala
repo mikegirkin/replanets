@@ -4,34 +4,33 @@ import replanets.common.{PlanetId, PlanetRecord, ServerData}
 import replanets.model.Specs
 import replanets.common.NumberExtensions._
 
-case class BuildMines(
+case class BuildDefences(
   objectId: PlanetId,
   number: Int
 ) extends PlayerCommand {
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case BuildMines(otherPlanetId, _) if otherPlanetId == objectId => true
+      case BuildDefences(otherPlanetId, _) if otherPlanetId == objectId => true
       case _ => false
     }
   }
 
   override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
-    val planet = initial.planets(objectId)
     number > 0
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
     val planet = state.planets(objectId)
-    val toBuild = number.bounded(0, maxMinesPossible(planet, specs))
+    val toBuild = number.bounded(0, maxPossible(planet, specs))
     val (suppliesRemaining, moneyRemaining) =
-      specs.formulas.remainingResourcesAfterStructuresBuilt(5)(toBuild, planet.supplies, planet.money)
+      specs.formulas.remainingResourcesAfterStructuresBuilt(11)(toBuild, planet.supplies, planet.money)
 
     if(toBuild == 0) state
     else {
       state.copy(
         planets = state.planets.updated(objectId, planet.copy(
-          minesNumber = planet.minesNumber + toBuild,
+          defencesNumber = planet.defencesNumber + toBuild,
           money = moneyRemaining,
           supplies = suppliesRemaining
         ))
@@ -39,10 +38,10 @@ case class BuildMines(
     }
   }
 
-  private def maxMinesPossible(planet: PlanetRecord, specs: Specs) = {
+  private def maxPossible(planet: PlanetRecord, specs: Specs) = {
     Math.min(
-      specs.formulas.maxMines(planet.colonistClans) - planet.minesNumber,
-      specs.formulas.maxMinesForMoney(planet.supplies, planet.money)
+      specs.formulas.maxDefences(planet.colonistClans) - planet.defencesNumber,
+      specs.formulas.maxDefencesForMoney(planet.supplies, planet.money)
     )
   }
 }

@@ -23,7 +23,7 @@ class BuildMinesSpec extends WordSpec with Matchers with TestGame_10 {
 
       "correctly determine if it adds to the initial state" in {
         BuildMines(hwPlanetId, 3).isAddDiffToInitialState(ti.initialState, specs) shouldBe true
-        BuildMines(PlanetId(245), 3).isAddDiffToInitialState(ti.initialState, specs) shouldBe false
+        BuildMines(PlanetId(245), 0).isAddDiffToInitialState(ti.initialState, specs) shouldBe false
       }
 
       "build given number of mines" in {

@@ -18,7 +18,7 @@ case class BuildFactories(
 
   override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
     val planet = initial.planets(objectId)
-    maxPossible(planet, specs) > 0 && number > 0
+    number > 0
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
@@ -27,7 +27,7 @@ case class BuildFactories(
     val (suppliesRemaining, moneyRemaining) =
       specs.formulas.remainingResourcesAfterStructuresBuilt(4)(toBuild, planet.supplies, planet.money)
 
-    if(toBuild == 0) state
+    if (toBuild == 0) state
     else {
       state.copy(
         planets = state.planets.updated(objectId, planet.copy(

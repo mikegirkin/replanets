@@ -58,4 +58,11 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
   }
 
+  def buildDefences(planet: PlanetRecord, newDefencesNumber: Int): Unit = {
+    val ti = game.turnInfo(game.lastTurn)
+    val totalDefencesToBuild = newDefencesNumber - ti.initialState.planets(planet.id).defencesNumber
+    game.addCommand(BuildDefences(planet.id, totalDefencesToBuild))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet.mapData))
+  }
+
 }

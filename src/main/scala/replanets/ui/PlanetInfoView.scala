@@ -133,7 +133,7 @@ class PlanetInfoView(
     defences,
     onDiff = (delta) => {
       planet.foreach( p =>
-        println(s"Changing defences to: ${p.defencesNumber + delta}")
+        commands.buildDefences(p.planetRecord, p.defencesNumber + delta)
       )
     },
     formatter = (value) => {
