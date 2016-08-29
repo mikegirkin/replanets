@@ -46,19 +46,26 @@ Label, TextFlow, Text, ListCell, Button {
     -fx-max-width: Infinity;
 }
 
-Label, TextFlow, Text {
+Label {
     -fx-padding: 0 3 0 3;
-    -fx-fill: lime;
-    -fx-text-fill: lime;
-    -fx-alignment: baseline-center;
+    -fx-fill: lightgray;
+    -fx-text-fill: lightgray;
+    -fx-alignment: center;
+}
+
+TextFlow {
+    -fx-padding: 3 3 0 3;
+    -fx-fill: lightgray;
+    -fx-text-fill: lightgray;
+    -fx-alignment: center;
 }
 
 Button {
     -fx-background-color: #222;
     -fx-border-color: gray;
     -fx-border-width: 1;
-    -fx-fill: lime;
-    -fx-text-fill: lime;
+    -fx-fill: lightgray;
+    -fx-text-fill: lightgray;
     -fx-text-alignment: center;
     -fx-alignment: baseline-center;
 }
@@ -75,12 +82,17 @@ Button TextFlow {
     -fx-text-alignment: center;
 }
 
-.baseInfo Label, .baseInfo Text{
+.planetInfo Label, .planetInfo Text, .planetInfo Button {
+    -fx-text-fill: lime;
+    -fx-fill: lime;
+}
+
+.baseInfo Label, .baseInfo Text, .baseInfo Button {
     -fx-fill: royalblue;
     -fx-text-fill: royalblue;
 }
 
-.shipInfo Label, .shipInfo Text{
+.shipInfo Label, .shipInfo Text, .shipInfo Button {
     -fx-fill: #55ffff;
     -fx-text-fill: #55ffff;
 }

@@ -1,0 +1,11 @@
+{
+  "version" : "v1",
+  "commands" : [ {
+    "type" : "SetShipFcode",
+    "value" : {
+      "objectId" : 368,
+      "newFcode" : "H2l"
+    }
+  } ],
+  "additionalData" : [ ]
+}

@@ -1,10 +1,14 @@
 package replanets.ui
 
-import replanets.common.OwnShip
+import replanets.common.{Fcode, OwnShip, ShipId}
 import replanets.model.Game
+import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
-import scalafx.scene.control.Label
+import scalafx.beans.property.ObjectProperty
+import scalafx.event.ActionEvent
+import scalafx.scene.control.{Label, TextField}
+import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
 import scalafx.scene.layout.Pane
 import scalafxml.core.macros.sfxml
 
@@ -13,7 +17,7 @@ import scalafxml.core.macros.sfxml
   */
 trait IShipInfoView {
   def rootPane: Pane
-  def setData(ship: OwnShip): Unit
+  def setData(shipId: ShipId): Unit
 }
 
 @sfxml
@@ -47,40 +51,97 @@ class ShipInfoView(
   val lblMoney: Label,
   val lblTorps: Label,
 
+  val edFcode: TextField,
+
   val game: Game,
-  val viewModel: ViewModel
+  val viewModel: ViewModel,
+  val actions: Actions
 ) extends IShipInfoView {
 
-  def setData(ship: OwnShip) = {
-    lblShipId.text = ship.id.value.toString
-    lblShipOwningRace.text = game.races(ship.owner.value - 1).shortname
-    lblShipName.text = ship.name
-    lblHullName.text = ship.hull.name
-    lblShipCoords.text = s"(${ship.x}, ${ship.y})"
-    lblDestination.text = s"(${ship.x + ship.xDistanceToWaypoint}, ${ship.y + ship.yDistanceToWaypoint})"
-    lblWarp.text = ship.warp.toString
-    lblFuel.text = s"${ship.minerals.neutronium} / ${ship.hull.fuelTankSize}"
+  viewModel.objectChanged += handleObjectChanged
+
+  val ship = ObjectProperty[Option[OwnShip]](None)
+
+  def setData(shipId: ShipId) = {
+    val newShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(shipId).asInstanceOf[OwnShip]
+    ship.value = Some(newShip)
+
+    lblShipId.text = newShip.id.value.toString
+    lblShipOwningRace.text = if(newShip.owner.value>0) {
+      game.races(newShip.owner.value - 1).adjective
+    } else {
+      "Unknown"
+    }
+    lblShipName.text = newShip.name
+    lblHullName.text = newShip.hull.name
+    lblShipCoords.text = s"(${newShip.x}, ${newShip.y})"
+    lblDestination.text = s"(${newShip.x + newShip.xDistanceToWaypoint}, ${newShip.y + newShip.yDistanceToWaypoint})"
+    lblWarp.text = newShip.warp.toString
+    lblFuel.text = s"${newShip.minerals.neutronium} / ${newShip.hull.fuelTankSize}"
     val fuelBurn = game.specs.formulas.fuelBurn(
-      ship.engines, ship.warp, ship.fullMass,
-      ship.xDistanceToWaypoint, ship.yDistanceToWaypoint, game.specs.isGravitonic(ship.hull.id))
+      newShip.engines, newShip.warp, newShip.fullMass,
+      newShip.xDistanceToWaypoint, newShip.yDistanceToWaypoint, game.specs.isGravitonic(newShip.hull.id))
     lblBurn.text = fuelBurn.toString
-    lblMass.text = s"${ship.fullMass}"
-    lblFcode.text = ship.fcode.value
-    lblCrew.text = s"${ship.crew} / ${ship.hull.crewSize}"
-    lblDamage.text = s"${ship.damage} %"
-    lblMission.text = game.specs.missions.get(ship.mission)
-    lblEnemy.text = if(ship.primaryEnemy != 0)  game.races(ship.primaryEnemy - 1).shortname else "(none)"
-    lblEquipEngines.text = ship.engines.name
-    lblEquipBeams.text = ship.beams.map { b => s"${ship.numberOfBeams} - ${b.name}" }.getOrElse("")
-    lblEquipLaunchers.text = ship.torpsType.map { tt => s"${ship.numberOfTorpLaunchers} - ${tt.name}" }.getOrElse("")
-    lblCargo.text = ship.cargoMass.toString
-    lblNeu.text = ship.minerals.neutronium.toString
-    lblTri.text = ship.minerals.tritanium.toString
-    lblDur.text = ship.minerals.duranium.toString
-    lblMol.text = ship.minerals.molybdenium.toString
-    lblSupplies.text = ship.supplies.toString
-    lblClans.text = ship.colonistClans.toString
-    lblMoney.text = ship.money.toString
-    lblTorps.text = ship.torpsFightersLoaded.toString
+    lblMass.text = s"${newShip.fullMass}"
+    lblFcode.text = newShip.fcode.value
+    lblCrew.text = s"${newShip.crew} / ${newShip.hull.crewSize}"
+    lblDamage.text = s"${newShip.damage} %"
+    lblMission.text = game.specs.missions.get(newShip.mission)
+    lblEnemy.text = if(newShip.primaryEnemy != 0)  game.races(newShip.primaryEnemy - 1).shortname else "(none)"
+    lblEquipEngines.text = newShip.engines.name
+    lblEquipBeams.text = newShip.beams.map { b => s"${newShip.numberOfBeams} - ${b.name}" }.getOrElse("")
+    lblEquipLaunchers.text = newShip.torpsType.map { tt => s"${newShip.numberOfTorpLaunchers} - ${tt.name}" }.getOrElse("")
+    lblCargo.text = newShip.cargoMass.toString
+    lblNeu.text = newShip.minerals.neutronium.toString
+    lblTri.text = newShip.minerals.tritanium.toString
+    lblDur.text = newShip.minerals.duranium.toString
+    lblMol.text = newShip.minerals.molybdenium.toString
+    lblSupplies.text = newShip.supplies.toString
+    lblClans.text = newShip.colonistClans.toString
+    lblMoney.text = newShip.money.toString
+    lblTorps.text = newShip.torpsFightersLoaded.toString
+  }
+
+  private def handleObjectChanged(mapObject: MapObject): Unit = {
+    mapObject match {
+      case MapObject.OwnShip(id, coords, displayName) if id == ship.value.map(_.id.value).getOrElse(0) =>
+        setData(ShipId(id))
+      case _ =>
+    }
+  }
+
+  def onRandomFcodeButton(e: ActionEvent) = {
+    ship.value.foreach(s =>
+      actions.setShipFcode(s, Fcode.random())
+    )
+  }
+
+  def onFcodeLabelClicked(e: MouseEvent) = {
+    lblFcode.visible = false
+    edFcode.visible = true
+    edFcode.requestFocus()
+  }
+
+  def onEdFcodeAction(e: ActionEvent) = {
+    for(
+      s <- ship.value;
+      fcode <- Fcode.tryConvert(edFcode.text.value)
+    ) {
+      actions.setShipFcode(s, fcode)
+      lblFcode.visible = true
+      edFcode.visible = false
+    }
+  }
+
+  def cancelFcodeEditing() = {
+    if(edFcode.visible.value) {
+      edFcode.text = lblFcode.text.value
+      lblFcode.visible = true
+      edFcode.visible = false
+    }
+  }
+
+  def onEdFcodeKeyPressed(e: KeyEvent) = {
+    if(e.code == KeyCode.Escape) cancelFcodeEditing()
   }
 }

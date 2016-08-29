@@ -77,9 +77,10 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     typeOf[ViewModel] -> viewModel
   ))
 
-  val shipInfoView = loadFxml[IShipInfoView]("/ShipDetailsView.fxml", Map(
+  val shipInfoView = loadFxml[IShipInfoView]("/ShipInfoView.fxml", Map(
     typeOf[Game] -> game,
-    typeOf[ViewModel] -> viewModel
+    typeOf[ViewModel] -> viewModel,
+    typeOf[Actions] -> actions
   ))
 
   val targetInfoView = loadFxml[ITargetInfoView]("/TargetInfoView.fxml", Map(
@@ -133,7 +134,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     val ship = game.turnSeverData(viewModel.turnShown).ships(ShipId(shipId))
     ship match {
       case x: OwnShip =>
-        shipInfoView.setData(x)
+        shipInfoView.setData(x.id)
         setDetailsView(shipInfoView.rootPane)
       case x: Target =>
         targetInfoView.setData(x)

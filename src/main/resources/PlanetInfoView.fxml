@@ -13,7 +13,7 @@
 <?import javafx.scene.control.CheckBox?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-      maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfoView"
+      maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfo"
       snapToPixel="true">
     <HBox>
         <Label fx:id="lblOwner" text="owner"/>
@@ -39,7 +39,7 @@
                 <ColumnConstraints percentWidth="50" halignment="LEFT" minWidth="10.0" />
             </columnConstraints>
             <children>
-                <TextFlow textAlignment="RIGHT" GridPane.rowIndex="1">
+                <TextFlow textAlignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <Text styleClass="actionSymbol" text="F"/>
                     <Text text="Code:"/>
                 </TextFlow>
