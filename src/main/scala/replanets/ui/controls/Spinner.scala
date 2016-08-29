@@ -1,27 +1,19 @@
 package replanets.ui.controls
 
-import javafx.beans.binding.IntegerBinding
-
-import scalafx.Includes._
-import scalafx.beans.property.IntegerProperty
+import scalafx.beans.binding.StringBinding
 import scalafx.geometry.Pos
-import scalafx.scene.control.{Button, Label}
-import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Pane}
+import scalafx.scene.control.Label
+import scalafx.scene.layout.{ColumnConstraints, GridPane}
 import scalafx.scene.text.TextAlignment
 
 class Spinner(
-  binding: IntegerBinding,
+  binding: StringBinding,
   onDiff: (Int) => Unit,
-  formatter: (Int) => String = _.toString,
   minLabelWidth: Int = 30
 ) extends GridPane {
 
-  val value: IntegerProperty = IntegerProperty(0)
-  value.bind(binding)
-
   val lblValue = new Label {
-    text <== createStringBinding(() => formatter(value.value), value)
+    text <== binding
     alignmentInParent = Pos.CenterLeft
     alignment = Pos.CenterLeft
     textAlignment = TextAlignment.Left

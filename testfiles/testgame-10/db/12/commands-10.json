@@ -6,6 +6,12 @@
       "objectId" : 368,
       "newFcode" : "H2l"
     }
+  }, {
+    "type" : "SetShipWarp",
+    "value" : {
+      "objectId" : 368,
+      "newWarp" : 8
+    }
   } ],
   "additionalData" : [ ]
 }

@@ -43,7 +43,7 @@
                 <Text text="W" styleClass="actionSymbol"/>
                 <Text text="arp:"/>
             </TextFlow>
-            <Label fx:id="lblWarp" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <HBox fx:id="hbWarpPlaceholder" GridPane.rowIndex="1" GridPane.columnIndex="1" />
             <Label text="ETA:"  GridPane.rowIndex="1" GridPane.columnIndex="2"/>
             <Label fx:id="lblETA" text="???" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
             <Label text="Fuel:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>

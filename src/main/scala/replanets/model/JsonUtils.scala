@@ -29,10 +29,11 @@ object JsonUtils {
   implicit val beamIdFormat = fromSingleIntFormat(x => BeamId(x))
   implicit val launcherIdFormat = fromSingleIntFormat(x => LauncherId(x))
 
-  val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setShipFcodeFormat = format[SetShipFcode]
+  val setShipWarpFormat = format[SetShipWarp]
   val buildShipFormat = format[StartShipConstruction]
   val stopShipConstructionFormat = format[StopShipConstruction]
+  val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setColonistTaxFormat = format[SetColonistTax]
   val setNativeTaxFormat = format[SetNativeTax]
   val buildFactoriesFormat = format[BuildFactories]
@@ -42,10 +43,11 @@ object JsonUtils {
   val playerCommandWrites = Writes[PlayerCommand] { cmd =>
     val typeValue = JsString(cmd.getClass.getSimpleName)
     val value= cmd match {
-      case x: SetPlanetFcode => toJson(x)(setPlanetFcodeFormat)
       case x: SetShipFcode => toJson(x)(setShipFcodeFormat)
+      case x: SetShipWarp => toJson(x)(setShipWarpFormat)
       case x: StartShipConstruction => toJson(x)(buildShipFormat)
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
+      case x: SetPlanetFcode => toJson(x)(setPlanetFcodeFormat)
       case x: SetColonistTax => toJson(x)(setColonistTaxFormat)
       case x: SetNativeTax => toJson(x)(setNativeTaxFormat)
       case x: BuildMines => toJson(x)(buildMinesFormat)
@@ -59,11 +61,12 @@ object JsonUtils {
   }
 
   val readers = Map[String, (JsLookupResult) => JsResult[PlayerCommand]](
-    classOf[SetPlanetFcode].getSimpleName -> { _.validate[SetPlanetFcode](setPlanetFcodeFormat) },
     classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
+    classOf[SetShipWarp].getSimpleName -> { _.validate[SetShipWarp](setShipWarpFormat) },
     classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
     classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
+    classOf[SetPlanetFcode].getSimpleName -> { _.validate[SetPlanetFcode](setPlanetFcodeFormat) },
     classOf[SetColonistTax].getSimpleName -> { _.validate[SetColonistTax](setColonistTaxFormat) },
     classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) },
     classOf[BuildMines].getSimpleName -> { _.validate[BuildMines](buildMinesFormat) },

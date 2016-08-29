@@ -40,6 +40,12 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forShip(ship))
   }
 
+  def setShipWarp(ship: OwnShip, newWarp: Int) = {
+    val command = SetShipWarp(ship.id, newWarp)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(ship))
+  }
+
   //planets
   def setPlanetFcode(planet: Planet, newFcode: Fcode) = {
     val command = SetPlanetFcode(planet.id, newFcode)

@@ -86,7 +86,7 @@ class PlanetInfoView(
   val planet = ObjectProperty[Option[PlanetInfoVM]](None)
 
   val colonistTaxSpinner = new Spinner(
-    createIntegerBinding(() => colonistTax.value, colonistTax, planet),
+    createStringBinding(() => s"${colonistTax.value} %", colonistTax, planet),
     (delta) => {
       planet.value.foreach( p =>
         commands.changeColonistTax(p.planetRecord, colonistTax.value + delta)
@@ -95,7 +95,7 @@ class PlanetInfoView(
   )
 
   val nativeTaxSpinner = new Spinner(
-    createIntegerBinding(() => nativeTax.value, nativeTax, planet),
+    createStringBinding(() => s"${nativeTax.value} %", nativeTax, planet),
     (delta) => {
       planet.value.foreach( p =>
         commands.changeNativeTax(p.planetRecord, nativeTax.value + delta)
@@ -104,40 +104,33 @@ class PlanetInfoView(
   )
 
   val factoriesSpinner = new Spinner(
-    createIntegerBinding(() => factories.value, factories, planet),
+    createStringBinding(() => planet.value.map( p =>
+      s"${p.factoriesNumber} / ${p.maxFactories}"
+    ).getOrElse(""), factories, planet),
     onDiff = (delta) => {
       planet.value.foreach( p =>
         commands.buildFactories(p.planetRecord, p.factoriesNumber + delta)
       )
     },
-    formatter = (value) => {
-      planet.value.map(p => s"${p.factoriesNumber} / ${p.maxFactories}").getOrElse("")
-    },
     minLabelWidth = 70
   )
 
   val minesSpinner = new Spinner(
-    createIntegerBinding(() => mines.value, mines, planet),
+    createStringBinding(() => planet.value.map(p => s"${p.minesNumber} / ${p.maxMines}").getOrElse(""), mines, planet),
     onDiff = (delta) => {
       planet.value.foreach( p =>
         commands.buildMines(p.planetRecord, p.minesNumber + delta)
       )
     },
-    formatter = (value) => {
-      planet.value.map(p => s"${p.minesNumber} / ${p.maxMines}").getOrElse("")
-    },
     minLabelWidth = 70
   )
 
   val defencesSpinner = new Spinner(
-    createIntegerBinding(() => defences.value, defences, planet),
+    createStringBinding(() => planet.value.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse(""), defences, planet),
     onDiff = (delta) => {
       planet.value.foreach( p =>
         commands.buildDefences(p.planetRecord, p.defencesNumber + delta)
       )
-    },
-    formatter = (value) => {
-      planet.value.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse("")
     },
     minLabelWidth = 70
   )

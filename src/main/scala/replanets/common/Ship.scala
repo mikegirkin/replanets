@@ -46,7 +46,7 @@ case class OwnShip(
   id: ShipId,
   owner: RaceId,
   fcode: Fcode,
-  warp: Short,
+  warp: Int,
   xDistanceToWaypoint: Short,
   yDistanceToWaypoint: Short,
   x: Short,

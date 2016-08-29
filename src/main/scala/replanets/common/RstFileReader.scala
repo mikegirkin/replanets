@@ -17,7 +17,10 @@ case class ServerData(
   mineFields: IndexedSeq[MineFieldRecord],
   ionStorms: IndexedSeq[IonStorm],
   explosions: IndexedSeq[ExplosionRecord]
-)
+) {
+
+  def ownShips: Map[ShipId, OwnShip] = ships.filter { case (_, ship) => ship.isInstanceOf[OwnShip] }.mapValues{ _.asInstanceOf[OwnShip] }
+}
 
 object RstFileReader {
 

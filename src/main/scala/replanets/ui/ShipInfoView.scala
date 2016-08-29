@@ -3,13 +3,15 @@ package replanets.ui
 import replanets.common.{Fcode, OwnShip, ShipId}
 import replanets.model.Game
 import replanets.ui.actions.Actions
+import replanets.ui.controls.Spinner
 import replanets.ui.viewmodels.ViewModel
 
+import scalafx.Includes._
 import scalafx.beans.property.ObjectProperty
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Label, TextField}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
-import scalafx.scene.layout.Pane
+import scalafx.scene.layout.{HBox, Pane}
 import scalafxml.core.macros.sfxml
 
 /**
@@ -29,7 +31,6 @@ class ShipInfoView(
   val lblHullName: Label,
   val lblShipCoords: Label,
   val lblDestination: Label,
-  val lblWarp: Label,
   val lblFuel: Label,
   val lblBurn: Label,
   val lblMass: Label,
@@ -53,6 +54,8 @@ class ShipInfoView(
 
   val edFcode: TextField,
 
+  val hbWarpPlaceholder: HBox,
+
   val game: Game,
   val viewModel: ViewModel,
   val actions: Actions
@@ -61,6 +64,16 @@ class ShipInfoView(
   viewModel.objectChanged += handleObjectChanged
 
   val ship = ObjectProperty[Option[OwnShip]](None)
+
+  val warpSpinner = new Spinner(
+    createStringBinding(() => ship.value.map(_.warp).getOrElse(0).toString, ship),
+    (delta) => ship.value.foreach { s =>
+      actions.setShipWarp(s, s.warp + delta)
+    },
+    minLabelWidth = 15
+  )
+
+  hbWarpPlaceholder.children = warpSpinner
 
   def setData(shipId: ShipId) = {
     val newShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(shipId).asInstanceOf[OwnShip]
@@ -76,7 +89,6 @@ class ShipInfoView(
     lblHullName.text = newShip.hull.name
     lblShipCoords.text = s"(${newShip.x}, ${newShip.y})"
     lblDestination.text = s"(${newShip.x + newShip.xDistanceToWaypoint}, ${newShip.y + newShip.yDistanceToWaypoint})"
-    lblWarp.text = newShip.warp.toString
     lblFuel.text = s"${newShip.minerals.neutronium} / ${newShip.hull.fuelTankSize}"
     val fuelBurn = game.specs.formulas.fuelBurn(
       newShip.engines, newShip.warp, newShip.fullMass,
