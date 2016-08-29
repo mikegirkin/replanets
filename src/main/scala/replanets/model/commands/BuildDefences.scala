@@ -1,6 +1,6 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, PlanetRecord, ServerData}
+import replanets.common.{PlanetId, Planet, ServerData}
 import replanets.model.Specs
 import replanets.common.NumberExtensions._
 
@@ -38,7 +38,7 @@ case class BuildDefences(
     }
   }
 
-  private def maxPossible(planet: PlanetRecord, specs: Specs) = {
+  private def maxPossible(planet: Planet, specs: Specs) = {
     Math.min(
       specs.formulas.maxDefences(planet.colonistClans) - planet.defencesNumber,
       specs.formulas.maxDefencesForMoney(planet.supplies, planet.money)

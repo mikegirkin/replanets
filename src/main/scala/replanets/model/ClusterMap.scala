@@ -7,7 +7,7 @@ import replanets.common.{Constants, IteratorExtensions, PlanetnmItem, XyplandatI
 case class ClusterMap(
 	height: Int,
 	width: Int,
-	planets: IndexedSeq[Planet]
+	planets: IndexedSeq[PlanetMapData]
 )
 
 object ClusterMap {
@@ -21,7 +21,7 @@ object ClusterMap {
 		ClusterMap(
 			Constants.MapHeight,
 			Constants.MapWidth,
-			xyplanData.zipWithIndex.map { case (item, idx) => Planet(
+			xyplanData.zipWithIndex.map { case (item, idx) => PlanetMapData(
 				(idx + 1).toShort,
 				item.x,
 				item.y,

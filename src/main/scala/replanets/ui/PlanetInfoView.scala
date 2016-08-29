@@ -229,7 +229,11 @@ class PlanetInfoView(
 
   def onBaseButton(e: ActionEvent) = commands.selectStarbase.execute()
 
-  def onRandomFcodeButton(e: ActionEvent) = commands.setFcode.execute(Fcode.random())
+  def onRandomFcodeButton(e: ActionEvent) = {
+    planet.value.foreach { p =>
+      commands.setPlanetFcode(p.planetRecord, Fcode.random())
+    }
+  }
 
   def onFcodeLabelClicked(e: MouseEvent) = {
     lblFcode.visible = false
@@ -238,10 +242,11 @@ class PlanetInfoView(
   }
 
   def onEdFcodeAction(e: ActionEvent) = {
-    println(s"${e.eventType}")
-    val fcode = Fcode.tryConvert(edFcode.text.value)
-    fcode.foreach { f =>
-      commands.setFcode.execute(f)
+    for(
+      p <- planet.value;
+      fcode <- Fcode.tryConvert(edFcode.text.value)
+    ) {
+      commands.setPlanetFcode(p.planetRecord, fcode)
       lblFcode.visible = true
       edFcode.visible = false
     }

@@ -1,6 +1,6 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, PlanetRecord, ServerData}
+import replanets.common.{PlanetId, Planet, ServerData}
 import replanets.model.Specs
 import replanets.common.NumberExtensions._
 
@@ -39,7 +39,7 @@ case class BuildMines(
     }
   }
 
-  private def maxMinesPossible(planet: PlanetRecord, specs: Specs) = {
+  private def maxMinesPossible(planet: Planet, specs: Specs) = {
     Math.min(
       specs.formulas.maxMines(planet.colonistClans) - planet.minesNumber,
       specs.formulas.maxMinesForMoney(planet.supplies, planet.money)

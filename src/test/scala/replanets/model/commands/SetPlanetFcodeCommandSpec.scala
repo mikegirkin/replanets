@@ -27,9 +27,9 @@ class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar
       val turnId = TurnId(8)
       val raceId = RaceId(6)
       val specs = mock[Specs]
-      val planet1 = mock[PlanetRecord]
+      val planet1 = mock[Planet]
       when(planet1.fcode).thenReturn(Fcode("AAB"))
-      val planet2 = mock[PlanetRecord]
+      val planet2 = mock[Planet]
       when(planet2.fcode).thenReturn(Fcode("sdd"))
       val serverData = mock[ServerData]
       when(serverData.planets).thenReturn(

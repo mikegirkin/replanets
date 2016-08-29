@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, Planet}
+import replanets.model.{Game, PlanetMapData}
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._

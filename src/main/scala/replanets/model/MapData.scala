@@ -2,7 +2,7 @@ package replanets.model
 
 import replanets.common.ObjectWithCoords
 
-case class Planet(
+case class PlanetMapData(
 	id: Short,
 	x: Short,
 	y: Short,

@@ -4,7 +4,7 @@ import replanets.common._
 
 case class Starbase(
   id: PlanetId,
-  planet: PlanetRecord,
+  planet: Planet,
   owner: RaceId,
   defences: Int,
   damage: Int,

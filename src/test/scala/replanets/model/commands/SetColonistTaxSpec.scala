@@ -22,7 +22,7 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with T
       val planetId = PlanetId(213)
       val cmd = SetColonistTax(planetId, 17)
       val cmd2 = SetColonistTax(planetId, 12)
-      val planet = mock[PlanetRecord]
+      val planet = mock[Planet]
       when(planet.colonistTax).thenReturn(12)
       val initialState = mock[ServerData]
       when(initialState.planets).thenReturn(

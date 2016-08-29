@@ -1,12 +1,12 @@
 package replanets.common
 
-import replanets.model.{ClusterMap, Planet}
+import replanets.model.{ClusterMap, PlanetMapData}
 import replanets.recipes._
 
-case class PlanetRecord(
+case class Planet(
   ownerId: RaceId,
   id: PlanetId,
-  mapData: Planet,
+  mapData: PlanetMapData,
   fcode: Fcode,
   minesNumber: Int,
   factoriesNumber: Int,
@@ -30,12 +30,12 @@ case class PlanetRecord(
 
 object PlanetsReader {
 
-  def read(it: Iterator[Byte], clusterMap: ClusterMap): Map[PlanetId, PlanetRecord] = {
+  def read(it: Iterator[Byte], clusterMap: ClusterMap): Map[PlanetId, Planet] = {
     val recordsNum = WORD.read(it)
     (1 to recordsNum).map { idx =>
       val raceId = RaceId(WORD.read(it))
       val planetId = PlanetId(WORD.read(it))
-      planetId -> PlanetRecord(
+      planetId -> Planet(
         raceId,
         planetId,
         clusterMap.planets(planetId.value - 1),

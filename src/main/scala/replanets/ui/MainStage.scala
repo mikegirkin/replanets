@@ -2,7 +2,7 @@ package replanets.ui
 
 import replanets.common.PlanetId
 import replanets.model.Game
-import replanets.ui.actions.{Actions, SelectBase, SelectPlanet, SetFcode}
+import replanets.ui.actions.{Actions, SelectBase, SelectPlanet}
 import replanets.ui.viewmodels.{CurrentView, ViewModel}
 
 import scalafx.Includes._
@@ -25,8 +25,7 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     new SelectBase(game, viewModel),
     new SelectPlanet(game, viewModel),
     () => viewModel.currentView = CurrentView.BuildShip,
-    () => viewModel.currentView = CurrentView.Map,
-    setFcode = new SetFcode(game, viewModel)
+    () => viewModel.currentView = CurrentView.Map
   )
 
   private val messageView = new MessagesView(game.turns(viewModel.turnShown)(game.playingRace).initialState.messages)

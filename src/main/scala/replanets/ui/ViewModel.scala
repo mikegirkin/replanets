@@ -41,8 +41,12 @@ object MapObject {
     MapObject.Starbase(base.id.value, planet.coords, s"Starbase ${base.id.value}")
   }
 
-  def forPlanet(planet: replanets.model.Planet) = {
+  def forPlanet(planet: replanets.model.PlanetMapData) = {
     MapObject.Planet(planet.id, planet.coords, planet.name)
+  }
+
+  def forPlanet(planet: replanets.common.Planet) = {
+    MapObject.Planet(planet.id.value, planet.mapData.coords, planet.mapData.name)
   }
 
   def forIonStorm(storm: replanets.common.IonStorm) = {

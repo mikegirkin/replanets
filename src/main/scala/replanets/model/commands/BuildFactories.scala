@@ -1,6 +1,6 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, PlanetRecord, ServerData}
+import replanets.common.{PlanetId, Planet, ServerData}
 import replanets.model.Specs
 import replanets.common.NumberExtensions._
 
@@ -39,7 +39,7 @@ case class BuildFactories(
     }
   }
 
-  private def maxPossible(planet: PlanetRecord, specs: Specs) =
+  private def maxPossible(planet: Planet, specs: Specs) =
     Math.min(
       specs.formulas.maxFactories(planet.colonistClans) - planet.factoriesNumber,
       specs.formulas.maxFactoriesForMoney(planet.supplies, planet.money)

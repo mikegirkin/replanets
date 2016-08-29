@@ -45,11 +45,11 @@ case class TurnInfo(
     initialState.bases(baseId)
   }
 
-  def getPlanetState(planetId: PlanetId): PlanetRecord = {
+  def getPlanetState(planetId: PlanetId): Planet = {
     stateAfterCommands.planets(planetId)
   }
 
-  def getPlanetInitial(planetId: PlanetId): PlanetRecord = {
+  def getPlanetInitial(planetId: PlanetId): Planet = {
     initialState.planets(planetId)
   }
 }

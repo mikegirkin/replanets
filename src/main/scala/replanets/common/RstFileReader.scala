@@ -10,7 +10,7 @@ case class ServerData(
   subversion: String,
 
   ships: Map[ShipId, Ship],
-  planets: Map[PlanetId, PlanetRecord],
+  planets: Map[PlanetId, Planet],
   bases: Map[PlanetId, Starbase],
   messages: IndexedSeq[MessageInfo],
   generalInfo: GeneralTurnInformation,
