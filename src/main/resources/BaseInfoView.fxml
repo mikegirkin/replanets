@@ -11,6 +11,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Region?>
 <VBox fx:id="rootPane" styleClass="baseInfo" stylesheets="styles.css"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="replanets.ui.BaseInfoView">
@@ -33,41 +34,41 @@
             <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Fighters:" GridPane.rowIndex="2" />
             <Label fx:id="lblFighters" text="???" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        </children>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
-    </GridPane>
-    <TextFlow>
-        <Text text="Primary "/>
-        <Text text="o" styleClass="actionSymbol"/>
-        <Text text="rder" />
-    </TextFlow>
-    <HBox alignment="CENTER_RIGHT">
-        <Label fx:id="lblPrimaryOrder" text="???" />
-    </HBox>
-    <TextFlow>
-        <Text text="T" styleClass="actionSymbol"/>
-        <Text text="ech levels:"/>
-    </TextFlow>
-    <GridPane styleClass="infoGrid">
-        <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" percentWidth="50"/>
-            <ColumnConstraints halignment="LEFT" percentWidth="50"/>
-        </columnConstraints>
-        <children>
-            <Label text="Engines:"/>
-            <Label fx:id="lblEngines" text="???" GridPane.columnIndex="1"/>
-            <Label text="Hulls:" GridPane.rowIndex="1"/>
-            <Label fx:id="lblHulls" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <Label text="Beams:" GridPane.rowIndex="2"/>
-            <Label fx:id="lblBeams" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <Label text="Torpedoes" GridPane.rowIndex="3"/>
-            <Label fx:id="lblTorpedoes" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <TextFlow textAlignment="RIGHT" GridPane.valignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Text text="Primary "/>
+                <Text text="o" styleClass="actionSymbol"/>
+                <Text text="rder:" />
+            </TextFlow>
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" alignment="CENTER_LEFT" GridPane.hgrow="ALWAYS">
+                <Label fx:id="lblPrimaryOrder" text="???" alignment="CENTER_LEFT" />
+                <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" >
+                    <Button text="..." styleClass="inGridButton" alignment="CENTER_RIGHT" onAction="#handleSelectMissionButton"/>
+                </HBox>
+            </HBox>
         </children>
     </GridPane>
+    <VBox fx:id="pnMissionTechContainer">
+        <TextFlow>
+            <Text text="T" styleClass="actionSymbol"/>
+            <Text text="ech levels:"/>
+        </TextFlow>
+        <GridPane styleClass="infoGrid">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" percentWidth="50"/>
+                <ColumnConstraints halignment="LEFT" percentWidth="50"/>
+            </columnConstraints>
+            <children>
+                <Label text="Engines:"/>
+                <Label fx:id="lblEngines" text="???" GridPane.columnIndex="1"/>
+                <Label text="Hulls:" GridPane.rowIndex="1"/>
+                <Label fx:id="lblHulls" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Beams:" GridPane.rowIndex="2"/>
+                <Label fx:id="lblBeams" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Torpedoes" GridPane.rowIndex="3"/>
+                <Label fx:id="lblTorpedoes" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </VBox>
     <Label text="Base storage:"/>
     <ListView fx:id="lvStorage" styleClass="storageList"/>
     <GridPane hgap="5" vgap="5">

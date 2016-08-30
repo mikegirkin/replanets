@@ -91,7 +91,8 @@ class PlanetInfoView(
       planet.value.foreach( p =>
         commands.changeColonistTax(p.planetRecord, colonistTax.value + delta)
       )
-    }
+    },
+    minLabelWidth = 45
   )
 
   val nativeTaxSpinner = new Spinner(
@@ -100,7 +101,8 @@ class PlanetInfoView(
       planet.value.foreach( p =>
         commands.changeNativeTax(p.planetRecord, nativeTax.value + delta)
       )
-    }
+    },
+    minLabelWidth = 45
   )
 
   val factoriesSpinner = new Spinner(

@@ -1,19 +1,22 @@
 package replanets.ui
 
-import replanets.common.Constants
+import replanets.common.{Constants, PlanetId}
 import replanets.model.{Game, Starbase}
 import replanets.ui.actions.Actions
 import replanets.ui.viewmodels.ViewModel
 
+import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.scene.control.{Label, ListCell, ListView}
+import scalafx.scene.control._
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{HBox, Pane, VBox}
+import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
 
 trait IBaseInfoView {
   def rootPane: Pane
-  def setData(base: Starbase): Unit
+  def setData(baseId: PlanetId): Unit
 }
 
 @sfxml
@@ -35,6 +38,33 @@ class BaseInfoView(
   val game: Game,
   val viewModel: ViewModel
 ) extends IBaseInfoView {
+
+  viewModel.objectChanged += handleObjectChanged
+
+  var starbase: Option[Starbase] = None
+
+  val primaryOrderSelector =
+    new ListView[(Int, String)] {
+      styleClass = Seq("primaryOrderSelection")
+      maxWidth <== rootPane.width - 10
+      minWidth <== rootPane.width - 10
+      items = ObservableBuffer(Constants.baseMissions.toSeq)
+      cellFactory = { _: ListView[(Int, String)] =>
+        new ListCell[(Int, String)] {
+          item.onChange { (_, _, item) =>
+            if(item == null) text = null
+            else text = item._2
+          }
+          onMouseClicked = (e: MouseEvent) => handlePrimaryOrderClicked(item.value)(e)
+        }
+      }
+    }
+
+  val popup = new Popup {
+
+    autoHide = true
+    content.add(primaryOrderSelector)
+  }
 
   private def lvItem(amount: Int, name: String) = new HBox {
     children = Seq(
@@ -58,12 +88,18 @@ class BaseInfoView(
 
   lvStorage.cellFactory = lvCellFactory
 
-  override def setData(base: Starbase): Unit = {
+  override def setData(baseId: PlanetId): Unit = {
+    val turn = viewModel.turnShown
+    val base = game.turnInfo(turn).stateAfterCommands.bases(baseId)
+    starbase = Some(base)
+
     lblStarbaseId.text = base.id.value.toString
     lblDefense.text = base.defences.toString
     lblDamage.text = base.damage.toString
     lblFighters.text = base.fightersNumber.toString
-    lblPrimaryOrder.text = Constants.baseMissions(base.primaryOrder)
+    val primaryOrderText = Constants.baseMissions(base.primaryOrder)
+    lblPrimaryOrder.text = primaryOrderText
+    primaryOrderSelector.selectionModel.delegate.get.select((base.primaryOrder, primaryOrderText))
     lblEngines.text = base.engineTech.toString
     lblHulls.text = base.hullsTech.toString
     lblBeams.text = base.beamTech.toString
@@ -92,7 +128,28 @@ class BaseInfoView(
     lvStorage.items = ObservableBuffer(hulls ++ beams ++ drives ++ launchers ++ torpedoes)
   }
 
+  private def handleObjectChanged(mo: MapObject): Unit = {
+    mo match {
+      case MapObject.Starbase(id, _, _) if id == starbase.map(_.id.value).getOrElse(0) =>
+        setData(PlanetId(id))
+      case _ =>
+    }
+  }
+
   def handlePlanetButton(e: ActionEvent) = actions.selectPlanet.execute()
 
   def handleBuildShipButton(e: ActionEvent) = actions.showBuildShipView()
+
+  def handleSelectMissionButton(e: ActionEvent) = {
+    val pointY = lblPrimaryOrder.localToScreen(0, 0)
+    val pointX = rootPane.localToScreen(0, 0)
+    popup.show(lblPrimaryOrder.getScene.getWindow, pointX.getX + 2, pointY.getY + lblPrimaryOrder.height.get() + 2)
+  }
+
+  def handlePrimaryOrderClicked(item: (Int, String))(e: MouseEvent): Unit = {
+    starbase.foreach( sb =>
+      actions.setPrimaryOrder(sb, item._1)
+    )
+    popup.hide()
+  }
 }

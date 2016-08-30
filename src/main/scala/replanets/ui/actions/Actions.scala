@@ -22,15 +22,21 @@ class Actions(game: Game, viewModel: ViewModel)(
   def buildShip(starbase: Starbase, buildOrder: ShipBuildOrder) = {
     val command = new StartShipConstruction(starbase.id, buildOrder)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forStarbase(game)(starbase))
+    viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
     viewModel.objectChanged.fire(MapObject.forPlanet(starbase.planet))
   }
 
   def stopShipConstruction(starbase: Starbase) = {
     val command = StopShipConstruction(starbase.id)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forStarbase(game)(starbase))
+    viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
     viewModel.objectChanged.fire(MapObject.forPlanet(starbase.planet))
+  }
+
+  def setPrimaryOrder(starbase: Starbase, newOrderId: Int) = {
+    val command = ChangeBasePrimaryOrder(starbase.id, newOrderId)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
   }
 
   //ships

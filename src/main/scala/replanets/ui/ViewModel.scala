@@ -36,7 +36,7 @@ object MapObject {
     }
   }
 
-  def forStarbase(game: Game)(base: model.Starbase): MapObject = {
+  def forStarbase(base: model.Starbase): MapObject = {
     val planet = base.planet.mapData
     MapObject.Starbase(base.id.value, planet.coords, s"Starbase ${base.id.value}")
   }
@@ -74,7 +74,7 @@ object MapObject {
     //bases
     val bases = planets.flatMap { p =>
       game.turnSeverData(turn).bases.get(PlanetId(p.id))
-    }.map { b => forStarbase(game)(b) }
+    }.map { b => forStarbase(b) }
       .toIndexedSeq
     //mine fields
     val mineFields = game.turnSeverData(turn).mineFields

@@ -12,6 +12,12 @@
       "objectId" : 368,
       "newWarp" : 8
     }
+  }, {
+    "type" : "ChangeBasePrimaryOrder",
+    "value" : {
+      "objectId" : 495,
+      "orderId" : 0
+    }
   } ],
   "additionalData" : [ ]
 }

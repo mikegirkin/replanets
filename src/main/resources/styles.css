@@ -88,13 +88,13 @@ Button TextFlow {
 }
 
 .baseInfo Label, .baseInfo Text, .baseInfo Button {
-    -fx-fill: royalblue;
-    -fx-text-fill: royalblue;
+    -fx-fill: deepskyblue;
+    -fx-text-fill: deepskyblue;
 }
 
 .shipInfo Label, .shipInfo Text, .shipInfo Button {
-    -fx-fill: #55ffff;
-    -fx-text-fill: #55ffff;
+    -fx-fill: cyan;
+    -fx-text-fill: cyan;
 }
 
 
@@ -200,3 +200,35 @@ ListView ListCell {
     -fx-text-fill: deepskyblue;
     -fx-fill: deepskyblue;
 }
+
+.primaryOrderSelection {
+    -fx-border-color: gray;
+    -fx-border-width: 2;
+    -fx-border-style: solid;
+    -fx-padding: 0 0 0 0;
+    -fx-background-color: #111;
+    -fx-max-height: 145;
+}
+
+.primaryOrderSelection:focused {
+    -fx-padding: 0 0 0 0;
+    -fx-border-width: 2;
+}
+
+.primaryOrderSelection:default {
+    -fx-padding: 0 0 0 0;
+    -fx-border-width: 2;
+}
+
+.primaryOrderSelection ListCell {
+    -fx-padding: 0;
+    -fx-background-color: #111;
+    -fx-pref-height: 20;
+    -fx-text-fill: deepskyblue;
+}
+
+.primaryOrderSelection ListCell:selected {
+    -fx-background-color: #004d4d;
+    -fx-text-fill: gold;
+}
+

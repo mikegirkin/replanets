@@ -161,7 +161,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   }
 
   private def showInfoAboutBase(mapObject: MapObject): Unit = {
-    baseInfoView.setData(game.turnInfo(viewModel.turnShown).stateAfterCommands.bases(PlanetId(mapObject.id)))
+    baseInfoView.setData(PlanetId(mapObject.id))
     setDetailsView(baseInfoView.rootPane)
   }
 
