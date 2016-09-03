@@ -8,9 +8,10 @@ case class Cargo(
   supplies: Int = 0,
   colonists: Int = 0,
   money: Int = 0,
-  torps: Int = 0
+  torps: Int = 0,
+  fighters: Int = 0
 ) {
-  def weight = tri + dur + mol + supplies + colonists + torps
+  def weight = tri + dur + mol + supplies + colonists + torps + fighters
 
   def minus(other: Cargo): Cargo = {
     Cargo(
@@ -21,7 +22,8 @@ case class Cargo(
       supplies = supplies - other.supplies,
       colonists = colonists - other.colonists,
       money = money - other.money,
-      torps = torps - other.torps
+      torps = torps - other.torps,
+      fighters = fighters - other.fighters
     )
   }
 }

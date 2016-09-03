@@ -17,6 +17,7 @@ abstract class CargoTransferView(
   styleClass = Seq("popupOuter")
 
   val lblTorpsHeader = new Label("Torps:")
+  val lblFightersHeader = new Label("Fighters:")
   val lblMoneyHeader = new Label("Money:")
 
   val lblNeuSource = new Label("???")
@@ -27,6 +28,7 @@ abstract class CargoTransferView(
   val lblColonistsSource = new Label("???")
   val lblMoneySource = new Label("???")
   val lblTorpsSource = new Label("???")
+  val lblFightersSource = new Label("???")
 
   val lblNeuTarget = new Label("???")
   val lblTriTarget = new Label("???")
@@ -36,6 +38,7 @@ abstract class CargoTransferView(
   val lblColonistsTarget = new Label("???")
   val lblMoneyTarget = new Label("???")
   val lblTorpsTarget = new Label("???")
+  val lblFightersTarget = new Label("???")
 
   private def boundedDeltaForCargo(valueExtracor: Cargo => Int)(delta: Int): Int = {
     if(delta < 0) {
@@ -60,6 +63,7 @@ abstract class CargoTransferView(
   val spinnerSupplies = transferSpinnerButtons(delta => Cargo(supplies = boundedDeltaForCargo(_.supplies)(delta)))
   val spinnerColonists = transferSpinnerButtons(delta => Cargo(colonists = boundedDeltaForCargo(_.colonists)(delta)))
   val spinnerTorps = transferSpinnerButtons(delta => Cargo(torps = boundedDeltaForCargo(_.torps)(delta)))
+  val spinnerFighters = transferSpinnerButtons(delta => Cargo(fighters = boundedDeltaForCargo(_.fighters)(delta)))
 
   val spinnerMoney = transferSpinnerButtons(delta => {
     val boundedDelta = if(delta < 0) {
@@ -99,6 +103,7 @@ abstract class CargoTransferView(
     add(new Label("Colonists:"), 0, 5)
     add(lblMoneyHeader, 0, 6)
     add(lblTorpsHeader, 0, 7)
+    add(lblFightersHeader, 0, 7)
     add(lblNeuSource, 1, 0)
     add(lblTriSource, 1, 1)
     add(lblDurSource, 1, 2)
@@ -107,6 +112,7 @@ abstract class CargoTransferView(
     add(lblColonistsSource, 1, 5)
     add(lblMoneySource, 1, 6)
     add(lblTorpsSource, 1, 7)
+    add(lblFightersSource, 1, 7)
     add(spinnerNeu, 2, 0)
     add(spinnerTri, 2, 1)
     add(spinnerDur, 2, 2)
@@ -115,6 +121,7 @@ abstract class CargoTransferView(
     add(spinnerColonists, 2, 5)
     add(spinnerMoney, 2, 6)
     add(spinnerTorps, 2, 7)
+    add(spinnerFighters, 2, 7)
     add(lblNeuTarget, 3, 0)
     add(lblTriTarget, 3, 1)
     add(lblDurTarget, 3, 2)
@@ -123,6 +130,7 @@ abstract class CargoTransferView(
     add(lblColonistsTarget, 3, 5)
     add(lblMoneyTarget, 3, 6)
     add(lblTorpsTarget, 3, 7)
+    add(lblFightersTarget, 3, 7)
   }
 
   val lblTotalCargoLoaded = new Label {
@@ -157,31 +165,23 @@ abstract class CargoTransferView(
 
   def setData(
     moneyTransferAvailable: Boolean,
-    torpsTransferAvailable: Boolean
+    torpsTransferAvailable: Boolean,
+    fightersTransferAvailable: Boolean
   ) = {
-    if(torpsTransferAvailable) {
-      lblTorpsHeader.visible = true
-      lblTorpsSource.visible = true
-      spinnerTorps.visible = true
-      lblTorpsTarget.visible = true
-    } else {
-      lblTorpsHeader.visible = false
-      lblTorpsSource.visible = false
-      spinnerTorps.visible = false
-      lblTorpsTarget.visible = false
-    }
+    lblTorpsHeader.visible = torpsTransferAvailable
+    lblTorpsSource.visible = torpsTransferAvailable
+    spinnerTorps.visible = torpsTransferAvailable
+    lblTorpsTarget.visible = torpsTransferAvailable
 
-    if(moneyTransferAvailable) {
-      lblMoneyHeader.visible = true
-      lblMoneySource.visible = true
-      lblMoneyTarget.visible = true
-      spinnerMoney.visible = true
-    } else {
-      lblMoneyHeader.visible = false
-      lblMoneySource.visible = false
-      lblMoneyTarget.visible = false
-      spinnerMoney.visible = false
-    }
+    lblMoneyHeader.visible = moneyTransferAvailable
+    lblMoneySource.visible = moneyTransferAvailable
+    lblMoneyTarget.visible = moneyTransferAvailable
+    spinnerMoney.visible = moneyTransferAvailable
+
+    lblFightersHeader.visible = fightersTransferAvailable
+    lblFightersSource.visible = fightersTransferAvailable
+    lblFightersTarget.visible = fightersTransferAvailable
+    spinnerFighters.visible = fightersTransferAvailable
   }
 
   private def bindToSource(extractor: Cargo => Int) = {

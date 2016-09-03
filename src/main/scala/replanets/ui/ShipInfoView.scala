@@ -199,9 +199,18 @@ class ShipInfoView(
       transferringToPlanet = Some(planet.id)
       setTransferDestination()
       val moneyTransferAvailable = planet.ownerId == game.playingRace
+      val torpsTransferAvailable = {
+        val starbase = game.turnInfo(viewModel.turnShown).initialState.bases.get(planet.id)
+        ship.numberOfTorpLaunchers > 0 && starbase.isDefined
+      }
+      val fightersTransferAvailable = {
+        val starbase = game.turnInfo(viewModel.turnShown).initialState.bases.get(planet.id)
+        ship.fighterBays > 0 && starbase.isDefined
+      }
       cargoTransferControl.setData(
         moneyTransferAvailable,
-        false
+        torpsTransferAvailable,
+        fightersTransferAvailable
       )
       val point = gpCargo.localToScreen(0, 0)
       transferPopup.show(gpCargo.getScene.getWindow, point.getX, point.getY)
