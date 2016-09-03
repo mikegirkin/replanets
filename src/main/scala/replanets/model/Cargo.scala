@@ -11,4 +11,17 @@ case class Cargo(
   torps: Int = 0
 ) {
   def weight = tri + dur + mol + supplies + colonists + torps
+
+  def minus(other: Cargo): Cargo = {
+    Cargo(
+      neu = neu - other.neu,
+      tri = tri - other.tri,
+      dur = dur - other.dur,
+      mol = mol - other.mol,
+      supplies = supplies - other.supplies,
+      colonists = colonists - other.colonists,
+      money = money - other.money,
+      torps = torps - other.torps
+    )
+  }
 }

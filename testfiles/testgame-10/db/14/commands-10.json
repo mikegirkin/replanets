@@ -43,6 +43,22 @@
       "launcherId" : 9,
       "launcherCount" : 1
     }
+  }, {
+    "type" : "ShipToPlanetTransfer",
+    "value" : {
+      "objectId" : 491,
+      "planetId" : 97,
+      "transfer" : {
+        "neu" : 0,
+        "tri" : 0,
+        "dur" : 0,
+        "mol" : 0,
+        "supplies" : 47,
+        "colonists" : 0,
+        "money" : 0,
+        "torps" : 0
+      }
+    }
   } ],
   "additionalData" : [ ]
 }

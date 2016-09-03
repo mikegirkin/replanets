@@ -94,13 +94,24 @@ class ShipInfoView(
     content.add(cargoTransferControl)
   }
 
+  private def setTransferDestination() = {
+    transferringToPlanet.foreach { planetId =>
+      val planet = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(planetId)
+      val planetBeforeCommands = game.turnInfo(viewModel.turnShown).initialState.planets(planetId)
+      transferDestination.value =
+        if(planet.ownerId == game.playingRace)
+          planet.cargoHold
+        else {
+          planet.cargoHold.copy(_cargo = planet.cargoHold.cargo.minus(planetBeforeCommands.cargoHold.cargo))
+        }
+    }
+  }
+
   def setData(shipId: ShipId) = {
     val newShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(shipId).asInstanceOf[OwnShip]
     ship.value = Some(newShip)
     transferSource.value = newShip.cargoHold
-    transferringToPlanet.foreach { planetId =>
-      transferDestination.value = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(planetId).cargoHold
-    }
+    setTransferDestination()
 
     lblShipId.text = newShip.id.value.toString
     lblShipOwningRace.text = if(newShip.owner.value>0) {
@@ -186,9 +197,10 @@ class ShipInfoView(
       planet <- game.turnInfo(viewModel.turnShown).stateAfterCommands.planets.values.find { planet => planet.mapData.coords == ship.coords }
     ) {
       transferringToPlanet = Some(planet.id)
-      transferDestination.value = planet.cargoHold
+      setTransferDestination()
+      val moneyTransferAvailable = planet.ownerId == game.playingRace
       cargoTransferControl.setData(
-        true,
+        moneyTransferAvailable,
         false
       )
       val point = gpCargo.localToScreen(0, 0)
