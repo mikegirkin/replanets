@@ -1,9 +1,9 @@
 package replanets.ui
 
-import replanets.common.{Fcode, OwnShip, ShipId}
-import replanets.model.Game
+import replanets.common._
+import replanets.model.{Cargo, CargoHold, Game}
 import replanets.ui.actions.Actions
-import replanets.ui.controls.Spinner
+import replanets.ui.controls.{CargoTransferView, Spinner}
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
@@ -11,7 +11,8 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Label, TextField}
 import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
-import scalafx.scene.layout.{HBox, Pane}
+import scalafx.scene.layout.{GridPane, HBox, Pane}
+import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
 
 /**
@@ -55,6 +56,7 @@ class ShipInfoView(
   val edFcode: TextField,
 
   val hbWarpPlaceholder: HBox,
+  val gpCargo: GridPane,
 
   val game: Game,
   val viewModel: ViewModel,
@@ -64,6 +66,9 @@ class ShipInfoView(
   viewModel.objectChanged += handleObjectChanged
 
   val ship = ObjectProperty[Option[OwnShip]](None)
+  val transferSource = ObjectProperty(CargoHold.zero)
+  val transferDestination = ObjectProperty(CargoHold.zero)
+  var transferringToPlanet: Option[PlanetId] = None
 
   val warpSpinner = new Spinner(
     createStringBinding(() => ship.value.map(_.warp).getOrElse(0).toString, ship),
@@ -75,9 +80,30 @@ class ShipInfoView(
 
   hbWarpPlaceholder.children = warpSpinner
 
+  val cargoTransferControl = new CargoTransferView(
+    transferSource,
+    transferDestination,
+    onChange = transfer => {
+      val planet = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(transferringToPlanet.get)
+      actions.transferShipToPlanet(ship.value.get, planet, transfer)
+    }
+  ) {
+    maxWidth <== rootPane.width
+    minWidth <== rootPane.width
+  }
+
+  val transferPopup = new Popup {
+    autoHide = true
+    content.add(cargoTransferControl)
+  }
+
   def setData(shipId: ShipId) = {
     val newShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(shipId).asInstanceOf[OwnShip]
     ship.value = Some(newShip)
+    transferSource.value = newShip.cargoHold
+    transferringToPlanet.foreach { planetId =>
+      transferDestination.value = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(planetId).cargoHold
+    }
 
     lblShipId.text = newShip.id.value.toString
     lblShipOwningRace.text = if(newShip.owner.value>0) {
@@ -103,7 +129,7 @@ class ShipInfoView(
     lblEquipEngines.text = newShip.engines.name
     lblEquipBeams.text = newShip.beams.map { b => s"${newShip.numberOfBeams} - ${b.name}" }.getOrElse("")
     lblEquipLaunchers.text = newShip.torpsType.map { tt => s"${newShip.numberOfTorpLaunchers} - ${tt.name}" }.getOrElse("")
-    lblCargo.text = newShip.cargoMass.toString
+    lblCargo.text =s"${newShip.cargoMass.toString} / ${newShip.hull.cargo}"
     lblNeu.text = newShip.minerals.neutronium.toString
     lblTri.text = newShip.minerals.tritanium.toString
     lblDur.text = newShip.minerals.duranium.toString
@@ -155,5 +181,26 @@ class ShipInfoView(
 
   def onEdFcodeKeyPressed(e: KeyEvent) = {
     if(e.code == KeyCode.Escape) cancelFcodeEditing()
+  }
+
+  def handleShipPlanetTransferButton(e: ActionEvent): Unit = {
+    for(
+      ship <- ship.value;
+      planet <- game.turnInfo(viewModel.turnShown).stateAfterCommands.planets.values.find { planet => planet.mapData.coords == ship.coords }
+    ) {
+      transferringToPlanet = Some(planet.id)
+      transferDestination.value = planet.cargoHold
+      cargoTransferControl.setData(
+        true,
+        false
+      )
+      val point = gpCargo.localToScreen(0, 0)
+      transferPopup.show(gpCargo.getScene.getWindow, point.getX, point.getY)
+    }
+  }
+
+  def hidePopup(): Unit = {
+    transferPopup.hide()
+    transferringToPlanet = None
   }
 }

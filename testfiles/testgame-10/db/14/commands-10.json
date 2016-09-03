@@ -1,0 +1,48 @@
+{
+  "version" : "v1",
+  "commands" : [ {
+    "type" : "ShipToPlanetTransfer",
+    "value" : {
+      "objectId" : 207,
+      "planetId" : 495,
+      "transfer" : {
+        "neu" : -60,
+        "tri" : 0,
+        "dur" : 0,
+        "mol" : 0,
+        "supplies" : -10,
+        "colonists" : -50,
+        "money" : 0,
+        "torps" : 0
+      }
+    }
+  }, {
+    "type" : "ShipToPlanetTransfer",
+    "value" : {
+      "objectId" : 355,
+      "planetId" : 495,
+      "transfer" : {
+        "neu" : 0,
+        "tri" : -100,
+        "dur" : -100,
+        "mol" : -80,
+        "supplies" : 0,
+        "colonists" : 1,
+        "money" : 0,
+        "torps" : 0
+      }
+    }
+  }, {
+    "type" : "StartShipConstruction",
+    "value" : {
+      "objectId" : 495,
+      "hullId" : 87,
+      "engineId" : 8,
+      "beamId" : 1,
+      "beamsCount" : 2,
+      "launcherId" : 9,
+      "launcherCount" : 1
+    }
+  } ],
+  "additionalData" : [ ]
+}

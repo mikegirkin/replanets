@@ -1,7 +1,7 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, ServerData}
-import replanets.model.Specs
+import replanets.common.{PlanetId, ServerData, ShipId}
+import replanets.model.{Cargo, Specs}
 
 case class ChangeBasePrimaryOrder(
   objectId: PlanetId,

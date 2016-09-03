@@ -1,6 +1,6 @@
 package replanets.common
 
-import replanets.model.{ClusterMap, PlanetMapData}
+import replanets.model.{Cargo, CargoHold, ClusterMap, PlanetMapData}
 import replanets.recipes._
 
 case class Planet(
@@ -26,7 +26,23 @@ case class Planet(
   nativeRace: NativeRace,
   temperature: Short,
   buildBase: Short
-)
+) {
+  def cargoHold = CargoHold(
+    Int.MaxValue,
+    Int.MaxValue,
+    Int.MaxValue,
+    Cargo(
+      surfaceMinerals.neutronium,
+      surfaceMinerals.tritanium,
+      surfaceMinerals.duranium,
+      surfaceMinerals.molybdenium,
+      supplies,
+      colonistClans,
+      money,
+      0
+    )
+  )
+}
 
 object PlanetsReader {
 

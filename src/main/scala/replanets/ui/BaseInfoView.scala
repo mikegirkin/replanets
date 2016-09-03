@@ -45,7 +45,7 @@ class BaseInfoView(
 
   val primaryOrderSelector =
     new ListView[(Int, String)] {
-      styleClass = Seq("primaryOrderSelection")
+      styleClass = Seq("popup", "primaryOrderSelection")
       maxWidth <== rootPane.width - 10
       minWidth <== rootPane.width - 10
       items = ObservableBuffer(Constants.baseMissions.toSeq)
@@ -61,7 +61,6 @@ class BaseInfoView(
     }
 
   val popup = new Popup {
-
     autoHide = true
     content.add(primaryOrderSelector)
   }

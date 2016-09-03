@@ -83,6 +83,10 @@ object RstFileReader {
 
     val ships = buildShipsMap(specs, shipRecords, targets, shipCoords)
 
+    println(s"For turn ${generalInfo.turnNumber} read:")
+    println(s"Player id: ${generalInfo.playerId}")
+    println(s"Own planets: ${planets.values.count(_.ownerId.value == generalInfo.playerId)}. Other planets: ${planets.values.count(_.ownerId.value != generalInfo.playerId)}")
+
     ServerData(isWinplan, subversion, ships, planets, bases, messages, generalInfo, mineFields, ionStorms, explosions)
   }
 

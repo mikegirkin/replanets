@@ -8,8 +8,8 @@ Label, TextFlow, Text, ListCell, Button {
     -fx-padding: 0 0 0 0;
     -fx-max-height: 18;
     -fx-min-height: 18;
-    -fx-max-width: 18;
     -fx-min-width: 18;
+    -fx-pref-width: 18;
     -fx-alignment: center;
     -fx-text-alignment: center;
 }
@@ -201,7 +201,7 @@ ListView ListCell {
     -fx-fill: deepskyblue;
 }
 
-.primaryOrderSelection {
+.popupOuter, .primaryOrderSelection {
     -fx-border-color: gray;
     -fx-border-width: 2;
     -fx-border-style: solid;

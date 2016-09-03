@@ -54,7 +54,10 @@ object MapObject {
   }
 
   def forMinefield(game: Game)(minefield: replanets.common.MineFieldRecord) = {
-    MapObject.Minefield(minefield.id, minefield.coords, s"${game.races(minefield.owner - 1).adjective} minefield ${minefield.id}")
+    MapObject.Minefield(minefield.id, minefield.coords,
+      if(minefield.owner < 12) s"${game.races(minefield.owner - 1).adjective} minefield ${minefield.id}"
+      else if(minefield.owner == 12) s"${game.races(6).adjective} web minefield ${minefield.id}"
+      else "Unknown minefield")
   }
 
   def forExplosion(explosion: replanets.common.ExplosionRecord) = {

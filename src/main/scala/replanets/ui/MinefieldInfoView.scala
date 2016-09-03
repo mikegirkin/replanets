@@ -29,7 +29,10 @@ class MinefieldInfoView(
 ) extends IMinefieldInfoView {
 
   override def setData(minefield: MineFieldRecord): Unit = {
-    lblRace.text = game.races(minefield.owner - 1).adjective
+    lblRace.text =
+      if(minefield.owner < 12) game.races(minefield.owner - 1).adjective
+      else if(minefield.owner == 12) game.races(6).adjective
+      else "Unknown"
     lblMinefieldId.text = minefield.id.toString
     //TODO: lblTurnObserved
     lblCenter.text = s"(${minefield.x}, ${minefield.y})"

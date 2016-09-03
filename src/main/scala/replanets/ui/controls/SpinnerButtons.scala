@@ -6,17 +6,19 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.HBox
 
 class SpinnerButtons(
-  onDiff: (Int) => Unit
+  onDiff: (Int) => Unit,
+  rightText: String = "+",
+  leftText: String = "-"
 ) extends HBox {
 
   val btnPlus = new Button {
     styleClass = Seq("inGridButton")
-    text = "+"
+    text = rightText
     onMouseClicked = (e: MouseEvent) => handlePlusClicked(e)
   }
   val btnMinus = new Button {
     styleClass = Seq("inGridButton")
-    text = "-"
+    text = leftText
     onMouseClicked = (e: MouseEvent) => handleMinusClicked(e)
   }
 

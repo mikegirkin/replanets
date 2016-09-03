@@ -1,5 +1,7 @@
 package replanets.common
 
+import replanets.model.{Cargo, CargoHold}
+
 sealed trait Ship extends ObjectWithCoords {
   val id: ShipId
   val x: Short
@@ -57,24 +59,41 @@ case class OwnShip(
   numberOfBeams: Short,
   fighterBays: Short,
   torpsType: Option[TorpspecItem],
-  torpsFightersLoaded: Short,
+  torpsFightersLoaded: Int,
   numberOfTorpLaunchers: Short,
   mission: Short,
   primaryEnemy: Short,
   towShipId: Short,
   damage: Short,
   crew: Short,
-  colonistClans: Short,
+  colonistClans: Int,
   name: String,
   minerals: Minerals,
-  supplies: Short,
+  supplies: Int,
   unloadToPlanet: TransferRecord,
   transferToEnemyShip: TransferRecord,
   secondMissionArgument: Short,
-  money: Short
+  money: Int
 ) extends Ship {
-  override def fullMass: Short = (cargoMass + hull.mass).toShort
-  def cargoMass: Short = (minerals.neutronium + minerals.tritanium + minerals.duranium + minerals.molybdenium + colonistClans + supplies + torpsFightersLoaded).toShort
+
+  override def fullMass: Short = (cargoMass + minerals.neutronium + hull.mass).toShort
+  def cargoMass: Short = (minerals.tritanium + minerals.duranium + minerals.molybdenium + colonistClans + supplies + torpsFightersLoaded).toShort
 
   override val plannedDestination: Option[IntCoords] = Some(IntCoords(x + xDistanceToWaypoint, y + yDistanceToWaypoint))
+
+  def cargoHold = CargoHold(
+    hull.fuelTankSize,
+    hull.cargo,
+    10000,
+    Cargo(
+      minerals.neutronium,
+      minerals.tritanium,
+      minerals.duranium,
+      minerals.molybdenium,
+      supplies,
+      colonistClans,
+      money,
+      torpsFightersLoaded
+    )
+  )
 }

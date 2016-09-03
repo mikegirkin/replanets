@@ -52,6 +52,13 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forShip(ship))
   }
 
+  def transferShipToPlanet(ship: OwnShip, planet: Planet, transfer: Cargo) = {
+    val command = ShipToPlanetTransfer(ship.id, planet.id, transfer)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet))
+  }
+
   //planets
   def setPlanetFcode(planet: Planet, newFcode: Fcode) = {
     val command = SetPlanetFcode(planet.id, newFcode)

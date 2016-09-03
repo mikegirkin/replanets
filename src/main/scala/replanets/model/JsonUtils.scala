@@ -29,11 +29,17 @@ object JsonUtils {
   implicit val beamIdFormat = fromSingleIntFormat(x => BeamId(x))
   implicit val launcherIdFormat = fromSingleIntFormat(x => LauncherId(x))
 
+  implicit val cargoFormat = format[Cargo]
+
+  //ships
   val setShipFcodeFormat = format[SetShipFcode]
   val setShipWarpFormat = format[SetShipWarp]
+  val shipToPlanetTransferFormat = format[ShipToPlanetTransfer]
+  //bases
   val buildShipFormat = format[StartShipConstruction]
   val stopShipConstructionFormat = format[StopShipConstruction]
   val changeBasePrimaryOrderFormat = format[ChangeBasePrimaryOrder]
+  //planets
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setColonistTaxFormat = format[SetColonistTax]
   val setNativeTaxFormat = format[SetNativeTax]
@@ -46,6 +52,7 @@ object JsonUtils {
     val value= cmd match {
       case x: SetShipFcode => toJson(x)(setShipFcodeFormat)
       case x: SetShipWarp => toJson(x)(setShipWarpFormat)
+      case x: ShipToPlanetTransfer => toJson(x)(shipToPlanetTransferFormat)
       case x: StartShipConstruction => toJson(x)(buildShipFormat)
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
       case x: ChangeBasePrimaryOrder => toJson(x)(changeBasePrimaryOrderFormat)
@@ -65,7 +72,7 @@ object JsonUtils {
   val readers = Map[String, (JsLookupResult) => JsResult[PlayerCommand]](
     classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
     classOf[SetShipWarp].getSimpleName -> { _.validate[SetShipWarp](setShipWarpFormat) },
-    classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
+    classOf[ShipToPlanetTransfer].getSimpleName -> { _.validate[ShipToPlanetTransfer](shipToPlanetTransferFormat) },
     classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
     classOf[ChangeBasePrimaryOrder].getSimpleName -> { _.validate[ChangeBasePrimaryOrder](changeBasePrimaryOrderFormat) },
