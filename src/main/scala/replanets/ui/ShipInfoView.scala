@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Cargo, CargoHold, Game}
+import replanets.model.{CargoHold, Game}
 import replanets.ui.actions.Actions
 import replanets.ui.controls.{CargoTransferView, Spinner}
 import replanets.ui.viewmodels.ViewModel
@@ -15,9 +15,6 @@ import scalafx.scene.layout.{GridPane, HBox, Pane}
 import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
 
-/**
-  * Created by mgirkin on 07/08/2016.
-  */
 trait IShipInfoView {
   def rootPane: Pane
   def setData(shipId: ShipId): Unit

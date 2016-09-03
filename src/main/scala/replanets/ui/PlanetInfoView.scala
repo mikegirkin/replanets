@@ -57,6 +57,7 @@ class PlanetInfoView(
   val lblMolDensity: Label,
 
   val btnStarbase: Button,
+  val btnRandomFcode: Button,
 
   val edFcode: TextField,
 
@@ -160,6 +161,32 @@ class PlanetInfoView(
     lblWhen.text = "(now)"
     lblOwner.text = "Planet"
     planetRecord.foreach( vm => {
+      val editable = vm.ownerId == game.playingRace.value
+      if(editable) {
+        colonistTaxSpinner.visible = true
+        nativeTaxSpinner.visible = true
+        factoriesSpinner.visible = true
+        minesSpinner.visible = true
+        defencesSpinner.visible = true
+        lblColonistHappinessChange.visible = true
+        lblNativeHappinessChange.visible = true
+        lblColonistIncome.visible = true
+        lblNativesIncome.visible = true
+        cbDone.visible = true
+        btnRandomFcode.visible = true
+      } else {
+        colonistTaxSpinner.visible = false
+        nativeTaxSpinner.visible = false
+        factoriesSpinner.visible = false
+        minesSpinner.visible = false
+        defencesSpinner.visible = false
+        lblColonistHappinessChange.visible = false
+        lblNativeHappinessChange.visible = false
+        lblColonistIncome.visible = false
+        lblNativesIncome.visible = false
+        cbDone.visible = false
+        btnRandomFcode.visible = false
+      }
       if(vm.ownerId != 0) lblOwner.text = s"${game.races(vm.ownerId - 1).adjective} planet"
       lblFcode.text = vm.fcode.value
       edFcode.text = vm.fcode.value
