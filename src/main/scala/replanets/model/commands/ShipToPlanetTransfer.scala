@@ -1,17 +1,17 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, ServerData, ShipId}
+import replanets.common.{PlanetId, ServerData, ShipId, TransferToPlanet}
 import replanets.model.{Cargo, Specs}
 
 case class ShipToPlanetTransfer(
-  objectId: ShipId,
+  shipId: ShipId,
   planetId: PlanetId,
   transfer: Cargo
 ) extends PlayerCommand {
 
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case ShipToPlanetTransfer(newObjectId, newPlanetId, newTransfer) if this.objectId == newObjectId && this.planetId == newPlanetId => true
+      case ShipToPlanetTransfer(newObjectId, _, _) if this.shipId == newObjectId => true
       case _ => false
     }
   }
@@ -42,7 +42,7 @@ case class ShipToPlanetTransfer(
         money = p.money + transfer.money
       )
     }
-    val ship = state.ownShips(objectId)
+    val ship = state.ownShips(shipId)
     val torpsType = ship.torpsType
     val starbaseState = for(
       torps <- torpsType;
@@ -61,7 +61,16 @@ case class ShipToPlanetTransfer(
       supplies = ship.supplies - transfer.supplies,
       colonistClans = ship.colonistClans - transfer.colonists,
       money = ship.money - transfer.money,
-      torpsFightersLoaded = ship.torpsFightersLoaded - transfer.torps
+      torpsFightersLoaded = ship.torpsFightersLoaded - transfer.torps,
+      transferToPlanet = TransferToPlanet(
+        transfer.neu,
+        transfer.tri,
+        transfer.dur,
+        transfer.mol,
+        transfer.colonists,
+        transfer.supplies,
+        planetId
+      )
     )
     val planets = planetState.map { p =>
       state.planets.updated(p.id, p)
@@ -78,7 +87,7 @@ case class ShipToPlanetTransfer(
 
   override def mergeWith(newerCommand: PlayerCommand): PlayerCommand = {
     newerCommand match {
-      case ShipToPlanetTransfer(newObjectId, newPlanetId, newTransfer) if this.objectId == newObjectId && this.planetId == newPlanetId =>
+      case ShipToPlanetTransfer(newObjectId, newPlanetId, newTransfer) if this.shipId == newObjectId && this.planetId == newPlanetId =>
         if(newTransfer.neu != 0) this.copy(transfer = this.transfer.copy(neu = this.transfer.neu + newTransfer.neu))
         else if(newTransfer.tri != 0) this.copy(transfer = this.transfer.copy(tri = this.transfer.tri + newTransfer.tri))
         else if(newTransfer.dur != 0) this.copy(transfer = this.transfer.copy(dur = this.transfer.dur + newTransfer.dur))

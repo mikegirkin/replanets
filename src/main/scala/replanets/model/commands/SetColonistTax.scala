@@ -9,8 +9,6 @@ case class SetColonistTax(
   newTax: Int
 ) extends PlayerCommand {
 
-  override def objectId = planetId
-
   override def isReplacableBy(other: PlayerCommand): Boolean = other match {
     case SetColonistTax(otherPlanetId, _) if otherPlanetId == planetId => true
     case _ => false

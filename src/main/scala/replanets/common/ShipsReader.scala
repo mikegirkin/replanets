@@ -2,14 +2,24 @@ package replanets.common
 
 import replanets.recipes.{SpacePaddedString, WORD}
 
-case class TransferRecord(
-  neutronuim: Short,
-  tritanium: Short,
-  duranium: Short,
-  molybdenium: Short,
-  colonists: Short,
-  supplies: Short,
-  targetId: Short
+case class TransferToPlanet(
+  neutronuim: Int,
+  tritanium: Int,
+  duranium: Int,
+  molybdenium: Int,
+  colonists: Int,
+  supplies: Int,
+  targetId: PlanetId
+)
+
+case class TransferToEnemyShip(
+  neutronuim: Int,
+  tritanium: Int,
+  duranium: Int,
+  molybdenium: Int,
+  colonists: Int,
+  supplies: Int,
+  targetId: ShipId
 )
 
 case class ShipRecord(
@@ -41,9 +51,9 @@ case class ShipRecord(
   duranium: Short,
   molybdenium: Short,
   supplies: Short,
-  unloadToPlanet: TransferRecord,
-  transferToEnemyShip: TransferRecord,
-  secondMissionArgument: Short,
+  transferToPlanet: TransferToPlanet,
+  transferToEnemyShip: TransferToEnemyShip,
+  interceptTargetId: Short,
   money: Short
 ) extends ObjectWithCoords {
   def loadedMass = neutronium + tritanium + duranium + molybdenium + colonistClans + supplies + torpsFightersLoaded
@@ -51,15 +61,27 @@ case class ShipRecord(
 
 
 object ShipsReader {
-  private def readTransferRecord(it: Iterator[Byte]): TransferRecord = {
-    TransferRecord(
+  private def readPlanetTransferRecord(it: Iterator[Byte]): TransferToPlanet = {
+    TransferToPlanet(
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
-      WORD.read(it)
+      PlanetId(WORD.read(it))
+    )
+  }
+
+  private def readEnemyShipTransferRecord(it: Iterator[Byte]): TransferToEnemyShip = {
+    TransferToEnemyShip(
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      WORD.read(it),
+      ShipId(WORD.read(it))
     )
   }
 
@@ -93,8 +115,8 @@ object ShipsReader {
       WORD.read(it),
       WORD.read(it),
       WORD.read(it),
-      readTransferRecord(it),
-      readTransferRecord(it),
+      readPlanetTransferRecord(it),
+      readEnemyShipTransferRecord(it),
       WORD.read(it),
       WORD.read(it)
     )

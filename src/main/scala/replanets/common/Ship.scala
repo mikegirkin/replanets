@@ -49,8 +49,8 @@ case class OwnShip(
   owner: RaceId,
   fcode: Fcode,
   warp: Int,
-  xDistanceToWaypoint: Short,
-  yDistanceToWaypoint: Short,
+  xDistanceToWaypoint: Int,
+  yDistanceToWaypoint: Int,
   x: Short,
   y: Short,
   engines: EngspecItem,
@@ -70,9 +70,9 @@ case class OwnShip(
   name: String,
   minerals: Minerals,
   supplies: Int,
-  unloadToPlanet: TransferRecord,
-  transferToEnemyShip: TransferRecord,
-  secondMissionArgument: Short,
+  transferToPlanet: TransferToPlanet,
+  transferToEnemyShip: TransferToEnemyShip,
+  interceptTargetId: Short,
   money: Int
 ) extends Ship {
 

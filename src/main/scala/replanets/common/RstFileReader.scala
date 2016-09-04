@@ -126,9 +126,9 @@ object RstFileReader {
           sr.name,
           Minerals(sr.neutronium, sr.tritanium, sr.duranium, sr.molybdenium),
           sr.supplies,
-          sr.unloadToPlanet,
+          sr.transferToPlanet,
           sr.transferToEnemyShip,
-          sr.secondMissionArgument,
+          sr.interceptTargetId,
           sr.money
         )
       }.getOrElse {

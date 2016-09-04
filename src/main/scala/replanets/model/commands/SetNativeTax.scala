@@ -9,8 +9,6 @@ case class SetNativeTax(
   newTax: Int
 ) extends PlayerCommand {
 
-  override def objectId: OneBasedIndex = planetId
-
   override def isReplacableBy(other: PlayerCommand): Boolean = other match {
     case SetNativeTax(otherPlanetId, _) if otherPlanetId == planetId => true
     case _ => false
