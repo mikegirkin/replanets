@@ -38,8 +38,8 @@ case class Target(
   override def fullMass: Short = mass
 
   override val plannedDestination: Option[IntCoords] = {
-    val dx = warp * warp * Math.sin(2 * Math.PI * heading / 360).toInt
-    val dy = warp * warp * Math.cos(2 * Math.PI * heading / 360).toInt
+    val dx = (warp * warp * Math.sin(2 * Math.PI * heading.toDouble / 360)).toInt
+    val dy = (warp * warp * Math.cos(2 * Math.PI * heading.toDouble / 360)).toInt
     Some(IntCoords(x + dx, y + dy))
   }
 }
