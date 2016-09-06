@@ -5,7 +5,7 @@ import java.nio.file.Paths
 import java.nio.{ByteBuffer, ByteOrder}
 
 import replanets.common._
-import replanets.model.Game
+import replanets.model.{Game, Starbase}
 import replanets.model.commands.PlayerCommand
 import replanets.recipes.{BYTE, DWORD}
 
@@ -96,162 +96,112 @@ class TrnWriter(game: Game) {
 
   type TrnRecord = Iterable[Byte]
 
-  private def shipCommand(code: Int, shipId: ShipId) =
-    code.toShort.toBytes ++ shipId.value.toShort.toBytes
-
-  private def planetaryCommand(code: Int, planetId: PlanetId) =
-    code.toShort.toBytes ++ planetId.value.toShort.toBytes
-
-  private def shipChangeFcode(ship: OwnShip): TrnRecord =
-    shipCommand(1, ship.id) ++ ship.fcode.value.toBytes(3)
-
-  private def shipChangeSpeed(ship: OwnShip): TrnRecord =
-    shipCommand(2, ship.id) ++ ship.warp.toShort.toBytes
-
-  private def shipChangeWaypoint(ship: OwnShip): TrnRecord =
-    shipCommand(3, ship.id) ++ ship.xDistanceToWaypoint.upperBound(3000).toShort.toBytes ++ ship.yDistanceToWaypoint.upperBound(3000).toShort.toBytes
-
-  private def shipChangeMission(ship:OwnShip): TrnRecord =
-    shipCommand(4, ship.id) ++ ship.mission.toShort.toBytes
-
-  private def shipChangePrimaryEnemy(ship: OwnShip): TrnRecord =
-    shipCommand(5, ship.id) ++ ship.primaryEnemy.toShort.toBytes
-
-  private def shipTowShip(ship: OwnShip): TrnRecord =
-    shipCommand(6, ship.id) ++ ship.towShipId.toShort.toBytes
-
-  private def shipChangeName(ship: OwnShip): TrnRecord =
-    shipCommand(7, ship.id) ++ ship.name.toBytes(20)
-
-  private def shipBeamDownCargo(ship: OwnShip): TrnRecord =
-    shipCommand(8, ship.id) ++ Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ ship.transferToPlanet.targetId.value.toShort.toBytes
-
-  private def shipTransferCargo(ship: OwnShip): TrnRecord =
-    shipCommand(9, ship.id) ++ Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ ship.transferToEnemyShip.targetId.value.toShort.toBytes
-
-  private def shipIntercept(ship: OwnShip): TrnRecord =
-    shipCommand(10, ship.id) ++ ship.interceptTargetId.toShort.toBytes
-
-  private def shipChangeNeutronium(ship: OwnShip): TrnRecord =
-    shipCommand(11, ship.id) ++ ship.minerals.neutronium.toShort.toBytes
-
-  private def shipChangeTritanium(ship: OwnShip): TrnRecord =
-    shipCommand(12, ship.id) ++ ship.minerals.tritanium.toShort.toBytes
-
-  private def shipChangeDuranium(ship: OwnShip): TrnRecord =
-    shipCommand(13, ship.id) ++ ship.minerals.duranium.toShort.toBytes
-
-  private def shipChangeMolybdenium(ship: OwnShip): TrnRecord =
-    shipCommand(14, ship.id) ++ ship.minerals.molybdenium.toShort.toBytes
-
-  private def shipChangeSupplies(ship: OwnShip): TrnRecord =
-    shipCommand(15, ship.id) ++ ship.supplies.toShort.toBytes
-
-  private def shipChangeColonists(ship: OwnShip): TrnRecord =
-    shipCommand(16, ship.id) ++ ship.colonistClans.toShort.toBytes
-
-  private def shipChangeTorpedoes(ship: OwnShip): TrnRecord =
-    shipCommand(17, ship.id) ++ ship.torpsFightersLoaded.toShort.toBytes
-
-  private def shipChangeMoney(ship: OwnShip): TrnRecord =
-    shipCommand(18, ship.id) ++ ship.money.toShort.toBytes
-
-  private def planetChangeFcode(planet: Planet): TrnRecord =
-    planetaryCommand(21, planet.id) ++ planet.fcode.value.toBytes(3)
-
-  private def planetBuildMines(planet: Planet): TrnRecord =
-    planetaryCommand(22, planet.id) ++ planet.minesNumber.toShort.toBytes
-
-  private def planetBuildFactories(planet: Planet): TrnRecord =
-    planetaryCommand(23, planet.id) ++ planet.factoriesNumber.toShort.toBytes
-
-  private def planetBuildDefences(planet: Planet): TrnRecord =
-    planetaryCommand(24, planet.id) ++ planet.defencesNumber.toShort.toBytes
-
-  private def planetChangeNeutronium(planet: Planet): TrnRecord =
-    planetaryCommand(25, planet.id) ++ planet.surfaceMinerals.neutronium.toBytes
-
-  private def planetChangeTritanium(planet: Planet): TrnRecord =
-    planetaryCommand(26, planet.id) ++ planet.surfaceMinerals.tritanium.toBytes
-
-  private def planetChangeDuranium(planet: Planet): TrnRecord =
-    planetaryCommand(27, planet.id) ++ planet.surfaceMinerals.duranium.toBytes
-
-  private def planetChangeMolibdanium(planet: Planet): TrnRecord =
-    planetaryCommand(28, planet.id) ++ planet.surfaceMinerals.molybdenium.toBytes
-
-  private def planetChangeColonists(planet: Planet): TrnRecord =
-    planetaryCommand(29, planet.id) ++ planet.colonistClans.toBytes
-
-  private def planetChangeSupplies(planet: Planet): TrnRecord =
-    planetaryCommand(30, planet.id) ++ planet.supplies.toBytes
-
-  private def planetChangeMoney(planet: Planet): TrnRecord =
-    planetaryCommand(31, planet.id) ++ planet.money.toBytes
-
-  private def planetChangeColonistTax(planet: Planet): TrnRecord =
-    planetaryCommand(32, planet.id) ++ planet.colonistTax.toShort.toBytes
-
-  private def planetChangeNativeTax(planet: Planet): TrnRecord =
-    planetaryCommand(33, planet.id) ++ planet.nativeTax.toShort.toBytes
-
-  private def planetBuildStarbase(planet: Planet): TrnRecord =
-    planetaryCommand(34, planet.id)
-
   private def checkAndCreateCommand[TObject, T](initialState: TObject, stateAfterCommands: TObject)(valueExtractor: TObject => T, commandGenerator: TObject => TrnRecord): Option[TrnRecord] =
     if(valueExtractor(initialState) != valueExtractor(stateAfterCommands))
       Some(commandGenerator(stateAfterCommands))
     else None
 
+  private def recordFor[TObject, T](id: TObject => Short)(current: TObject, initial: TObject)(commandCode: Short, valueExtractor: TObject => T)(itemWriter: T => Iterable[Byte]): Option[TrnRecord] = {
+    if(valueExtractor(initial) != valueExtractor(current)) Some(
+      commandCode.toBytes ++ id(current).toBytes ++ itemWriter(valueExtractor(current))
+    ) else None
+  }
 
+  private def shipRecordFor[T] = recordFor[OwnShip, T](_.id.value.toShort) _
+  private def planetRecordFor[T] = recordFor[Planet, T](_.id.value.toShort) _
+  private def strarbaseRecordFor[T] = recordFor[Starbase, T](_.id.value.toShort) _
+
+  implicit val shortsWriter: Short => Iterable[Byte] = _.toBytes
+  implicit val intsWriter: Int => Iterable[Byte] = _.toBytes
+  implicit val fcodeWriter: Fcode => Iterable[Byte] = _.value.toBytes(3)
+  implicit val arrayShortsWriter: IndexedSeq[Short] => Iterable[Byte] = seq => seq.flatMap(_.toBytes)
 
   private def generateCommandsSection(commands: Iterable[PlayerCommand]): Iterable[TrnRecord] = {
-    //planetary commands
-    val planetaryCommands = game.turnInfo(game.lastTurn).stateAfterCommands.planets.values.toList.sortBy(_.id.value).flatMap { planet =>
-      val planetInitialState = game.turnInfo(game.lastTurn).initialState.planets(planet.id)
-      val planetCommandCreate = checkAndCreateCommand(planetInitialState, planet) _
+    val gameInitialState = game.turnInfo(game.lastTurn).initialState
+    val stateAfterCommands = game.turnInfo(game.lastTurn).stateAfterCommands
+
+    val planetaryCommands = stateAfterCommands.planets.values.toList.sortBy(_.id.value).flatMap { planet =>
+      val planetInitialState = gameInitialState.planets(planet.id)
+      def command[T](commandCode: Short, valueExtractor: Planet => T)(implicit itemWriter: T => Iterable[Byte]) = planetRecordFor(planetInitialState, planet)(commandCode, valueExtractor)(itemWriter)
       Iterable.empty[TrnRecord] ++
-      planetCommandCreate(_.fcode, planetChangeFcode) ++
-      planetCommandCreate(_.minesNumber, planetBuildMines) ++
-      planetCommandCreate(_.factoriesNumber, planetBuildFactories) ++
-      planetCommandCreate(_.defencesNumber, planetBuildDefences) ++
-      planetCommandCreate(_.surfaceMinerals.neutronium, planetChangeNeutronium) ++
-      planetCommandCreate(_.surfaceMinerals.tritanium, planetChangeTritanium) ++
-      planetCommandCreate(_.surfaceMinerals.duranium, planetChangeDuranium) ++
-      planetCommandCreate(_.surfaceMinerals.molybdenium, planetChangeMolibdanium) ++
-      planetCommandCreate(_.colonistClans, planetChangeColonists) ++
-      planetCommandCreate(_.supplies, planetChangeSupplies) ++
-      planetCommandCreate(_.money, planetChangeMoney) ++
-      planetCommandCreate(_.colonistTax, planetChangeColonistTax) ++
-      planetCommandCreate(_.nativeTax, planetChangeNativeTax) ++
-      planetCommandCreate(_.buildBase, planetBuildStarbase)
+      command(21, _.fcode) ++
+      command(22, _.minesNumber.toShort) ++
+      command(23, _.factoriesNumber.toShort) ++
+      command(24, _.defencesNumber.toShort) ++
+      command(25, _.surfaceMinerals.neutronium) ++
+      command(26, _.surfaceMinerals.tritanium) ++
+      command(27, _.surfaceMinerals.duranium) ++
+      command(28, _.surfaceMinerals.molybdenium) ++
+      command(29, _.colonistClans) ++
+      command(30, _.supplies) ++
+      command(31, _.money) ++
+      command(32, _.colonistTax.toShort) ++
+      command(33, _.nativeTax.toShort) ++
+      command(34, _.buildBase.toShort)
     }
-    val shipCommands = game.turnInfo(game.lastTurn).stateAfterCommands.ownShips.values.flatMap { ship =>
-      val shipInitialState = game.turnInfo(game.lastTurn).initialState.ownShips(ship.id)
-      val shipCommand = checkAndCreateCommand(shipInitialState, ship) _
+    val shipCommands = stateAfterCommands.ownShips.values.toList.sortBy(_.id.value).flatMap { ship =>
+      val shipInitialState = gameInitialState.ownShips(ship.id)
+      def command[T](commandCode: Short, valueExtractor: OwnShip => T)(implicit itemWriter: T => Iterable[Byte]) = shipRecordFor(shipInitialState, ship)(commandCode, valueExtractor)(itemWriter)
       Iterable.empty[TrnRecord] ++
-      shipCommand(_.fcode, shipChangeFcode) ++
-      shipCommand(_.warp, shipChangeSpeed) ++
-        (if(ship.xDistanceToWaypoint != shipInitialState.xDistanceToWaypoint || ship.yDistanceToWaypoint != shipInitialState.yDistanceToWaypoint)
-        Some(shipChangeWaypoint(ship)) else None) ++
-      shipCommand(_.mission, shipChangeMission) ++
-      shipCommand(_.primaryEnemy, shipChangePrimaryEnemy) ++
-      shipCommand(_.towShipId, shipTowShip) ++
-      shipCommand(_.name, shipChangeName) ++
-      shipCommand(_.transferToPlanet, shipBeamDownCargo) ++
-      shipCommand(_.transferToEnemyShip, shipTransferCargo) ++
-      shipCommand(_.interceptTargetId, shipIntercept) ++
-      shipCommand(_.minerals.neutronium, shipChangeNeutronium) ++
-      shipCommand(_.minerals.tritanium, shipChangeTritanium) ++
-      shipCommand(_.minerals.duranium, shipChangeDuranium) ++
-      shipCommand(_.minerals.molybdenium, shipChangeMolybdenium) ++
-      shipCommand(_.supplies, shipChangeSupplies) ++
-      shipCommand(_.colonistClans, shipChangeColonists) ++
-      shipCommand(_.torpsFightersLoaded, shipChangeTorpedoes) ++
-      shipCommand(_.money, shipChangeMoney)
+      command(1, _.fcode) ++
+      command(2, _.warp.toShort) ++
+      (if(ship.xDistanceToWaypoint != shipInitialState.xDistanceToWaypoint || ship.yDistanceToWaypoint != shipInitialState.yDistanceToWaypoint)
+        Some(3.toShort.toBytes ++ ship.id.value.toShort.toBytes ++ ship.xDistanceToWaypoint.toShort.toBytes ++ ship.yDistanceToWaypoint.toShort.toBytes)
+      else None) ++
+      command(4, _.mission.toShort) ++
+      command(5, _.primaryEnemy.toShort) ++
+      command(6, _.towShipId.toShort) ++
+      command(7, _.name)(_.toBytes(20)) ++
+      command(8, _.transferToPlanet)(t => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ t.targetId.value.toShort.toBytes) ++
+      command(9, _.transferToEnemyShip)(t => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ t.targetId.value.toShort.toBytes) ++
+      command(10, _.interceptTargetId.toShort) ++
+      command(11, _.minerals.neutronium.toShort) ++
+      command(12, _.minerals.tritanium.toShort) ++
+      command(13, _.minerals.duranium.toShort) ++
+      command(14, _.minerals.molybdenium.toShort) ++
+      command(15, _.supplies.toShort) ++
+      command(16, _.colonistClans.toShort) ++
+      command(17, _.torpsFightersLoaded.toShort) ++
+      command(18, _.money.toShort)
     }
 
-    val starbaseCommands = Iterable.empty[TrnRecord]
+    val starbaseCommands = stateAfterCommands.bases.values.toList.sortBy(_.id.value).flatMap { base =>
+      val baseInitialState = gameInitialState.bases(base.id)
+      def command[T](commandCode: Short, valueExtractor: Starbase => T)(implicit itemWriter: T => Iterable[Byte]) = strarbaseRecordFor(baseInitialState, base)(commandCode, valueExtractor)(itemWriter)
+      Iterable.empty[TrnRecord] ++
+      command(40, _.defences.toShort) ++
+      command(41, _.engineTech.toShort) ++
+      command(42, _.hullsTech.toShort) ++
+      command(43, _.beamTech.toShort) ++
+      command(44, _.storedEngines.map(_.toShort)) ++
+      (if(base.storedHulls != baseInitialState.storedHulls)
+        Some(45.toShort.toBytes ++ base.id.value.toShort.toBytes ++ game.specs.raceHulls.getRaceHullIds(game.playingRace).map(hullIdx => base.storedHulls(HullId(hullIdx))))
+        else None) ++
+      command(46, _.storedBeams.map(_.toShort)) ++
+      command(47, _.storedLaunchers.map(_.toShort)) ++
+      command(48, _.storedTorpedoes.map(_.toShort)) ++
+      command(49, _.fightersNumber.toShort) ++
+      command(50, _.actionedShipId.toShort) ++
+      command(51, _.shipAction.toShort) ++
+      command(52, _.primaryOrder.toShort) ++
+      //This is hack according to docs http://www.phost.de/~stefan/planets/filefmt.txt.gz
+      base.shipBeingBuilt.map( order =>
+        53.toShort.toBytes ++
+        base.id.value.toShort.toBytes ++
+        game.specs.raceHulls.availableHulls(game.playingRace.value - 1).map(idx => game.specs.hullSpecs(idx - 1)).indexWhere(_ == order.hull).toShort.toBytes ++
+        (order.engine.id.value).toShort.toBytes ++
+        order.beams.map(_.spec.id.value).getOrElse(0).toShort.toBytes ++
+        order.beams.map(_.count).getOrElse(0).toShort.toBytes ++
+        order.launchers.map(_.spec.id.value).getOrElse(0).toShort.toBytes ++
+        order.launchers.map(_.count).getOrElse(0).toShort.toBytes ++
+        0.toShort.toBytes
+      )
+      command(54, _.torpedoTech.toShort)
+    }
+
+    //TODO: Message commands
+    //TODO: Phost-special commands
+
 
     shipCommands ++ planetaryCommands ++ starbaseCommands
   }

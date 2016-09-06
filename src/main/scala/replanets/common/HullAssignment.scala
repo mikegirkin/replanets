@@ -7,8 +7,8 @@ import replanets.recipes.WORD
 case class HullAssignment(
   availableHulls: IndexedSeq[IndexedSeq[Short]]
 ) {
-  def getRaceHullIds(raceId: Int): IndexedSeq[Short] = {
-    availableHulls(raceId)
+  def getRaceHullIds(raceId: RaceId): IndexedSeq[Short] = {
+    availableHulls(raceId.value - 1)
   }
 }
 

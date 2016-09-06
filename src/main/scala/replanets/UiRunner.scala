@@ -41,8 +41,14 @@ object UiRunner extends JFXApp {
   stage = new MainStage(game, viewModel)
 
   override def main(args: Array[String]): Unit = {
-    if(args.length == 1 && args(0) == "console")
-      ConsoleRunner.run
+    if(args.length > 0 && args(0) == "console") {
+      if(args(1) == "untrn") {
+        ConsoleRunner.untrn(args(2))
+      } else if(args(1) == "racehulls") {
+        ConsoleRunner.raceHulls(args(2).toInt, args(3))
+      }
+
+    }
     else super.main(args)
   }
 

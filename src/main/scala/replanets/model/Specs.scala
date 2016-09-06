@@ -16,7 +16,7 @@ case class Specs(
   hullFunctions: Map[HullId, Set[HullFunc]]
 ) {
   def getRaceHulls(race: RaceId): IndexedSeq[HullspecItem] = {
-    val hullIndexes = raceHulls.getRaceHullIds(race.value - 1)
+    val hullIndexes = raceHulls.getRaceHullIds(race)
     hullIndexes.map(idx => hullSpecs(idx - 1))
   }
 
