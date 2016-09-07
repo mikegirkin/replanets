@@ -12,7 +12,7 @@ class TurnInfoSpec extends WordSpec with Matchers {
     val directory = Paths.get("./testfiles/testgame-4")
     val path = directory.resolve("db/38/player4.rst")
     val specs = Specs.fromDirectory(directory)(THostFormulas, new Missions(RaceId(4), THost))
-    val rst = RstFileReader.read(path, RaceId(4), specs)
+    val rst = RstFileReader.read(path, specs)
   }
 
   "set planet fcode command" should {

@@ -32,7 +32,7 @@ object LauncherId {
   val Nothing = LauncherId(0)
 }
 
-case class RaceId(value: Int)
-case class TurnId(value: Int) extends OneBasedIndex
-case class PlanetId(value: Int) extends OneBasedIndex
-case class ShipId(value: Int) extends OneBasedIndex
+case class RaceId(value: Int) extends Index
+case class TurnId(value: Int) extends Index
+case class PlanetId(value: Int) extends Index
+case class ShipId(value: Int) extends Index

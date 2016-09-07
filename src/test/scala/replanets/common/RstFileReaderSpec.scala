@@ -11,7 +11,7 @@ class RstFileReaderSpec extends WordSpec with Matchers {
 
       val specs = Specs.fromDirectory(Paths.get("./testfiles/testgame-4/"))(THostFormulas, new Missions(RaceId(4), THost))
       val path = Paths.get("./testfiles/testgame-4/db/38/player4.rst")
-      val rst = RstFileReader.read(path, RaceId(4), specs)
+      val rst = RstFileReader.read(path, specs)
 
       val base = rst.bases(PlanetId(16))
       val klingonHulls = specs.getRaceHulls(RaceId(4))
@@ -50,7 +50,7 @@ class RstFileReaderSpec extends WordSpec with Matchers {
   "Can read dos-style RST" in {
     val specs = Specs.fromDirectory(Paths.get("./testfiles/testgame-10/"))(PHostFormulas, new Missions(RaceId(10), PHost4))
     val path = Paths.get("./testfiles/testgame-10/db/1/player10.rst")
-    val rst = RstFileReader.read(path, RaceId(10), specs)
+    val rst = RstFileReader.read(path, specs)
 
     rst.generalInfo.turnNumber should be(1)
   }

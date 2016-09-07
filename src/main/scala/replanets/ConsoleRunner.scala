@@ -226,4 +226,11 @@ object ConsoleRunner {
       println(s"${idx + 1}: ${specs.hullSpecs(hullId - 1)}")
     }
   }
+
+  def rstBases(filename: String, specsDir: String) = {
+    val specs = Specs.fromDirectory(Paths.get(specsDir))(PHostFormulas, new Missions(RaceId(4), PHost4))
+    val rst = RstFileReader.read(Paths.get(filename), specs)
+
+    rst.bases.foreach(b => println(b))
+  }
 }

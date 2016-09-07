@@ -165,7 +165,7 @@ class TrnWriter(game: Game) {
       command(18, _.money.toShort)
     }
 
-    val starbaseCommands = stateAfterCommands.bases.values.toList.sortBy(_.id.value).flatMap { base =>
+    val starbaseCommands: Iterable[TrnRecord] = stateAfterCommands.bases.values.toList.sortBy(_.id.value).flatMap { base =>
       val baseInitialState = gameInitialState.bases(base.id)
       def command[T](commandCode: Short, valueExtractor: Starbase => T)(implicit itemWriter: T => Iterable[Byte]) = strarbaseRecordFor(baseInitialState, base)(commandCode, valueExtractor)(itemWriter)
       Iterable.empty[TrnRecord] ++
@@ -175,7 +175,10 @@ class TrnWriter(game: Game) {
       command(43, _.beamTech.toShort) ++
       command(44, _.storedEngines.map(_.toShort)) ++
       (if(base.storedHulls != baseInitialState.storedHulls)
-        Some(45.toShort.toBytes ++ base.id.value.toShort.toBytes ++ game.specs.raceHulls.getRaceHullIds(game.playingRace).map(hullIdx => base.storedHulls(HullId(hullIdx))))
+        Some(
+          45.toShort.toBytes ++
+          base.id.value.toShort.toBytes ++
+          game.specs.raceHulls.getRaceHullIds(game.playingRace).flatMap(hullIdx => base.storedHulls(HullId(hullIdx)).toShort.toBytes))
         else None) ++
       command(46, _.storedBeams.map(_.toShort)) ++
       command(47, _.storedLaunchers.map(_.toShort)) ++
@@ -188,14 +191,14 @@ class TrnWriter(game: Game) {
       base.shipBeingBuilt.map( order =>
         53.toShort.toBytes ++
         base.id.value.toShort.toBytes ++
-        game.specs.raceHulls.availableHulls(game.playingRace.value - 1).map(idx => game.specs.hullSpecs(idx - 1)).indexWhere(_ == order.hull).toShort.toBytes ++
-        (order.engine.id.value).toShort.toBytes ++
+        (game.specs.raceHulls.availableHulls(game.playingRace.value - 1).map(idx => game.specs.hullSpecs(idx - 1)).indexWhere(_ == order.hull) + 1).toShort.toBytes ++
+        order.engine.id.value.toShort.toBytes ++
         order.beams.map(_.spec.id.value).getOrElse(0).toShort.toBytes ++
         order.beams.map(_.count).getOrElse(0).toShort.toBytes ++
         order.launchers.map(_.spec.id.value).getOrElse(0).toShort.toBytes ++
         order.launchers.map(_.count).getOrElse(0).toShort.toBytes ++
         0.toShort.toBytes
-      )
+      ) ++
       command(54, _.torpedoTech.toShort)
     }
 

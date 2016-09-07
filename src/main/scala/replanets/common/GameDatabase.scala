@@ -47,7 +47,7 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
       filesInTurnDirectory.filter { file =>
         file.getFileName.toString.toLowerCase.endsWith("rst")
       }.map { file =>
-        val rst = RstFileReader.read(file, playingRace, specs)
+        val rst = RstFileReader.read(file, specs)
         (rst.generalInfo.turnNumber.toInt, rst.generalInfo.playerId.toInt, rst)
       }
     }

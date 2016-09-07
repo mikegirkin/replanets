@@ -46,6 +46,8 @@ object UiRunner extends JFXApp {
         ConsoleRunner.untrn(args(2))
       } else if(args(1) == "racehulls") {
         ConsoleRunner.raceHulls(args(2).toInt, args(3))
+      } else if(args(1) == "unrst") {
+        if(args(2) == "bases") ConsoleRunner.rstBases(args(3), args(4))
       }
 
     }

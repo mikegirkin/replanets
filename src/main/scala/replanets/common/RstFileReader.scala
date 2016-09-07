@@ -24,7 +24,7 @@ case class ServerData(
 
 object RstFileReader {
 
-  def read(file: Path, race: RaceId, specs: Specs) = {
+  def read(file: Path, specs: Specs) = {
     val buffer = Files.readAllBytes(file)
     val it = buffer.iterator
 
@@ -34,6 +34,10 @@ object RstFileReader {
     val subversion = SpacePaddedString(2).read(it)
     val winplanDataPosition = DWORD.read(it)
     val leechPosition = DWORD.read(it)
+
+    val generalInfo = GeneralDataReader.read(buffer.iterator.drop(pointers(6) - 1))
+
+    val race = RaceId(generalInfo.playerId)
 
     val anotherSignature = {
       val it = buffer.iterator.drop(winplanDataPosition - 1).drop(500 * 8 + 600 + 50 * 4 + 682 + 7800)
@@ -74,7 +78,6 @@ object RstFileReader {
 
     val messages = MessagesReader.read(buffer, pointers(4) - 1)
     val shipCoords = ShipCoordsReader.read(buffer.iterator.drop(pointers(5) - 1))
-    val generalInfo = GeneralDataReader.read(buffer.iterator.drop(pointers(6) - 1))
     //TODO: vcrs
 
     val mineFields = if(isWinplan) MineFieldsSectionReader.read(buffer.iterator.drop(winplanDataPosition - 1)) else IndexedSeq()
