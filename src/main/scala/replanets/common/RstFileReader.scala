@@ -129,8 +129,8 @@ object RstFileReader {
           sr.name,
           Minerals(sr.neutronium, sr.tritanium, sr.duranium, sr.molybdenium),
           sr.supplies,
-          sr.transferToPlanet,
-          sr.transferToEnemyShip,
+          if(sr.transferToPlanet.targetId.value != 0) Some(sr.transferToPlanet) else None,
+          if(sr.transferToEnemyShip.targetId.value != 0) Some(sr.transferToEnemyShip) else None,
           sr.interceptTargetId,
           sr.money
         )

@@ -40,7 +40,6 @@ object PlanetsWriter {
 }
 
 import replanets.model.trn.PlanetsWriter._
-import NumberExtensions._
 
 class TrnWriter(game: Game) {
   import ByteExtensions._
@@ -152,8 +151,8 @@ class TrnWriter(game: Game) {
       command(5, _.primaryEnemy.toShort) ++
       command(6, _.towShipId.toShort) ++
       command(7, _.name)(_.toBytes(20)) ++
-      command(8, _.transferToPlanet)(t => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ t.targetId.value.toShort.toBytes) ++
-      command(9, _.transferToEnemyShip)(t => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ t.targetId.value.toShort.toBytes) ++
+      command(8, _.transferToPlanet)(t => t.map(to => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ to.targetId.value.toShort.toBytes).getOrElse(Iterable.empty)) ++
+      command(9, _.transferToEnemyShip)(t => t.map(to => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ to.targetId.value.toShort.toBytes).getOrElse(Iterable.empty)) ++
       command(10, _.interceptTargetId.toShort) ++
       command(11, _.minerals.neutronium.toShort) ++
       command(12, _.minerals.tritanium.toShort) ++

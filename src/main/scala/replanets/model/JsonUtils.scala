@@ -34,7 +34,10 @@ object JsonUtils {
   //ships
   val setShipFcodeFormat = format[SetShipFcode]
   val setShipWarpFormat = format[SetShipWarp]
-  val shipToPlanetTransferFormat = format[ShipToPlanetTransfer]
+  val shipToOwnPlanetTransferFormat = format[ShipToOwnPlanetTransfer]
+  val shipToOtherPlanetTransferFormat = format[ShipToOtherPlanetTransfer]
+  val shipToOwnShipTransferFormat = format[ShipToOwnShipTransfer]
+  val shipToOtherShipTransferFormat = format[ShipToOtherShipTransfer]
   //bases
   val buildShipFormat = format[StartShipConstruction]
   val stopShipConstructionFormat = format[StopShipConstruction]
@@ -49,10 +52,13 @@ object JsonUtils {
 
   val playerCommandWrites = Writes[PlayerCommand] { cmd =>
     val typeValue = JsString(cmd.getClass.getSimpleName)
-    val value= cmd match {
+    val value = cmd match {
       case x: SetShipFcode => toJson(x)(setShipFcodeFormat)
       case x: SetShipWarp => toJson(x)(setShipWarpFormat)
-      case x: ShipToPlanetTransfer => toJson(x)(shipToPlanetTransferFormat)
+      case x: ShipToOwnPlanetTransfer => toJson(x)(shipToOwnPlanetTransferFormat)
+      case x: ShipToOtherPlanetTransfer => toJson(x)(shipToOtherPlanetTransferFormat)
+      case x: ShipToOwnShipTransfer => toJson(x)(shipToOwnShipTransferFormat)
+      case x: ShipToOtherShipTransfer => toJson(x)(shipToOtherShipTransferFormat)
       case x: StartShipConstruction => toJson(x)(buildShipFormat)
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
       case x: ChangeBasePrimaryOrder => toJson(x)(changeBasePrimaryOrderFormat)
@@ -72,7 +78,10 @@ object JsonUtils {
   val readers = Map[String, (JsLookupResult) => JsResult[PlayerCommand]](
     classOf[SetShipFcode].getSimpleName -> { _.validate[SetShipFcode](setShipFcodeFormat) },
     classOf[SetShipWarp].getSimpleName -> { _.validate[SetShipWarp](setShipWarpFormat) },
-    classOf[ShipToPlanetTransfer].getSimpleName -> { _.validate[ShipToPlanetTransfer](shipToPlanetTransferFormat) },
+    classOf[ShipToOwnPlanetTransfer].getSimpleName -> { _.validate[ShipToOwnPlanetTransfer](shipToOwnPlanetTransferFormat) },
+    classOf[ShipToOtherPlanetTransfer].getSimpleName -> { _.validate[ShipToOtherPlanetTransfer](shipToOtherPlanetTransferFormat) },
+    classOf[ShipToOwnShipTransfer].getSimpleName -> { _.validate[ShipToOwnShipTransfer](shipToOwnShipTransferFormat) },
+    classOf[ShipToOtherShipTransfer].getSimpleName -> { _.validate[ShipToOtherShipTransfer](shipToOtherShipTransferFormat) },
     classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
     classOf[ChangeBasePrimaryOrder].getSimpleName -> { _.validate[ChangeBasePrimaryOrder](changeBasePrimaryOrderFormat) },

@@ -119,10 +119,10 @@
         <Label fx:id="lblClans" text="???" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
         <Label text="\$$$:" GridPane.rowIndex="6"/>
         <Label fx:id="lblMoney" text="???" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-        <Label text="Trp:" GridPane.rowIndex="7"/>
+        <Label fx:id="lblTorpsHeader" text="???" GridPane.rowIndex="7"/>
         <Label fx:id="lblTorps" text="???" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
     </GridPane>
-    <Button styleClass="commandButton">
+    <Button fx:id="btnTransfer" styleClass="commandButton" onAction="#handleShipShipTransferButton">
         <graphic>
             <TextFlow>
                 <Text text="T" styleClass="actionSymbol"/>

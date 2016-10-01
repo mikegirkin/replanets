@@ -1,0 +1,39 @@
+{
+  "version" : "v1",
+  "commands" : [ {
+    "type" : "ShipToOtherPlanetTransfer",
+    "value" : {
+      "shipId" : 132,
+      "planetId" : 213,
+      "transfer" : {
+        "neu" : 2,
+        "tri" : 0,
+        "dur" : 0,
+        "mol" : 0,
+        "supplies" : 0,
+        "colonists" : 0,
+        "money" : 0,
+        "torps" : 0,
+        "fighters" : 0
+      }
+    }
+  }, {
+    "type" : "ShipToOtherShipTransfer",
+    "value" : {
+      "sourceId" : 132,
+      "targetId" : 93,
+      "transfer" : {
+        "neu" : 6,
+        "tri" : 0,
+        "dur" : 0,
+        "mol" : 0,
+        "supplies" : 0,
+        "colonists" : 0,
+        "money" : 0,
+        "torps" : 0,
+        "fighters" : 0
+      }
+    }
+  } ],
+  "additionalData" : [ ]
+}

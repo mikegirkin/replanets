@@ -1,7 +1,7 @@
 package replanets.ui
 
 import replanets.common._
-import replanets.model.{Game, PlanetMapData}
+import replanets.model.Game
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
@@ -14,10 +14,10 @@ import scalafx.scene.paint.Color
 class MapView(game: Game, viewModel: ViewModel) extends Pane {
   self: Node =>
 
-  import GraphicContextExtensions._
   import DoubleExtensions._
+  import GraphicContextExtensions._
 
-  val ownShipColor = Color.MediumPurple
+  val ownShipColor = Color.LimeGreen
   val enemyShipColor = Color.Red
   val mixedShipsColor = Color.Yellow
   val contactShipColor = Color.OrangeRed
@@ -26,6 +26,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
   val ownMineFieldColor = Color.Aqua
 
   val unscannedPlanetColor = Color.LightGray
+  val explosionColor = Color.Purple
 
   var scale = 0.4
   var offsetX = -350d
@@ -34,9 +35,9 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
   def planetDiameter: Double =
     if (scale < 0.2) 2
-    else if(scale < 0.4) 3
-    else if (scale < 0.7) 5
-    else 6
+    else if(scale < 0.6) 3
+    else if (scale < 1.4) 5
+    else 7
 
   def shipCircleDiameter: Double = planetDiameter + 4
   def shipCircleThickness: Double = 1
@@ -203,7 +204,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val baseInfo = planetInfo.flatMap { p => currentTurnServerData.bases.get(p.id) }
 
       val coord = canvasCoord(planetCoords)
-      gc.setFill(planetColor(planetInfo.map(_.ownerId), baseInfo.isDefined))
+      gc.setFill(planetColor(planetInfo.map(_.owner), baseInfo.isDefined))
       gc.fillOval(coord.x - planetDiameter/2, coord.y - planetDiameter/2, planetDiameter, planetDiameter)
     }
   }
@@ -217,13 +218,13 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
 
     shipsByCoords.foreach { case (coords, localShips) =>
       if(game.specs.map.planets.exists(_.coords == coords)) {
-        drawLocalShipsOrbitingPlanet(coords, localShips.toSeq)
+        drawShipsOrbitingPlanets(coords, localShips.toSeq)
       } else {
-        drawLocalShipsNotOrbitingPlanet(coords, localShips.toSeq)
+        drawShipsNotOrbitingPlanet(coords, localShips.toSeq)
       }
     }
 
-    def drawLocalShipsOrbitingPlanet(coords: IntCoords, ships: Seq[Ship]) = {
+    def drawShipsOrbitingPlanets(coords: IntCoords, ships: Seq[Ship]) = {
       val beginCoords = canvasCoord(coords)
       for(
         ship <- ships;
@@ -237,7 +238,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       gc.strokeCircle(beginCoords, shipCircleDiameter)
     }
 
-    def drawLocalShipsNotOrbitingPlanet(coords: IntCoords, ships: Seq[Ship]) = {
+    def drawShipsNotOrbitingPlanet(coords: IntCoords, ships: Seq[Ship]) = {
       val beginCoords = canvasCoord(coords)
       for(
         ship <- ships;
@@ -293,7 +294,7 @@ class MapView(game: Game, viewModel: ViewModel) extends Pane {
       val coords = canvasCoord(Coords(e.x, e.y))
       val size = planetDiameter / 2 + 1
 
-      gc.setStroke(ownShipColor)
+      gc.setStroke(explosionColor)
       gc.strokeLine(coords.x - size, coords.y - size, coords.x + size, coords.y + size)
       gc.strokeLine(coords.x + size, coords.y - size, coords.x - size, coords.y + size)
     }

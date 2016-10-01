@@ -1,5 +1,6 @@
 package replanets.common
 
+import replanets.model.{Cargo, CargoHold}
 import replanets.recipes.{SpacePaddedString, WORD}
 
 case class TransferToPlanet(
@@ -10,7 +11,21 @@ case class TransferToPlanet(
   colonists: Int,
   supplies: Int,
   targetId: PlanetId
-)
+) {
+  def asCargoHold = {
+    CargoHold(
+      Int.MaxValue, Int.MaxValue, Int.MaxValue,
+      Cargo(
+        neutronuim,
+        tritanium,
+        duranium,
+        molybdenium,
+        supplies,
+        colonists
+      )
+    )
+  }
+}
 
 case class TransferToEnemyShip(
   neutronuim: Int,
@@ -20,7 +35,21 @@ case class TransferToEnemyShip(
   colonists: Int,
   supplies: Int,
   targetId: ShipId
-)
+) {
+  def asCargoHold = {
+    CargoHold(
+      Int.MaxValue, Int.MaxValue, 10000,
+      Cargo(
+        neutronuim,
+        tritanium,
+        duranium,
+        molybdenium,
+        supplies,
+        colonists
+      )
+    )
+  }
+}
 
 case class ShipRecord(
   shipId: Short,

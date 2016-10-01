@@ -1,6 +1,6 @@
 package replanets.ui.actions
 
-import replanets.common.{Fcode, OwnShip, Planet}
+import replanets.common._
 import replanets.model._
 import replanets.model.commands._
 import replanets.ui.MapObject
@@ -52,11 +52,35 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forShip(ship))
   }
 
-  def transferShipToPlanet(ship: OwnShip, planet: Planet, transfer: Cargo) = {
-    val command = ShipToPlanetTransfer(ship.id, planet.id, transfer)
+  def shipToOwnPlanetTransfer(ship: OwnShip, planet: Planet, transfer: Cargo) = {
+    val command = ShipToOwnPlanetTransfer(ship.id, planet.id, transfer)
     game.addCommand(command)
     viewModel.objectChanged.fire(MapObject.forShip(ship))
     viewModel.objectChanged.fire(MapObject.forPlanet(planet))
+  }
+
+  def shipToOtherPlanetTransfer(ship: OwnShip, planetId: PlanetId, transfer: Cargo) = {
+    val command = ShipToOtherPlanetTransfer(ship.id, planetId, transfer)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    val planetMapInfo = game.specs.map.planets(planetId.value - 1)
+    viewModel.objectChanged.fire(MapObject.Planet(planetId.value, planetMapInfo.coords, planetMapInfo.name))
+  }
+
+  def shipToOwnShipTransfer(source: OwnShip, target: OwnShip, transfer: Cargo) = {
+    val command = ShipToOwnShipTransfer(source.id, target.id, transfer)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(source))
+    viewModel.objectChanged.fire(MapObject.forShip(target))
+  }
+
+  def shipToOtherShipTransfer(source: OwnShip, targetId: ShipId, transfer: Cargo) = {
+    val command = ShipToOtherShipTransfer(source.id, targetId, transfer)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(source))
+    game.turnInfo(viewModel.turnShown).stateAfterCommands.ships.get(targetId).foreach { x =>
+      viewModel.objectChanged.fire(MapObject.forShip(x))
+    }
   }
 
   //planets

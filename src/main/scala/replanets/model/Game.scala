@@ -47,7 +47,7 @@ object Game {
     val races = RacenmItem.fromFile(getFromResourcesIfInexistent(gameDirectory.resolve(Constants.racenmFilename), s"/files/${Constants.racenmFilename}"))
 
     //TODO: Figure out a way to detect hosttype
-    val hostType: HostType = THost
+    val hostType: HostType = PHost4
 
     val formulas: Formulas = hostType match {
       case THost => THostFormulas

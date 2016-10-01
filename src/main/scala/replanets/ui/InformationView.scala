@@ -1,8 +1,9 @@
 package replanets.ui
 
 import replanets.common.{ExplosionRecord, _}
-import replanets.model.{Game}
+import replanets.model.Game
 import replanets.ui.actions.Actions
+import replanets.ui.controls.ObjectsListView
 import replanets.ui.viewmodels.ViewModel
 
 import scala.reflect.runtime.universe._
@@ -18,11 +19,6 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
 
   styleClass = Seq("informationView")
 
-  val defaultColor = Color.LightGray
-  val ownShipColor = Color.Cyan
-  val enemyShipColor = Color.Red
-  val mineFieldColor = Color.MediumPurple
-
   minWidth = 275
   maxWidth = 275
 
@@ -30,32 +26,9 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     minHeight = 450
   }
 
-  val objectListView = new ListView[MapObject] {
-    maxHeight = Double.MaxValue
-    minHeight = 100
-    vgrow = Priority.Always
-    cellFactory = { _ =>
-      new ListCell[MapObject] {
-        styleClass = Seq("objectsListCell")
-        item.onChange { (_, _, item) =>
-          if(item == null) text = null
-          else {
-            val color = item match {
-              case _ : MapObject.OwnShip => ownShipColor
-              case _ : MapObject.Target => enemyShipColor
-              case _ : MapObject.Minefield => mineFieldColor
-              case _ => defaultColor
-            }
-            textFill = color
-            text = item.displayName
-          }
-        }
-        onMouseClicked = (e: MouseEvent) => {
-          if(item.value != null) viewModel.selectedObject = Some(this.item.value)
-        }
-      }
-    }
-  }
+  val objectListView = new ObjectsListView(
+    obj => viewModel.selectedObject = Some(obj)
+  )
 
   children = Seq(
     objectDetailsView,

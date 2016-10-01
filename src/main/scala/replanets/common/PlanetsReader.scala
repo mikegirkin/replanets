@@ -4,7 +4,7 @@ import replanets.model.{Cargo, CargoHold, ClusterMap, PlanetMapData}
 import replanets.recipes._
 
 case class Planet(
-  ownerId: RaceId,
+  owner: RaceId,
   id: PlanetId,
   mapData: PlanetMapData,
   fcode: Fcode,

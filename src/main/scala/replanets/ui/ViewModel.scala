@@ -2,7 +2,7 @@ package replanets.ui
 
 import replanets.common._
 import replanets.model
-import replanets.model.Game
+import replanets.model.{Game, TurnInfo}
 
 case class Coords(x: Double, y: Double) {
   def shift(dx: Double, dy: Double) = {
@@ -18,9 +18,9 @@ trait MapObject {
 
 object MapObject {
 
-  case class OwnShip(id: Int, coords: IntCoords, displayName: String) extends MapObject
-  case class Target(id: Int, coords: IntCoords, displayName: String) extends MapObject
-  case class Contact(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class OwnShip(id: Int, coords: IntCoords, displayName: String, ship: replanets.common.OwnShip) extends MapObject
+  case class Target(id: Int, coords: IntCoords, displayName: String, target: replanets.common.Target) extends MapObject
+  case class Contact(id: Int, coords: IntCoords, displayName: String, contact: replanets.common.Contact) extends MapObject
   case class Planet(id: Int, coords: IntCoords, displayName: String) extends MapObject
   case class Starbase(id: Int, coords: IntCoords, displayName: String) extends MapObject
   case class Minefield(id: Int, coords: IntCoords, displayName: String) extends MapObject
@@ -30,9 +30,9 @@ object MapObject {
 
   def forShip(ship: Ship): MapObject = {
     ship match {
-      case x: replanets.common.OwnShip => MapObject.OwnShip(ship.id.value, ship.coords, x.name)
-      case x: replanets.common.Target => MapObject.Target(ship.id.value, ship.coords, x.hull.name)
-      case x: replanets.common.Contact => MapObject.Contact(ship.id.value, ship.coords, s"Ship ${ship.id}")
+      case x: replanets.common.OwnShip => MapObject.OwnShip(ship.id.value, ship.coords, x.name, x)
+      case x: replanets.common.Target => MapObject.Target(ship.id.value, ship.coords, x.hull.name, x)
+      case x: replanets.common.Contact => MapObject.Contact(ship.id.value, ship.coords, s"Ship ${ship.id}", x)
     }
   }
 
@@ -66,9 +66,7 @@ object MapObject {
 
   def findAtCoords(game: Game, turn: TurnId)(coords: IntCoords): IndexedSeq[MapObject] = {
     //ships
-    val ships = game.turnSeverData(turn).ships.values
-      .filter(ship => ship.coords == coords)
-      .map { ship => forShip(ship) }
+    val ships = shipsAtCoords(game, turn)(coords)
     //planets
     val planets = game.specs.map.planets
       .find(p => p.coords == coords)
@@ -94,6 +92,13 @@ object MapObject {
 
     planets ++ bases ++ ships ++ mineFields ++ explosions ++ ionStorms
   }
+
+  def shipsAtCoords(game: Game, turn: TurnId)(coords: IntCoords): Iterable[MapObject] = {
+    game.turnSeverData(turn).ships.values
+      .filter(ship => ship.coords == coords)
+      .map { ship => forShip(ship) }
+  }
+
 }
 
 

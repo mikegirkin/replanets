@@ -7,7 +7,7 @@ import replanets.model.commands.SetPlanetFcode
 class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   val planetRecord = game.turnInfo(turn).stateAfterCommands.planets(planetId)
 
-  def ownerId: Short = planetRecord.ownerId.value.toShort
+  def ownerId: Short = planetRecord.owner.value.toShort
 
   def fcode: Fcode = planetRecord.fcode
   def minesNumber = planetRecord.minesNumber

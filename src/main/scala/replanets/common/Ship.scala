@@ -70,8 +70,8 @@ case class OwnShip(
   name: String,
   minerals: Minerals,
   supplies: Int,
-  transferToPlanet: TransferToPlanet,
-  transferToEnemyShip: TransferToEnemyShip,
+  transferToPlanet: Option[TransferToPlanet],
+  transferToEnemyShip: Option[TransferToEnemyShip],
   interceptTargetId: Short,
   money: Int
 ) extends Ship {
@@ -96,4 +96,7 @@ case class OwnShip(
       torpsFightersLoaded
     )
   )
+
+  def isCarrier = fighterBays > 0
+  def isLauncher = numberOfTorpLaunchers > 0 && torpsType.isDefined
 }

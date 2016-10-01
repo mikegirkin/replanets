@@ -1,5 +1,7 @@
 package replanets.model
 
+import replanets.common.Minerals
+
 case class Cargo(
   neu: Int = 0,
   tri: Int = 0,
@@ -26,4 +28,19 @@ case class Cargo(
       fighters = fighters - other.fighters
     )
   }
+
+  def plus(other: Cargo): Cargo = {
+    this.minus(Cargo.zero.minus(other))
+  }
+
+  def minerals = Minerals(
+    neu,
+    tri,
+    dur,
+    mol
+  )
+}
+
+object Cargo {
+  def zero = Cargo()
 }

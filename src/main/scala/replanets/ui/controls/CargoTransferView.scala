@@ -1,6 +1,10 @@
 package replanets.ui.controls
 
-import replanets.model.{Cargo, CargoHold}
+import replanets.common._
+import replanets.model.{Cargo, CargoHold, Game}
+import replanets.ui.MapObject
+import replanets.ui.actions.Actions
+import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
 import scalafx.beans.property.ObjectProperty
@@ -8,11 +12,22 @@ import scalafx.geometry.{HPos, Pos}
 import scalafx.scene.control.Label
 import scalafx.scene.layout.{ColumnConstraints, GridPane, VBox}
 
-abstract class CargoTransferView(
-  source: ObjectProperty[CargoHold],
-  destination: ObjectProperty[CargoHold],
-  onChange: Cargo => Unit
+class CargoTransferView(
+  game: Game,
+  viewModel: ViewModel,
+  actions: Actions
 ) extends VBox {
+
+  private val sourceCargo = ObjectProperty[CargoHold](CargoHold.zero)
+  private val destinationCargo = ObjectProperty[CargoHold](CargoHold.zero)
+  private var isSource: MapObject => Boolean = (_) => false
+  private var isDestination: MapObject => Boolean = (_) => false
+  private var onSourceUpdated: () => Unit = () => {}
+  private var onDestinationUpdated: () => Unit = () => {}
+
+  private var onChange: Cargo => Unit = (_) => Unit
+
+  viewModel.objectChanged += onObjectChanged
 
   styleClass = Seq("popupOuter")
 
@@ -42,17 +57,17 @@ abstract class CargoTransferView(
 
   private def boundedDeltaForCargo(valueExtracor: Cargo => Int)(delta: Int): Int = {
     if(delta < 0) {
-      -Seq(source.value.cargoCapacityLeft, valueExtracor(destination.value.cargo), -delta, source.value.maxIndividual - valueExtracor(source.value.cargo)).min
+      -Seq(sourceCargo.value.cargoCapacityLeft, valueExtracor(destinationCargo.value.cargo), -delta, sourceCargo.value.maxIndividual - valueExtracor(sourceCargo.value.cargo)).min
     } else {
-      Seq(destination.value.cargoCapacityLeft, valueExtracor(source.value.cargo), delta, destination.value.maxIndividual - valueExtracor(destination.value.cargo)).min
+      Seq(destinationCargo.value.cargoCapacityLeft, valueExtracor(sourceCargo.value.cargo), delta, destinationCargo.value.maxIndividual - valueExtracor(destinationCargo.value.cargo)).min
     }
   }
 
   val spinnerNeu = transferSpinnerButtons(delta => {
     val boundedDelta = if (delta < 0) {
-      -Seq(source.value.neuCapacityLeft, destination.value.cargo.neu, -delta, source.value.maxIndividual - source.value.cargo.neu).min
+      -Seq(sourceCargo.value.neuCapacityLeft, destinationCargo.value.cargo.neu, -delta, sourceCargo.value.maxIndividual - sourceCargo.value.cargo.neu).min
     } else {
-      Seq(destination.value.neuCapacityLeft, source.value.cargo.neu, delta, destination.value.maxIndividual - destination.value.cargo.neu).min
+      Seq(destinationCargo.value.neuCapacityLeft, sourceCargo.value.cargo.neu, delta, destinationCargo.value.maxIndividual - destinationCargo.value.cargo.neu).min
     }
     Cargo(neu = boundedDelta)
   })
@@ -67,9 +82,9 @@ abstract class CargoTransferView(
 
   val spinnerMoney = transferSpinnerButtons(delta => {
     val boundedDelta = if(delta < 0) {
-      -Seq(destination.value.cargo.money, -delta, source.value.maxIndividual - source.value.cargo.money).min
+      -Seq(destinationCargo.value.cargo.money, -delta, sourceCargo.value.maxIndividual - sourceCargo.value.cargo.money).min
     } else {
-      Seq(source.value.cargo.money, delta, destination.value.maxIndividual - destination.value.cargo.money).min
+      Seq(sourceCargo.value.cargo.money, delta, destinationCargo.value.maxIndividual - destinationCargo.value.cargo.money).min
     }
     Cargo(money = boundedDelta)
   })
@@ -134,11 +149,11 @@ abstract class CargoTransferView(
   }
 
   val lblTotalCargoLoaded = new Label {
-    text <== createStringBinding(() => s"${source.value.cargo.weight}", source)
+    text <== createStringBinding(() => s"${sourceCargo.value.cargo.weight}", sourceCargo)
   }
 
   val lblTotalCargoPossible = new Label {
-    text <== createStringBinding(() => source.value.cargoCapacityTotal.toString, source)
+    text <== createStringBinding(() => sourceCargo.value.cargoCapacityTotal.toString, sourceCargo)
   }
 
   children = Seq(
@@ -163,7 +178,104 @@ abstract class CargoTransferView(
   lblMoneyTarget.text <== bindToTarget(_.money)
   lblTorpsTarget.text <== bindToTarget(_.torps)
 
-  def setData(
+  private def isOwnShip(source: OwnShip)(mapObject: MapObject): Boolean = {
+    mapObject match {
+      case MapObject.OwnShip(id, _, _, _) => source.id.value == id
+      case _ => false
+    }
+  }
+
+  private def isPlanet(planet: Planet)(mapObject: MapObject): Boolean = {
+    hasPlanetId(planet.id)(mapObject)
+  }
+
+  private def hasPlanetId(planetId: PlanetId)(mapObject: MapObject): Boolean = {
+    mapObject match {
+      case MapObject.Planet(id, _, _) => planetId.value == id
+      case _ => false
+    }
+  }
+
+  private def isOtherShip(target: ShipId)(mapObject: MapObject): Boolean = {
+    mapObject match {
+      case MapObject.Target(id, _, _, _) => target.value == id
+      case _ => false
+    }
+  }
+
+  private def setData(source: OwnShip)(setDestination: => Unit) = {
+    this.isSource = isOwnShip(source) _
+    onSourceUpdated = () => {
+      val sourceAfterCommands = game.turnInfo(viewModel.turnShown).stateAfterCommands.ownShips(source.id)
+      sourceCargo.value = sourceAfterCommands.cargoHold
+    }
+    setDestination
+    onSourceUpdated()
+    onDestinationUpdated()
+  }
+
+  def setData(source: OwnShip, target: Planet): Unit = {
+    setData(source) {
+      this.isDestination = isPlanet(target) _
+      if(target.owner == source.owner) {
+        //From own ship to own planet
+        val base = game.turnInfo(viewModel.turnShown).stateAfterCommands.bases.get(target.id)
+        val torpsTransferAvailable = (
+          for (
+            tt <- source.torpsType;
+            b <- base
+          ) yield tt.techLevel <= b.torpedoTech
+        ).getOrElse(false)
+        val fightersTransferAvailable = base.isDefined && source.isCarrier
+        setTransferControlsVisibility(moneyTransferAvailable = true, torpsTransferAvailable, fightersTransferAvailable)
+        onDestinationUpdated = () => {
+          val planetAfterCommands = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(target.id)
+          destinationCargo.value = planetAfterCommands.cargoHold
+        }
+        onChange = transfer => actions.shipToOwnPlanetTransfer(source, target, transfer)
+      }
+    }
+  }
+
+  //Unowned or enemy planet
+  def setData(source: OwnShip, target: PlanetId): Unit =
+    setData(source) {
+      this.isDestination = hasPlanetId(target) _
+      onDestinationUpdated = () => {
+        val sourceAfterCommands = game.turnInfo(viewModel.turnShown).stateAfterCommands.ownShips(source.id)
+        destinationCargo.value = sourceAfterCommands.transferToPlanet.map { _.asCargoHold }.getOrElse(CargoHold(Int.MaxValue, Int.MaxValue, Int.MaxValue, Cargo.zero))
+      }
+      setTransferControlsVisibility(false, false, false)
+      onChange = transfer => actions.shipToOtherPlanetTransfer(source, target, transfer)
+    }
+
+  def setData(source: OwnShip, target: OwnShip): Unit = {
+    setData(source) {
+      this.isDestination = isOwnShip(target) _
+      onDestinationUpdated = () => {
+        val targetAfterCommands = game.turnInfo(viewModel.turnShown).stateAfterCommands.ownShips(target.id)
+        this.destinationCargo.value = targetAfterCommands.cargoHold
+      }
+      val torpsTransferAvailable = source.torpsType == target.torpsType
+      val fightersTransferAvailable = source.isCarrier && target.isCarrier
+      setTransferControlsVisibility(moneyTransferAvailable = true, torpsTransferAvailable, fightersTransferAvailable)
+      onChange = transfer => actions.shipToOwnShipTransfer(source, target, transfer)
+    }
+  }
+
+  //Enemy ship
+  def setData(source: OwnShip, target: ShipId): Unit =
+    setData(source) {
+      isDestination = isOtherShip(target) _
+      onDestinationUpdated = () => {
+        val sourceAfterCommands = game.turnInfo(viewModel.turnShown).stateAfterCommands.ownShips(source.id)
+        destinationCargo.value = sourceAfterCommands.transferToEnemyShip.map { _.asCargoHold }.getOrElse(CargoHold(Int.MaxValue, Int.MaxValue, 10000, Cargo.zero))
+      }
+      setTransferControlsVisibility(false, false, false)
+      onChange = transfer => actions.shipToOtherShipTransfer(source, target, transfer)
+    }
+
+  private def setTransferControlsVisibility(
     moneyTransferAvailable: Boolean,
     torpsTransferAvailable: Boolean,
     fightersTransferAvailable: Boolean
@@ -186,16 +298,16 @@ abstract class CargoTransferView(
 
   private def bindToSource(extractor: Cargo => Int) = {
     createStringBinding(() => {
-      val value = extractor(source.value.cargo)
+      val value = extractor(sourceCargo.value.cargo)
       if(value == 0) "" else value.toString
-    }, source)
+    }, sourceCargo)
   }
 
   private def bindToTarget(extractor: Cargo => Int) = {
     createStringBinding(() => {
-      val value = extractor(destination.value.cargo)
+      val value = extractor(destinationCargo.value.cargo)
       if(value == 0) "" else value.toString
-    }, destination)
+    }, destinationCargo)
   }
 
   private def transferSpinnerButtons(cargoCreator: Int => Cargo) =
@@ -207,4 +319,9 @@ abstract class CargoTransferView(
       leftText = "<",
       rightText = ">"
     )
+
+  private def onObjectChanged(mapObject: MapObject): Unit = {
+    if(isSource(mapObject)) onSourceUpdated()
+    if(isDestination(mapObject)) onDestinationUpdated()
+  }
 }
