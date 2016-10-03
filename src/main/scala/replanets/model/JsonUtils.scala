@@ -23,6 +23,7 @@ object JsonUtils {
   )
 
   implicit val planetIdFormat = fromSingleIntFormat(x => PlanetId(x))
+  implicit val raceIdFormat = fromSingleIntFormat(x => RaceId(x))
   implicit val shipIdFormat = fromSingleIntFormat(x => ShipId(x))
   implicit val hullIdFormat = fromSingleIntFormat(x => HullId(x))
   implicit val engineIdFormat = fromSingleIntFormat(x => EngineId(x))
@@ -38,6 +39,8 @@ object JsonUtils {
   val shipToOtherPlanetTransferFormat = format[ShipToOtherPlanetTransfer]
   val shipToOwnShipTransferFormat = format[ShipToOwnShipTransfer]
   val shipToOtherShipTransferFormat = format[ShipToOtherShipTransfer]
+  val setPrimaryEnemyFormat = format[SetPrimaryEnemy]
+  val setMissionFormat = format[SetMission]
   //bases
   val buildShipFormat = format[StartShipConstruction]
   val stopShipConstructionFormat = format[StopShipConstruction]
@@ -59,6 +62,8 @@ object JsonUtils {
       case x: ShipToOtherPlanetTransfer => toJson(x)(shipToOtherPlanetTransferFormat)
       case x: ShipToOwnShipTransfer => toJson(x)(shipToOwnShipTransferFormat)
       case x: ShipToOtherShipTransfer => toJson(x)(shipToOtherShipTransferFormat)
+      case x: SetPrimaryEnemy => toJson(x)(setPrimaryEnemyFormat)
+      case x: SetMission => toJson(x)(setMissionFormat)
       case x: StartShipConstruction => toJson(x)(buildShipFormat)
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
       case x: ChangeBasePrimaryOrder => toJson(x)(changeBasePrimaryOrderFormat)
@@ -82,6 +87,8 @@ object JsonUtils {
     classOf[ShipToOtherPlanetTransfer].getSimpleName -> { _.validate[ShipToOtherPlanetTransfer](shipToOtherPlanetTransferFormat) },
     classOf[ShipToOwnShipTransfer].getSimpleName -> { _.validate[ShipToOwnShipTransfer](shipToOwnShipTransferFormat) },
     classOf[ShipToOtherShipTransfer].getSimpleName -> { _.validate[ShipToOtherShipTransfer](shipToOtherShipTransferFormat) },
+    classOf[SetPrimaryEnemy].getSimpleName -> { _.validate[SetPrimaryEnemy](setPrimaryEnemyFormat) },
+    classOf[SetMission].getSimpleName -> { _.validate[SetMission](setMissionFormat) },
     classOf[StartShipConstruction].getSimpleName -> { _.validate[StartShipConstruction](buildShipFormat) },
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
     classOf[ChangeBasePrimaryOrder].getSimpleName -> { _.validate[ChangeBasePrimaryOrder](changeBasePrimaryOrderFormat) },

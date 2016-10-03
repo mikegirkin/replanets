@@ -34,6 +34,12 @@
         "fighters" : 0
       }
     }
+  }, {
+    "type" : "SetShipFcode",
+    "value" : {
+      "objectId" : 379,
+      "newFcode" : "OIf"
+    }
   } ],
   "additionalData" : [ ]
 }

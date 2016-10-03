@@ -1,6 +1,6 @@
 package replanets.model.commands
 
-import replanets.common.{ServerData, ShipId, TransferToEnemyShip}
+import replanets.common.{RaceId, ServerData, ShipId, TransferToEnemyShip}
 import replanets.model.{Cargo, Specs}
 
 case class ShipToOtherShipTransfer(

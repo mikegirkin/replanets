@@ -61,9 +61,9 @@ case class OwnShip(
   torpsType: Option[TorpspecItem],
   torpsFightersLoaded: Int,
   numberOfTorpLaunchers: Short,
-  mission: Short,
-  primaryEnemy: Short,
-  towShipId: Short,
+  missionId: Int,
+  primaryEnemy: Option[RaceId],
+  towShipId: Int,
   damage: Short,
   crew: Short,
   colonistClans: Int,
@@ -72,7 +72,7 @@ case class OwnShip(
   supplies: Int,
   transferToPlanet: Option[TransferToPlanet],
   transferToEnemyShip: Option[TransferToEnemyShip],
-  interceptTargetId: Short,
+  interceptTargetId: Int,
   money: Int
 ) extends Ship {
 

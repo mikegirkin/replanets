@@ -78,7 +78,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
 
   def onSelectedObjectChanged(selectedObject: MapObject): Unit = {
     showListInfoForPoint(selectedObject.coords)
-    objectListView.selectionModel.delegate.get().select(selectedObject)
+    objectListView.getSelectionModel.select(selectedObject)
     showInfoAbout(selectedObject)
   }
 

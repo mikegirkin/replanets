@@ -147,8 +147,8 @@ class TrnWriter(game: Game) {
       (if(ship.xDistanceToWaypoint != shipInitialState.xDistanceToWaypoint || ship.yDistanceToWaypoint != shipInitialState.yDistanceToWaypoint)
         Some(3.toShort.toBytes ++ ship.id.value.toShort.toBytes ++ ship.xDistanceToWaypoint.toShort.toBytes ++ ship.yDistanceToWaypoint.toShort.toBytes)
       else None) ++
-      command(4, _.mission.toShort) ++
-      command(5, _.primaryEnemy.toShort) ++
+      command(4, _.missionId.toShort) ++
+      command(5, _.primaryEnemy.fold(0)(_.value).toShort) ++
       command(6, _.towShipId.toShort) ++
       command(7, _.name)(_.toBytes(20)) ++
       command(8, _.transferToPlanet)(t => t.map(to => Seq.fill[Short](6)(0).flatMap(_.toBytes) ++ to.targetId.value.toShort.toBytes).getOrElse(Iterable.empty)) ++

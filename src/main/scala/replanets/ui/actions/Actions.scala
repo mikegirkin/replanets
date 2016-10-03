@@ -83,6 +83,18 @@ class Actions(game: Game, viewModel: ViewModel)(
     }
   }
 
+  def setPrimaryEnemy(ship: OwnShip, enemyRaceId: Option[RaceId]): Unit = {
+    val command = SetPrimaryEnemy(ship.id, enemyRaceId)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(ship))
+  }
+
+  def setMission(ship: OwnShip, missionId: Int): Unit = {
+    val command = SetMission(ship.id, missionId)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forShip(ship))
+  }
+
   //planets
   def setPlanetFcode(planet: Planet, newFcode: Fcode) = {
     val command = SetPlanetFcode(planet.id, newFcode)

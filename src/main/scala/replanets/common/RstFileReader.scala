@@ -121,7 +121,7 @@ object RstFileReader {
           sr.torpsFightersLoaded,
           sr.numberOfTorpLaunchers,
           sr.mission,
-          sr.primaryEnemy,
+          if(sr.primaryEnemy == 0) None else Some(RaceId(sr.primaryEnemy)),
           sr.towShipId,
           sr.damage,
           sr.crew,

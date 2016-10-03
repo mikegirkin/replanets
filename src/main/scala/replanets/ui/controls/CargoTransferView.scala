@@ -9,7 +9,7 @@ import replanets.ui.viewmodels.ViewModel
 import scalafx.Includes._
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.{HPos, Pos}
-import scalafx.scene.control.Label
+import scalafx.scene.control.{Label, ListView}
 import scalafx.scene.layout.{ColumnConstraints, GridPane, VBox}
 
 class CargoTransferView(

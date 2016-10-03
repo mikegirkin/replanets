@@ -65,5 +65,5 @@ class Missions(race: RaceId, hostType: HostType) {
     (if(hostType == PHost3 || hostType == PHost4) phostMissions else Map()) ++
     (if(hostType == PHost4) phost4Missions else Map())
   
-  def get(mission: Short) = all(mission)
+  def get(mission: Int) = all(mission)
 }

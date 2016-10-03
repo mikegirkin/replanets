@@ -3,7 +3,7 @@ package replanets.ui
 import replanets.common._
 import replanets.model.{CargoHold, Game}
 import replanets.ui.actions.Actions
-import replanets.ui.controls.{CargoTransferView, ObjectsListView, Spinner}
+import replanets.ui.controls._
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
@@ -95,6 +95,16 @@ class ShipInfoView(
     mo => onTransferDestinationSelected(mo)
   )
 
+  val missionSelectPopup = new SelectMissionView(
+    game.specs.missions.all.toSeq,
+    missionId => setCurrentShipMission(missionId)
+  )
+
+  val enemySelectPopup = new SelectEnemyView(
+    game.races,
+    raceId => setPrimaryEnemy(raceId)
+  )
+
   val transferTargetSelectionPopup = new Popup {
     autoHide = true
 
@@ -129,8 +139,14 @@ class ShipInfoView(
     lblFcode.text = newShip.fcode.value
     lblCrew.text = s"${newShip.crew} / ${newShip.hull.crewSize}"
     lblDamage.text = s"${newShip.damage} %"
-    lblMission.text = game.specs.missions.get(newShip.mission)
-    lblEnemy.text = if(newShip.primaryEnemy != 0)  game.races(newShip.primaryEnemy - 1).shortname else "(none)"
+    lblMission.text = game.specs.missions.get(newShip.missionId)
+    missionSelectPopup.setSelectedItem(newShip.missionId)
+    lblEnemy.text = newShip.primaryEnemy.fold(
+      "None"
+    )( raceId =>
+      game.races(raceId.value - 1).shortname
+    )
+    enemySelectPopup.setSelected(newShip.primaryEnemy)
     lblEquipEngines.text = newShip.engines.name
     lblEquipBeams.text = newShip.beams.map { b => s"${newShip.numberOfBeams} - ${b.name}" }.getOrElse("")
     lblEquipLaunchers.text = newShip.torpsType.map { tt => s"${newShip.numberOfTorpLaunchers} - ${tt.name}" }.getOrElse("")
@@ -192,6 +208,16 @@ class ShipInfoView(
     if(e.code == KeyCode.Escape) cancelFcodeEditing()
   }
 
+  def onChangeEnemyButton(e: ActionEvent) = {
+    val point = lblEnemy.localToScreen(0, 0)
+    enemySelectPopup.show(lblEnemy.getScene.getWindow, point.getX, point.getY)
+  }
+
+  def onChangeMissionButton(e: ActionEvent) = {
+    val point = lblMission.localToScreen(0, 0)
+    missionSelectPopup.show(lblMission.getScene.getWindow, point.getX, point.getY)
+  }
+
   private def showTransferPopup() = {
     val point = gpCargo.localToScreen(0, 0)
     transferPopup.show(gpCargo.getScene.getWindow, point.getX, point.getY)
@@ -246,7 +272,22 @@ class ShipInfoView(
     showTransferPopup()
   }
 
-  def hidePopup(): Unit = {
+  def hideTransferPopup(): Unit = {
     transferPopup.hide()
   }
+
+  def setCurrentShipMission(missionId: Int): Unit = {
+    ship.value.foreach(s =>
+      actions.setMission(s, missionId)
+    )
+    missionSelectPopup.hide()
+  }
+
+  def setPrimaryEnemy(raceId: Option[RaceId]): Unit = {
+    ship.value.foreach(s =>
+      actions.setPrimaryEnemy(s, raceId)
+    )
+    enemySelectPopup.hide()
+  }
+
 }
