@@ -97,10 +97,10 @@ class ShipInfoView(
   )
 
   val missionSelectPopup = new SelectMissionView(
-    game.specs.missions.argumentRequiremets,
-    game.specs.missions.all.toSeq,
-    missionId => setCurrentShipMission(missionId),
-    () => game.turnInfo(viewModel.turnShown).stateAfterCommands.getShipsAtCoords(ship.value.get.coords)
+    () => ship.value.get,
+    game.turnInfo(viewModel.turnShown).stateAfterCommands,
+    game.specs.missions,
+    missionId => setCurrentShipMission(missionId)
   )
 
   val enemySelectPopup = new SelectEnemyView(
@@ -146,9 +146,9 @@ class ShipInfoView(
     lblMission.text = game.specs.missions.get(newShip.missionId)
     missionSelectPopup.setSelectedItem(newShip.missionId)
     lblMissionAdditional.text =
-      if (newShip.missionId == 7 && newShip.towShipId != 0) { //Tow
+      if (newShip.missionId == Missions.TowMissionId && newShip.towShipId != 0) { //Tow
         s"Tow: ${state.ships(ShipId(newShip.towShipId)).name}"
-      } else if(newShip.missionId == 8 && newShip.interceptTargetId != 0) { //Intercept
+      } else if(newShip.missionId == Missions.InterceptMissionId && newShip.interceptTargetId != 0) { //Intercept
         s"Intercepting ship id: ${newShip.interceptTargetId}"
       } else if(newShip.missionId >= 20 && game.specs.missions.argumentRequiremets.contains(newShip.missionId)) {
         s"I: ${newShip.interceptTargetId}  T: ${newShip.towShipId}"

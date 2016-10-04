@@ -1,6 +1,6 @@
 package replanets.ui.controls
 
-import replanets.common.{MissionRequirement, Ship}
+import replanets.common.{Missions, OwnShip, ServerData, Ship}
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
@@ -19,15 +19,17 @@ case class SelectedMission(
 )
 
 class SelectMissionView(
-  missionDesctioptions: Map[Int, MissionRequirement],
-  missions: Iterable[(Int, String)],
-  onSelect: (SelectedMission) => Unit,
-  shipsAtPosition: () => Seq[Ship]
+  ship: () => OwnShip,
+  state: ServerData,
+  missionSpecs: Missions,
+  onSelect: (SelectedMission) => Unit
 ) extends Popup {
 
   autoHide = true
 
   val popup = this
+
+  val allAvailableMissions = missionSpecs.all
 
   val missionList = new ListView[(Int, String)] {
     cellFactory = { _ =>
@@ -45,7 +47,7 @@ class SelectMissionView(
     }
   }
 
-  missionList.items = ObservableBuffer(missions.toSeq.sortBy{case (id, _) => id})
+  missionList.items = ObservableBuffer(allAvailableMissions.toSeq.sortBy{case (id, _) => id})
 
   content.setAll(missionList)
 
@@ -142,15 +144,10 @@ class SelectMissionView(
     missionList.getSelectionModel.select(index)
   }
 
-  val towMissionId = 7
-  val interceptMissionId = 8
-
   private def onMissionSelected(missionId: Int): Unit = {
-    if(missionId == towMissionId) {
-      //Tow
+    if(missionId == Missions.TowMissionId) {
       onTow()
-    } else if(missionId == interceptMissionId) {
-      //Intercept
+    } else if(missionId == Missions.InterceptMissionId) {
       onIntercept()
     } else if(missionId >= 20) {
       //Extended missions
@@ -160,10 +157,14 @@ class SelectMissionView(
     }
   }
 
+  private def shipsAtPosition() = {
+    state.getShipsAtCoords(ship().coords).filterNot(s => s.id == ship().id)
+  }
+
   private def onTow() = {
     towTargetSelect.towShipList.items = ObservableBuffer(shipsAtPosition())
     towTargetSelect.onItemMouseClicked = (targetId) => {
-      onSelect(SelectedMission(towMissionId, towArgument = targetId))
+      onSelect(SelectedMission(Missions.TowMissionId, towArgument = targetId))
       content.setAll(missionList)
     }
     content.setAll(towTargetSelect)
@@ -175,14 +176,14 @@ class SelectMissionView(
     mitControl.lblIntercept.text = "Ship id to intercept:"
     mitControl.onFinished = () => {
       val interceptId = mitControl.edIntercept.text.value.toInt
-      onSelect(SelectedMission(interceptMissionId, interceptId))
+      onSelect(SelectedMission(Missions.InterceptMissionId, interceptId))
     }
     content.setAll(mitControl)
     mitControl.edIntercept.requestFocus()
   }
 
   private def onExtendedMission(missionId: Int) = {
-    val requirements = missionDesctioptions.get(missionId)
+    val requirements = missionSpecs.argumentRequiremets.get(missionId)
     requirements.fold(
       onSelect(SelectedMission(missionId))
     ) { r =>

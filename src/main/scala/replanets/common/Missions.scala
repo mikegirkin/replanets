@@ -20,6 +20,11 @@ object MissionRequirement {
   def apply(intercept: InterceptArgument, tow: TowArgument) = new MissionRequirement(Some(tow), Some(intercept))
 }
 
+object Missions {
+  val TowMissionId = 7
+  val InterceptMissionId = 8
+}
+
 class Missions(race: RaceId, hostType: HostType) {
   private val raceSpecificMissions = Map(
     1 -> "Super refit",
@@ -42,8 +47,8 @@ class Missions(race: RaceId, hostType: HostType) {
     4 -> "KILL",
     5 -> "Sensor sweep",
     6 -> "Colonize & disassemble",
-    7 -> "Tow",
-    8 -> "Intercept",
+    Missions.TowMissionId -> "Tow",
+    Missions.InterceptMissionId -> "Intercept",
     9 -> raceSpecificMissions(race.value),
     10 -> "Cloak",
     11 -> "Beam up fuel",
