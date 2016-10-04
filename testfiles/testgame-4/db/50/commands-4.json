@@ -40,6 +40,12 @@
       "objectId" : 379,
       "newFcode" : "OIf"
     }
+  }, {
+    "type" : "SetShipName",
+    "value" : {
+      "shipId" : 379,
+      "newName" : "Ill wind 1"
+    }
   } ],
   "additionalData" : [ ]
 }

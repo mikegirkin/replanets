@@ -18,9 +18,9 @@ trait MapObject {
 
 object MapObject {
 
-  case class OwnShip(id: Int, coords: IntCoords, displayName: String, ship: replanets.common.OwnShip) extends MapObject
-  case class Target(id: Int, coords: IntCoords, displayName: String, target: replanets.common.Target) extends MapObject
-  case class Contact(id: Int, coords: IntCoords, displayName: String, contact: replanets.common.Contact) extends MapObject
+  case class OwnShip(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Target(id: Int, coords: IntCoords, displayName: String) extends MapObject
+  case class Contact(id: Int, coords: IntCoords, displayName: String) extends MapObject
   case class Planet(id: Int, coords: IntCoords, displayName: String) extends MapObject
   case class Starbase(id: Int, coords: IntCoords, displayName: String) extends MapObject
   case class Minefield(id: Int, coords: IntCoords, displayName: String) extends MapObject
@@ -30,9 +30,9 @@ object MapObject {
 
   def forShip(ship: Ship): MapObject = {
     ship match {
-      case x: replanets.common.OwnShip => MapObject.OwnShip(ship.id.value, ship.coords, x.name, x)
-      case x: replanets.common.Target => MapObject.Target(ship.id.value, ship.coords, x.hull.name, x)
-      case x: replanets.common.Contact => MapObject.Contact(ship.id.value, ship.coords, s"Ship ${ship.id}", x)
+      case x: replanets.common.OwnShip => MapObject.OwnShip(ship.id.value, ship.coords, x.name)
+      case x: replanets.common.Target => MapObject.Target(ship.id.value, ship.coords, x.hull.name)
+      case x: replanets.common.Contact => MapObject.Contact(ship.id.value, ship.coords, s"Ship ${ship.id}")
     }
   }
 
@@ -74,7 +74,7 @@ object MapObject {
       .toIndexedSeq
     //bases
     val bases = planets.flatMap { p =>
-      game.turnSeverData(turn).bases.get(PlanetId(p.id))
+      game.turnInfo(turn).stateAfterCommands.bases.get(PlanetId(p.id))
     }.map { b => forStarbase(b) }
       .toIndexedSeq
     //mine fields
@@ -94,7 +94,8 @@ object MapObject {
   }
 
   def shipsAtCoords(game: Game, turn: TurnId)(coords: IntCoords): Iterable[MapObject] = {
-    game.turnSeverData(turn)
+    game.turnInfo(turn)
+      .stateAfterCommands
       .getShipsAtCoords(coords)
       .map { ship => forShip(ship) }
   }

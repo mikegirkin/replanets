@@ -35,6 +35,9 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
     objectListView
   )
 
+  viewModel.selectedObjectChaged += { (Unit) =>
+    viewModel.selectedObject.foreach(x => onSelectedObjectChanged(x))
+  }
 
   val ionStormInfoView = loadFxml[IIonStormInformationView]("/IonStormInfoView.fxml")
 

@@ -93,9 +93,6 @@ class MainStage(game: Game, viewModel: ViewModel) extends PrimaryStage {
     )
   }
 
-  viewModel.selectedObjectChaged += { (Unit) =>
-    viewModel.selectedObject.foreach(x => informationView.onSelectedObjectChanged(x))
-  }
 
   private def setMainView(view: Node) = {
     mainLayout.center = view

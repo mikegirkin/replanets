@@ -11,7 +11,7 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.scene.control.{Button, Label, TextField}
-import scalafx.scene.input.{KeyCode, KeyEvent, MouseEvent}
+import scalafx.scene.input.{KeyCode, KeyEvent, MouseButton, MouseEvent}
 import scalafx.scene.layout.{GridPane, HBox, Pane, VBox}
 import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
@@ -54,6 +54,7 @@ class ShipInfoView(
   val lblTorps: Label,
 
   val edFcode: TextField,
+  val edShipName: TextField,
   val btnTransfer: Button,
 
   val hbWarpPlaceholder: HBox,
@@ -131,6 +132,9 @@ class ShipInfoView(
       "Unknown"
     }
     lblShipName.text = newShip.name
+    lblShipName.visible = true
+    edShipName.text = newShip.name
+    edShipName.visible = false
     lblHullName.text = newShip.hull.name
     lblShipCoords.text = s"(${newShip.x}, ${newShip.y})"
     lblDestination.text = s"(${newShip.x + newShip.xDistanceToWaypoint}, ${newShip.y + newShip.yDistanceToWaypoint})"
@@ -181,7 +185,7 @@ class ShipInfoView(
 
   private def handleObjectChanged(mapObject: MapObject): Unit = {
     mapObject match {
-      case MapObject.OwnShip(id, coords, displayName, _) if id == ship.value.map(_.id.value).getOrElse(0) =>
+      case MapObject.OwnShip(id, coords, displayName) if id == ship.value.map(_.id.value).getOrElse(0) =>
         setData(ShipId(id))
       case _ =>
     }
@@ -255,32 +259,33 @@ class ShipInfoView(
     for(
       ship <- ship.value
     ) {
-      val objectList = MapObject.findAtCoords(game, viewModel.turnShown)(ship.coords).filter(mo =>
-        mo match {
-          case MapObject.OwnShip(_, _, _, s) => s.id != ship.id
-          case MapObject.Target(_, _, _, _) => true
-          case _ => false
+
+      val shipList = game.turnInfo(viewModel.turnShown)
+        .stateAfterCommands
+        .getShipsAtCoords(ship.coords).filter {
+          _.id != ship.id
+        }.map { s =>
+          MapObject.forShip(s)
         }
-      )
-      if(objectList.size > 1) {
-        targetSelectionControl.items = ObservableBuffer(objectList)
+      if(shipList.size > 1) {
+        targetSelectionControl.items = ObservableBuffer(shipList)
         val point = gpCargo.localToScreen(0, 0)
         transferTargetSelectionPopup.show(gpCargo.getScene.getWindow, point.getX, point.getY)
-      } else if(objectList.size == 1) {
-        onTransferDestinationSelected(objectList.head)
+      } else if(shipList.size == 1) {
+        onTransferDestinationSelected(shipList.head)
       }
     }
   }
 
   def onTransferDestinationSelected(mo: MapObject) = {
     mo match {
-      case MapObject.OwnShip(id, _, _, _) =>
+      case MapObject.OwnShip(id, _, _) =>
         val otherShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ownShips(ShipId(id))
         cargoTransferControl.setData(ship.value.get, otherShip)
       case MapObject.Planet(id, _, _) =>
         val planet = game.turnInfo(viewModel.turnShown).stateAfterCommands.planets(PlanetId(id))
         cargoTransferControl.setData(ship.value.get, planet)
-      case MapObject.Target(id, _, _, _) =>
+      case MapObject.Target(id, _, _) =>
         val target = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(ShipId(id)).asInstanceOf[Target]
         cargoTransferControl.setData(ship.value.get, target.id)
     }
@@ -305,4 +310,21 @@ class ShipInfoView(
     enemySelectPopup.hide()
   }
 
+  def onShipNameClicked(e: MouseEvent): Unit = {
+    if(e.button == MouseButton.Primary) {
+      lblShipName.visible = false
+      edShipName.visible = true
+      edShipName.requestFocus()
+    }
+  }
+
+  def onEdShipNameKeyPressed(e: KeyEvent): Unit = {
+    if(e.code == KeyCode.Enter) {
+      lblShipName.visible = true
+      edShipName.visible = false
+      ship.value.foreach { s =>
+        actions.setShipName(s, edShipName.text.value)
+      }
+    }
+  }
 }

@@ -43,4 +43,12 @@ case class ViewModel (
   val selectedObjectChaged = Event[Unit]
   val objectChanged = Event[MapObject]
   val currentViewChanged = Event[Unit]
+
+  objectChanged += { mo =>
+    selectedObject.foreach { so =>
+      if (mo.getClass == so.getClass && mo.id == so.id && mo != so) {
+        selectedObject = Some(mo)
+      }
+    }
+  }
 }

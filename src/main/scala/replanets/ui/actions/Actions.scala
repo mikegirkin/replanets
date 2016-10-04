@@ -12,10 +12,11 @@ class Actions(game: Game, viewModel: ViewModel)(
   val showBuildShipView: () => Unit,
   val showMapView: () => Unit
 ) {
-  private def fireObjectChangedForSelectedObject() = {
-    viewModel.selectedObject.foreach(x =>
-      viewModel.objectChanged.fire(x)
-    )
+
+  private def fireShipChanged(shipId: ShipId) = {
+    viewModel.objectChanged.fire(MapObject.forShip(
+      game.turnInfo(game.lastTurn).stateAfterCommands.ships(shipId)
+    ))
   }
 
   //Starbase
@@ -43,26 +44,26 @@ class Actions(game: Game, viewModel: ViewModel)(
   def setShipFcode(ship: OwnShip, newFcode: Fcode) = {
     val command = SetShipFcode(ship.id, newFcode)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
   }
 
   def setShipWarp(ship: OwnShip, newWarp: Int) = {
     val command = SetShipWarp(ship.id, newWarp)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
   }
 
   def shipToOwnPlanetTransfer(ship: OwnShip, planet: Planet, transfer: Cargo) = {
     val command = ShipToOwnPlanetTransfer(ship.id, planet.id, transfer)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
     viewModel.objectChanged.fire(MapObject.forPlanet(planet))
   }
 
   def shipToOtherPlanetTransfer(ship: OwnShip, planetId: PlanetId, transfer: Cargo) = {
     val command = ShipToOtherPlanetTransfer(ship.id, planetId, transfer)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
     val planetMapInfo = game.specs.map.planets(planetId.value - 1)
     viewModel.objectChanged.fire(MapObject.Planet(planetId.value, planetMapInfo.coords, planetMapInfo.name))
   }
@@ -70,29 +71,35 @@ class Actions(game: Game, viewModel: ViewModel)(
   def shipToOwnShipTransfer(source: OwnShip, target: OwnShip, transfer: Cargo) = {
     val command = ShipToOwnShipTransfer(source.id, target.id, transfer)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(source))
-    viewModel.objectChanged.fire(MapObject.forShip(target))
+    fireShipChanged(source.id)
+    fireShipChanged(target.id)
   }
 
   def shipToOtherShipTransfer(source: OwnShip, targetId: ShipId, transfer: Cargo) = {
     val command = ShipToOtherShipTransfer(source.id, targetId, transfer)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(source))
+    fireShipChanged(source.id)
     game.turnInfo(viewModel.turnShown).stateAfterCommands.ships.get(targetId).foreach { x =>
-      viewModel.objectChanged.fire(MapObject.forShip(x))
+      fireShipChanged(x.id)
     }
   }
 
   def setPrimaryEnemy(ship: OwnShip, enemyRaceId: Option[RaceId]): Unit = {
     val command = SetPrimaryEnemy(ship.id, enemyRaceId)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
   }
 
   def setMission(ship: OwnShip, missionId: Int, towArgument: Int = 0, interceptArgument: Int = 0): Unit = {
     val command = SetMission(ship.id, missionId, towArgument, interceptArgument)
     game.addCommand(command)
-    viewModel.objectChanged.fire(MapObject.forShip(ship))
+    fireShipChanged(ship.id)
+  }
+
+  def setShipName(ship: OwnShip, newName: String): Unit = {
+    val command = SetShipName(ship.id, newName)
+    game.addCommand(command)
+    fireShipChanged(ship.id)
   }
 
   //planets

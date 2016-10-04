@@ -9,7 +9,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.StackPane?>
 <VBox fx:id="rootPane" styleClass="shipInfo" stylesheets="styles.css"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="replanets.ui.ShipInfoView">
@@ -25,7 +24,8 @@
                 <Label fx:id="lblShipId" text="???"/>
             </HBox>
             <Label fx:id="lblHullName" text="???" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Label fx:id="lblShipName" text="???" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="lblShipName" text="???" GridPane.columnIndex="0" GridPane.rowIndex="2" onMouseClicked="#onShipNameClicked"/>
+            <TextField fx:id="edShipName" styleClass="inGridEditor" text="???" GridPane.columnIndex="0" GridPane.rowIndex="2" visible="false" onKeyPressed="#onEdShipNameKeyPressed"/>
             <Label fx:id="lblShipCoords" text="???" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <CheckBox GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="3" GridPane.valignment="TOP" GridPane.halignment="RIGHT"/>
         </children>
