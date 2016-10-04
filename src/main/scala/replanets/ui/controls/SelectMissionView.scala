@@ -1,6 +1,6 @@
 package replanets.ui.controls
 
-import replanets.common.Ship
+import replanets.common.{MissionRequirement, Ship}
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
@@ -19,6 +19,7 @@ case class SelectedMission(
 )
 
 class SelectMissionView(
+  missionDesctioptions: Map[Int, MissionRequirement],
   missions: Iterable[(Int, String)],
   onSelect: (SelectedMission) => Unit,
   shipsAtPosition: () => Seq[Ship]
@@ -153,7 +154,7 @@ class SelectMissionView(
       onIntercept()
     } else if(missionId >= 20) {
       //Extended missions
-      onExtendedMission()
+      onExtendedMission(missionId)
     } else {
       onSelect(SelectedMission(missionId))
     }
@@ -180,7 +181,26 @@ class SelectMissionView(
     mitControl.edIntercept.requestFocus()
   }
 
-  private def onExtendedMission() = {
-    mitControl.setTowVisibility(false)
+  private def onExtendedMission(missionId: Int) = {
+    val requirements = missionDesctioptions.get(missionId)
+    requirements.fold(
+      onSelect(SelectedMission(missionId))
+    ) { r =>
+      r.tow.foreach { ta =>
+        mitControl.lblTow.text = ta.text
+      }
+      r.itercept.foreach { ia =>
+        mitControl.lblIntercept.text = ia.text
+      }
+      mitControl.setTowVisibility(r.tow.isDefined)
+      mitControl.setInterceptVisibility(r.itercept.isDefined)
+      mitControl.onFinished = () => {
+        val interceptId = if(r.itercept.isDefined) mitControl.edIntercept.text.value.toInt else 0
+        val towId = if(r.tow.isDefined) mitControl.edTow.text.value.toInt else 0
+        onSelect(SelectedMission(missionId, interceptId, towId))
+      }
+      content.setAll(mitControl)
+      if(r.itercept.isDefined) mitControl.edIntercept.requestFocus() else mitControl.edTow.requestFocus()
+    }
   }
 }

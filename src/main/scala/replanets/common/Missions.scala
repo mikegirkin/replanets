@@ -9,7 +9,7 @@ case class InterceptArgument(
   text: String
 ) extends MissionArgumentRequirement
 
-class MissionRequirement(
+case class MissionRequirement(
   tow: Option[TowArgument] = None,
   itercept: Option[InterceptArgument] = None
 )
@@ -84,7 +84,7 @@ class Missions(race: RaceId, hostType: HostType) {
     40 -> "PH4 - Repair ship"
   )
 
-  val argementRequiremets = Map(
+  val argumentRequiremets = Map(
     21 -> MissionRequirement(InterceptArgument("Torpedo count"), TowArgument("Owner race")),
     22 -> MissionRequirement(InterceptArgument("Torpedo count"), TowArgument("Owner race")),
     23 -> MissionRequirement(InterceptArgument("Max torpedoes"), TowArgument("Minefield ID")),
