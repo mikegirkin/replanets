@@ -97,7 +97,8 @@ class ShipInfoView(
 
   val missionSelectPopup = new SelectMissionView(
     game.specs.missions.all.toSeq,
-    missionId => setCurrentShipMission(missionId)
+    missionId => setCurrentShipMission(missionId),
+    () => game.turnInfo(viewModel.turnShown).stateAfterCommands.getShipsAtCoords(ship.value.get.coords)
   )
 
   val enemySelectPopup = new SelectEnemyView(
@@ -214,6 +215,7 @@ class ShipInfoView(
   }
 
   def onChangeMissionButton(e: ActionEvent) = {
+    missionSelectPopup.reset()
     val point = lblMission.localToScreen(0, 0)
     missionSelectPopup.show(lblMission.getScene.getWindow, point.getX, point.getY)
   }
@@ -276,9 +278,9 @@ class ShipInfoView(
     transferPopup.hide()
   }
 
-  def setCurrentShipMission(missionId: Int): Unit = {
+  def setCurrentShipMission(mission: SelectedMission): Unit = {
     ship.value.foreach(s =>
-      actions.setMission(s, missionId)
+      actions.setMission(s, mission.missionId)
     )
     missionSelectPopup.hide()
   }

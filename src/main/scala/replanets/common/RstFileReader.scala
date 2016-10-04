@@ -20,6 +20,12 @@ case class ServerData(
 ) {
 
   def ownShips: Map[ShipId, OwnShip] = ships.filter { case (_, ship) => ship.isInstanceOf[OwnShip] }.mapValues{ _.asInstanceOf[OwnShip] }
+
+  def getShipsAtCoords(coords: IntCoords): Seq[Ship] = {
+    ships.values
+      .filter(ship => ship.coords == coords)
+      .toSeq
+  }
 }
 
 object RstFileReader {

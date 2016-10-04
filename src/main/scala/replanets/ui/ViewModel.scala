@@ -94,8 +94,8 @@ object MapObject {
   }
 
   def shipsAtCoords(game: Game, turn: TurnId)(coords: IntCoords): Iterable[MapObject] = {
-    game.turnSeverData(turn).ships.values
-      .filter(ship => ship.coords == coords)
+    game.turnSeverData(turn)
+      .getShipsAtCoords(coords)
       .map { ship => forShip(ship) }
   }
 

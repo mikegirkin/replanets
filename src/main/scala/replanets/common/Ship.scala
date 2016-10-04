@@ -10,6 +10,7 @@ sealed trait Ship extends ObjectWithCoords {
 
   def fullMass: Short
   def plannedDestination: Option[IntCoords]
+  def name: String
 }
 
 case class Contact(
@@ -20,6 +21,8 @@ case class Contact(
   mass: Short
 ) extends Ship {
   override def fullMass: Short = mass
+
+  override def name: String = s"Ship #${id.value}"
 
   override val plannedDestination: Option[IntCoords] = None
 }
