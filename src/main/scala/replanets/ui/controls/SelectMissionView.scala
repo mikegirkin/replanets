@@ -14,8 +14,8 @@ import scalafx.stage.Popup
 
 case class SelectedMission(
   missionId: Int,
-  interceptId: Int = 0,
-  towId: Int = 0
+  interceptArgument: Int = 0,
+  towArgument: Int = 0
 )
 
 class SelectMissionView(
@@ -162,7 +162,7 @@ class SelectMissionView(
   private def onTow() = {
     towTargetSelect.towShipList.items = ObservableBuffer(shipsAtPosition())
     towTargetSelect.onItemMouseClicked = (targetId) => {
-      onSelect(SelectedMission(towMissionId, towId = targetId))
+      onSelect(SelectedMission(towMissionId, towArgument = targetId))
       content.setAll(missionList)
     }
     content.setAll(towTargetSelect)
@@ -181,6 +181,6 @@ class SelectMissionView(
   }
 
   private def onExtendedMission() = {
-    mitControl.setTowVisibility()
+    mitControl.setTowVisibility(false)
   }
 }

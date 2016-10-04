@@ -82,11 +82,12 @@
                 <Label fx:id="lblMission" text="???" />
                 <Button fx:id="btnChangeMission" text="..." styleClass="inGridButton" onAction="#onChangeMissionButton" />
             </HBox>
-            <TextFlow textAlignment="RIGHT" GridPane.rowIndex="7">
+            <Label fx:id="lblMissionAdditional" text="???" GridPane.columnSpan="3" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <TextFlow textAlignment="RIGHT" GridPane.rowIndex="8">
                 <Text text="E" styleClass="actionSymbol"/>
                 <Text text="nemy:"/>
             </TextFlow>
-            <HBox GridPane.rowIndex="7" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" alignment="CENTER_LEFT">
+            <HBox GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" alignment="CENTER_LEFT">
                 <Label fx:id="lblEnemy" text="???" />
                 <Button fx:id="btnChangeEnemy" text="..." styleClass="inGridButton" onAction="#onChangeEnemyButton" />
             </HBox>

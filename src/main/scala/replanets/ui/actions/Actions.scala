@@ -89,8 +89,8 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forShip(ship))
   }
 
-  def setMission(ship: OwnShip, missionId: Int): Unit = {
-    val command = SetMission(ship.id, missionId)
+  def setMission(ship: OwnShip, missionId: Int, towArgument: Int = 0, interceptArgument: Int = 0): Unit = {
+    val command = SetMission(ship.id, missionId, towArgument, interceptArgument)
     game.addCommand(command)
     viewModel.objectChanged.fire(MapObject.forShip(ship))
   }

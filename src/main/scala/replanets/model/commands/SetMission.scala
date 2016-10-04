@@ -6,8 +6,8 @@ import replanets.model.Specs
 case class SetMission(
   shipId: ShipId,
   missionId: Int,
-  towParam: Int = 0,
-  interceptParam: Int = 0
+  towArgument: Int = 0,
+  interceptArgument: Int = 0
 ) extends PlayerCommand {
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
@@ -23,8 +23,8 @@ case class SetMission(
   override def apply(state: ServerData, specs: Specs): ServerData = {
     val shipState = state.ownShips(shipId).copy(
       missionId = this.missionId,
-      interceptTargetId = this.interceptParam,
-      towShipId = this.towParam
+      interceptTargetId = this.interceptArgument,
+      towShipId = this.towArgument
     )
     state.copy(ships = state.ships.updated(shipId, shipState))
   }

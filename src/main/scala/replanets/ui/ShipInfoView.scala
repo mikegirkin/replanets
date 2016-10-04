@@ -37,6 +37,7 @@ class ShipInfoView(
   val lblCrew: Label,
   val lblDamage: Label,
   val lblMission: Label,
+  val lblMissionAdditional: Label,
   val lblEnemy: Label,
   val lblEquipEngines: Label,
   val lblEquipBeams: Label,
@@ -118,11 +119,12 @@ class ShipInfoView(
   }
 
   def setData(shipId: ShipId) = {
-    val newShip = game.turnInfo(viewModel.turnShown).stateAfterCommands.ships(shipId).asInstanceOf[OwnShip]
+    val state = game.turnInfo(viewModel.turnShown).stateAfterCommands
+    val newShip = state.ships(shipId).asInstanceOf[OwnShip]
     ship.value = Some(newShip)
 
     lblShipId.text = newShip.id.value.toString
-    lblShipOwningRace.text = if(newShip.owner.value>0) {
+    lblShipOwningRace.text = if (newShip.owner.value > 0) {
       game.races(newShip.owner.value - 1).adjective
     } else {
       "Unknown"
@@ -142,6 +144,16 @@ class ShipInfoView(
     lblDamage.text = s"${newShip.damage} %"
     lblMission.text = game.specs.missions.get(newShip.missionId)
     missionSelectPopup.setSelectedItem(newShip.missionId)
+    lblMissionAdditional.text =
+      if (newShip.missionId == 7 && newShip.towShipId != 0) { //Tow
+        s"Tow: ${state.ships(ShipId(newShip.towShipId)).name}"
+      } else if(newShip.missionId == 8 && newShip.interceptTargetId != 0) { //Intercept
+        s"Intercepting ship id: ${newShip.interceptTargetId}"
+      } else if(newShip.missionId >= 20) {
+        s"I: ${newShip.interceptTargetId}  T: ${newShip.towShipId}"
+      } else {
+        ""
+      }
     lblEnemy.text = newShip.primaryEnemy.fold(
       "None"
     )( raceId =>
@@ -280,7 +292,7 @@ class ShipInfoView(
 
   def setCurrentShipMission(mission: SelectedMission): Unit = {
     ship.value.foreach(s =>
-      actions.setMission(s, mission.missionId)
+      actions.setMission(s, mission.missionId, mission.towArgument, mission.interceptArgument)
     )
     missionSelectPopup.hide()
   }
