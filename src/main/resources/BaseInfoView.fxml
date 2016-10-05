@@ -29,7 +29,7 @@
                 <Text text="D" styleClass="actionSymbol"/>
                 <Text text="efense:"/>
             </TextFlow>
-            <Label fx:id="lblDefense" text="???" GridPane.columnIndex="1" />
+            <HBox fx:id="phDefencePlaceholder" GridPane.columnIndex="1"/>
             <Label text="Damage:" GridPane.rowIndex="1" />
             <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Fighters:" GridPane.rowIndex="2" />

@@ -1,10 +1,10 @@
 package replanets.common
 
 case class Cost(
-  tri: Int,
-  dur: Int,
-  mol: Int,
-  money: Int
+  tri: Int = 0,
+  dur: Int = 0,
+  mol: Int = 0,
+  money: Int = 0
 ) {
   def mul(n: Int) = Cost(this.tri * n, this.dur * n, this.mol * n, this.money * n)
 

@@ -40,6 +40,13 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
   }
 
+  def buildDefences(starbase: Starbase, delta: Int) = {
+    val command = BaseBuildDefences(starbase.id, delta)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forPlanet(starbase.planet))
+    viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
+  }
+
   //ships
   def setShipFcode(ship: OwnShip, newFcode: Fcode) = {
     val command = SetShipFcode(ship.id, newFcode)

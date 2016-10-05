@@ -18,6 +18,15 @@ case class Minerals(
   def plus(transfer: Minerals) = {
     this.minus(Minerals.zero.minus(transfer))
   }
+
+  def minus(cost: Cost) = {
+    Minerals(
+      neutronium,
+      tritanium = this.tritanium - cost.tri,
+      duranium = this.duranium - cost.dur,
+      molybdenium = this.molybdenium - -cost.mol
+    )
+  }
 }
 
 object Minerals {

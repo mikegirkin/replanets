@@ -1,5 +1,7 @@
 package replanets.common
 
+import replanets.model.Cargo
+
 object Constants {
   val HullsInHullspec: Int = 105
   val EnginesInSpec: Int = 9
@@ -22,6 +24,12 @@ object Constants {
   val hullsAssignmentFilename = "truehull.dat"
 
   val techLevelsCost = IndexedSeq(0, 100, 200, 300, 400, 500, 600, 700, 800, 900)
+
+  val MaxBaseDefences = 200
+  val MaxBaseFighters = 60
+  val DefenceCost = Cost(dur = 1, money = 10)
+  val fighterCost = Cost(tri = 3, mol = 2, money = 100)
+
 
   val natives: Map[Id, NativeRace] = Seq(
     NativeRace.None, NativeRace.Humanoid, NativeRace.Bovinoid,

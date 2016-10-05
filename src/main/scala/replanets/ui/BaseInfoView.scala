@@ -3,9 +3,11 @@ package replanets.ui
 import replanets.common.{Constants, PlanetId}
 import replanets.model.{Game, Starbase}
 import replanets.ui.actions.Actions
+import replanets.ui.controls.Spinner
 import replanets.ui.viewmodels.ViewModel
 
 import scalafx.Includes._
+import scalafx.beans.property.ObjectProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.scene.control._
@@ -13,6 +15,8 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
+
+import replanets.common.NumberExtensions._
 
 trait IBaseInfoView {
   def rootPane: Pane
@@ -23,7 +27,7 @@ trait IBaseInfoView {
 class BaseInfoView(
   val rootPane: VBox,
   val lblStarbaseId: Label,
-  val lblDefense: Label,
+  val phDefencePlaceholder: Pane,
   val lblDamage: Label,
   val lblFighters: Label,
   val lblPrimaryOrder: Label,
@@ -41,7 +45,19 @@ class BaseInfoView(
 
   viewModel.objectChanged += handleObjectChanged
 
-  var starbase: Option[Starbase] = None
+  var starbase: ObjectProperty[Option[Starbase]] = ObjectProperty(None)
+
+  val defenceSpinner = new Spinner(
+    createStringBinding(() => starbase.value.map(_.defences).getOrElse(0).toString, starbase),
+    (delta) => starbase.value.foreach { s =>
+      val initiallyHad = game.turnInfo(viewModel.turnShown).initialState.bases(s.id).defences
+      val boundedDelta = delta.bounded(initiallyHad - s.defences, Constants.MaxBaseDefences - s.defences)
+      actions.buildDefences(s, boundedDelta)
+    },
+    minLabelWidth = 28
+  )
+
+  phDefencePlaceholder.children = Seq(defenceSpinner)
 
   val primaryOrderSelector =
     new ListView[(Int, String)] {
@@ -90,10 +106,9 @@ class BaseInfoView(
   override def setData(baseId: PlanetId): Unit = {
     val turn = viewModel.turnShown
     val base = game.turnInfo(turn).stateAfterCommands.bases(baseId)
-    starbase = Some(base)
+    starbase.value = Some(base)
 
     lblStarbaseId.text = base.id.value.toString
-    lblDefense.text = base.defences.toString
     lblDamage.text = base.damage.toString
     lblFighters.text = base.fightersNumber.toString
     val primaryOrderText = Constants.baseMissions(base.primaryOrder)
@@ -129,7 +144,7 @@ class BaseInfoView(
 
   private def handleObjectChanged(mo: MapObject): Unit = {
     mo match {
-      case MapObject.Starbase(id, _, _) if id == starbase.map(_.id.value).getOrElse(0) =>
+      case MapObject.Starbase(id, _, _) if id == starbase.value.map(_.id.value).getOrElse(0) =>
         setData(PlanetId(id))
       case _ =>
     }
@@ -146,7 +161,7 @@ class BaseInfoView(
   }
 
   def handlePrimaryOrderClicked(item: (Int, String))(e: MouseEvent): Unit = {
-    starbase.foreach( sb =>
+    starbase.value.foreach( sb =>
       actions.setPrimaryOrder(sb, item._1)
     )
     popup.hide()

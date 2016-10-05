@@ -44,7 +44,7 @@
     "type" : "SetShipName",
     "value" : {
       "shipId" : 379,
-      "newName" : "Ill wind 1"
+      "name" : "Ill wind 1"
     }
   } ],
   "additionalData" : [ ]

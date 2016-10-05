@@ -1,6 +1,6 @@
 package replanets.model.commands
 
-import replanets.common.{ServerData, ShipId}
+import replanets.common.{Constants, PlanetId, ServerData, ShipId}
 import replanets.model.Specs
 
 case class SetMission(
