@@ -66,23 +66,25 @@ case class StartShipConstruction(
       if(planet.money >= cost.total.money) planet.supplies
       else planet.supplies - (cost.total.money - planet.money)
     }
+    val newPlanetState = planet.copy(
+      surfaceMinerals = planet.surfaceMinerals.copy(
+        tritanium = planet.surfaceMinerals.tritanium - cost.total.tri,
+        duranium = planet.surfaceMinerals.duranium - cost.total.dur,
+        molybdenium = planet.surfaceMinerals.molybdenium - cost.total.mol
+      ),
+      money = newPlanetMoney,
+      supplies = newPlanetSupplies
+    )
     state.copy(
       bases = state.bases.updated(objectId, base.copy(
+        planet = newPlanetState,
         shipBeingBuilt = Some(order),
         hullsTech = hullTechLevel,
         engineTech = engineTechLevel,
         beamTech = beamTechLevel,
         torpedoTech = torpsTechLevel
       )),
-      planets = state.planets.updated(objectId, planet.copy(
-        surfaceMinerals = planet.surfaceMinerals.copy(
-          tritanium = planet.surfaceMinerals.tritanium - cost.total.tri,
-          duranium = planet.surfaceMinerals.duranium - cost.total.dur,
-          molybdenium = planet.surfaceMinerals.molybdenium - cost.total.mol
-        ),
-        money = newPlanetMoney,
-        supplies = newPlanetSupplies
-      ))
+      planets = state.planets.updated(objectId, newPlanetState)
     )
   }
 }

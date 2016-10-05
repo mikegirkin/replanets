@@ -3,6 +3,9 @@ package replanets.model.commands
 import replanets.common.{Constants, PlanetId, ServerData}
 import replanets.model.Specs
 
+import replanets.model.StarbaseExtensions._
+import replanets.common.NumberExtensions._
+
 case class BaseBuildDefences(
   baseId: PlanetId,
   defencesToBuild: Int
@@ -20,13 +23,8 @@ case class BaseBuildDefences(
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
     val planet = state.planets(baseId)
-    val actualBuild = Seq(
-      if(Constants.DefenceCost.tri > 0) planet.surfaceMinerals.tritanium / Constants.DefenceCost.tri else Int.MaxValue,
-      if(Constants.DefenceCost.dur > 0) planet.surfaceMinerals.duranium / Constants.DefenceCost.dur else Int.MaxValue,
-      if(Constants.DefenceCost.mol > 0) planet.surfaceMinerals.molybdenium / Constants.DefenceCost.mol else Int.MaxValue,
-      if(Constants.DefenceCost.money > 0) (planet.money + planet.supplies) / Constants.DefenceCost.money else Int.MaxValue,
-      defencesToBuild
-    ).min
+    val base = state.bases(baseId)
+    val actualBuild = base.maxPossibleDefencesBuild().upperBound(defencesToBuild)
     val totalCost = Constants.DefenceCost.mul(actualBuild)
     val (remainingMoney, remainingSupplies) =
       if(planet.money < totalCost.money) (0, planet.supplies - (totalCost.money - planet.money))
@@ -36,8 +34,10 @@ case class BaseBuildDefences(
       money = remainingMoney,
       supplies = remainingSupplies
     )
-    val base = state.bases(baseId)
-    val newBaseState = base.copy(defences = base.defences + actualBuild)
+    val newBaseState = base.copy(
+      defences = base.defences + actualBuild,
+      planet = newPlanetState
+    )
     state.copy(
       bases = state.bases.updated(baseId, newBaseState),
       planets = state.planets.updated(baseId, newPlanetState)

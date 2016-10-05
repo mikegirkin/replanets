@@ -16,6 +16,7 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
 
+import replanets.model.StarbaseExtensions._
 import replanets.common.NumberExtensions._
 
 trait IBaseInfoView {
@@ -51,7 +52,8 @@ class BaseInfoView(
     createStringBinding(() => starbase.value.map(_.defences).getOrElse(0).toString, starbase),
     (delta) => starbase.value.foreach { s =>
       val initiallyHad = game.turnInfo(viewModel.turnShown).initialState.bases(s.id).defences
-      val boundedDelta = delta.bounded(initiallyHad - s.defences, Constants.MaxBaseDefences - s.defences)
+      val boundedDelta = delta.bounded(initiallyHad - s.defences, s.maxPossibleDefencesBuild())
+      println(s"delta: $delta, boundedDelta: $boundedDelta")
       actions.buildDefences(s, boundedDelta)
     },
     minLabelWidth = 28
