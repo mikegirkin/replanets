@@ -28,9 +28,9 @@ trait IBaseInfoView {
 class BaseInfoView(
   val rootPane: VBox,
   val lblStarbaseId: Label,
-  val phDefencePlaceholder: Pane,
+  val phDefences: Pane,
   val lblDamage: Label,
-  val lblFighters: Label,
+  val phFighters: Pane,
   val lblPrimaryOrder: Label,
   val lblEngines: Label,
   val lblHulls: Label,
@@ -53,13 +53,24 @@ class BaseInfoView(
     (delta) => starbase.value.foreach { s =>
       val initiallyHad = game.turnInfo(viewModel.turnShown).initialState.bases(s.id).defences
       val boundedDelta = delta.bounded(initiallyHad - s.defences, s.maxPossibleDefencesBuild())
-      println(s"delta: $delta, boundedDelta: $boundedDelta")
-      actions.buildDefences(s, boundedDelta)
+      actions.baseBuildDefences(s, boundedDelta)
     },
-    minLabelWidth = 28
+    minLabelWidth = 30
   )
 
-  phDefencePlaceholder.children = Seq(defenceSpinner)
+  phDefences.children = Seq(defenceSpinner)
+
+  val fightersSpinner = new Spinner(
+    createStringBinding(() => starbase.value.map(_.fightersNumber).getOrElse(0).toString, starbase),
+    (delta) => starbase.value.foreach { s =>
+      val initiallyHad = game.turnInfo(viewModel.turnShown).initialState.bases(s.id).fightersNumber
+      val boundedDelta = delta.bounded(initiallyHad - s.fightersNumber, s.maxPossibleFightersBuild())
+      actions.baseBuildFighters(s, boundedDelta)
+    },
+    minLabelWidth = 30
+  )
+
+  phFighters.children = Seq(fightersSpinner)
 
   val primaryOrderSelector =
     new ListView[(Int, String)] {
@@ -112,7 +123,6 @@ class BaseInfoView(
 
     lblStarbaseId.text = base.id.value.toString
     lblDamage.text = base.damage.toString
-    lblFighters.text = base.fightersNumber.toString
     val primaryOrderText = Constants.baseMissions(base.primaryOrder)
     lblPrimaryOrder.text = primaryOrderText
     primaryOrderSelector.selectionModel.delegate.get.select((base.primaryOrder, primaryOrderText))

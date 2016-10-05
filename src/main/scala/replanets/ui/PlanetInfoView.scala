@@ -132,7 +132,7 @@ class PlanetInfoView(
     createStringBinding(() => planet.value.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse(""), defences, planet),
     onDiff = (delta) => {
       planet.value.foreach( p =>
-        commands.buildDefences(p.planetRecord, p.defencesNumber + delta)
+        commands.baseBuildDefences(p.planetRecord, p.defencesNumber + delta)
       )
     },
     minLabelWidth = 70

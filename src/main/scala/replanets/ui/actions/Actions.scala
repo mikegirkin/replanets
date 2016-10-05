@@ -12,7 +12,6 @@ class Actions(game: Game, viewModel: ViewModel)(
   val showBuildShipView: () => Unit,
   val showMapView: () => Unit
 ) {
-
   private def fireShipChanged(shipId: ShipId) = {
     viewModel.objectChanged.fire(MapObject.forShip(
       game.turnInfo(game.lastTurn).stateAfterCommands.ships(shipId)
@@ -40,12 +39,20 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
   }
 
-  def buildDefences(starbase: Starbase, delta: Int) = {
+  def baseBuildDefences(starbase: Starbase, delta: Int) = {
     val command = BaseBuildDefences(starbase.id, delta)
     game.addCommand(command)
     viewModel.objectChanged.fire(MapObject.forPlanet(starbase.planet))
     viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
   }
+
+  def baseBuildFighters(starbase: Starbase, delta: Int): Unit = {
+    val command = BaseBuildFighters(starbase.id, delta)
+    game.addCommand(command)
+    viewModel.objectChanged.fire(MapObject.forPlanet(starbase.planet))
+    viewModel.objectChanged.fire(MapObject.forStarbase(starbase))
+  }
+
 
   //ships
   def setShipFcode(ship: OwnShip, newFcode: Fcode) = {
@@ -141,7 +148,7 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forPlanet(planet))
   }
 
-  def buildDefences(planet: Planet, newDefencesNumber: Int): Unit = {
+  def baseBuildDefences(planet: Planet, newDefencesNumber: Int): Unit = {
     val ti = game.turnInfo(game.lastTurn)
     val totalDefencesToBuild = newDefencesNumber - ti.initialState.planets(planet.id).defencesNumber
     game.addCommand(BuildDefences(planet.id, totalDefencesToBuild))

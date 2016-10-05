@@ -2,30 +2,29 @@ package replanets.model.commands
 
 import replanets.common.{Constants, PlanetId, ServerData}
 import replanets.model.Specs
-
-import replanets.model.StarbaseExtensions._
 import replanets.common.NumberExtensions._
+import replanets.model.StarbaseExtensions._
 
-case class BaseBuildDefences(
+case class BaseBuildFighters(
   baseId: PlanetId,
-  defencesToBuild: Int
+  fightersToBuild: Int
 ) extends PlayerCommand {
   override def isReplacableBy(other: PlayerCommand): Boolean = {
     other match {
-      case BaseBuildDefences(otherBaseId, _) => otherBaseId == baseId
+      case BaseBuildFighters(otherBaseId, _) => otherBaseId == baseId
       case _ => false
     }
   }
 
   override def isAddDiffToInitialState(initial: ServerData, specs: Specs): Boolean = {
-    defencesToBuild != 0
+    fightersToBuild != 0
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
     val planet = state.planets(baseId)
     val base = state.bases(baseId)
-    val actualBuild = defencesToBuild.upperBound(base.maxPossibleDefencesBuild())
-    val totalCost = Constants.DefenceCost.mul(actualBuild)
+    val actualBuild = fightersToBuild.upperBound(base.maxPossibleFightersBuild())
+    val totalCost = Constants.FighterCost.mul(actualBuild)
     val (remainingMoney, remainingSupplies) =
       if(planet.money < totalCost.money) (0, planet.supplies - (totalCost.money - planet.money))
       else (planet.money - totalCost.money, planet.supplies)
@@ -35,7 +34,7 @@ case class BaseBuildDefences(
       supplies = remainingSupplies
     )
     val newBaseState = base.copy(
-      defences = base.defences + actualBuild,
+      fightersNumber = base.fightersNumber + actualBuild,
       planet = newPlanetState
     )
     state.copy(
@@ -46,9 +45,8 @@ case class BaseBuildDefences(
 
   override def mergeWith(newerCommand: PlayerCommand): PlayerCommand = {
     newerCommand match {
-      case BaseBuildDefences(newerBaseId, newerDelta) if newerBaseId == baseId => this.copy(defencesToBuild = this.defencesToBuild + newerDelta)
+      case BaseBuildFighters(newerBaseId, newerDelta) if newerBaseId == baseId => this.copy(fightersToBuild = this.fightersToBuild + newerDelta)
       case _ => this
     }
   }
-
 }

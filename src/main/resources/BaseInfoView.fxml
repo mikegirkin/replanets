@@ -29,11 +29,11 @@
                 <Text text="D" styleClass="actionSymbol"/>
                 <Text text="efense:"/>
             </TextFlow>
-            <HBox fx:id="phDefencePlaceholder" GridPane.columnIndex="1"/>
+            <HBox fx:id="phDefences" GridPane.columnIndex="1"/>
             <Label text="Damage:" GridPane.rowIndex="1" />
             <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Fighters:" GridPane.rowIndex="2" />
-            <Label fx:id="lblFighters" text="???" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox fx:id="phFighters" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextFlow textAlignment="RIGHT" GridPane.valignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3">
                 <Text text="Primary "/>
                 <Text text="o" styleClass="actionSymbol"/>
