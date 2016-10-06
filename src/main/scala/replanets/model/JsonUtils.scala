@@ -47,6 +47,7 @@ object JsonUtils {
   val stopShipConstructionFormat = format[StopShipConstruction]
   val changeBasePrimaryOrderFormat = format[ChangeBasePrimaryOrder]
   val baseBuildDefencesFormat = format[BaseBuildDefences]
+  val baseBuildFightersFormat = format[BaseBuildFighters]
   //planets
   val setPlanetFcodeFormat = format[SetPlanetFcode]
   val setColonistTaxFormat = format[SetColonistTax]
@@ -71,6 +72,7 @@ object JsonUtils {
       case x: StopShipConstruction => toJson(x)(stopShipConstructionFormat)
       case x: ChangeBasePrimaryOrder => toJson(x)(changeBasePrimaryOrderFormat)
       case x: BaseBuildDefences => toJson(x)(baseBuildDefencesFormat)
+      case x: BaseBuildFighters => toJson(x)(baseBuildFightersFormat)
       case x: SetPlanetFcode => toJson(x)(setPlanetFcodeFormat)
       case x: SetColonistTax => toJson(x)(setColonistTaxFormat)
       case x: SetNativeTax => toJson(x)(setNativeTaxFormat)
@@ -98,6 +100,7 @@ object JsonUtils {
     classOf[StopShipConstruction].getSimpleName -> { _.validate[StopShipConstruction](stopShipConstructionFormat) },
     classOf[ChangeBasePrimaryOrder].getSimpleName -> { _.validate[ChangeBasePrimaryOrder](changeBasePrimaryOrderFormat) },
     classOf[BaseBuildDefences].getSimpleName -> { _.validate[BaseBuildDefences](baseBuildDefencesFormat) },
+    classOf[BaseBuildFighters].getSimpleName -> { _.validate[BaseBuildFighters](baseBuildFightersFormat) },
     classOf[SetPlanetFcode].getSimpleName -> { _.validate[SetPlanetFcode](setPlanetFcodeFormat) },
     classOf[SetColonistTax].getSimpleName -> { _.validate[SetColonistTax](setColonistTaxFormat) },
     classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) },
