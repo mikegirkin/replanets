@@ -16,7 +16,7 @@ import scalafxml.core.macros.sfxml
 
 trait IPlanetInfoView {
   def rootPane: VBox
-  def setPlanet(turnId: TurnId, planetId: Int)
+  def setPlanet(turnId: TurnId, planetId: PlanetId)
 }
 
 @sfxml
@@ -57,6 +57,8 @@ class PlanetInfoView(
   val lblMolDensity: Label,
 
   val btnStarbase: Button,
+  val btnBuildStarbase: Button,
+  val btnCancelBuildStarbase: Button,
   val btnRandomFcode: Button,
 
   val edFcode: TextField,
@@ -132,7 +134,7 @@ class PlanetInfoView(
     createStringBinding(() => planet.value.map(p => s"${p.defencesNumber} / ${p.maxDefences}").getOrElse(""), defences, planet),
     onDiff = (delta) => {
       planet.value.foreach( p =>
-        commands.baseBuildDefences(p.planetRecord, p.defencesNumber + delta)
+        commands.buildDefences(p.planetRecord, p.defencesNumber + delta)
       )
     },
     minLabelWidth = 70
@@ -144,9 +146,9 @@ class PlanetInfoView(
   gpStructures.add(factoriesSpinner, 1, 1)
   gpStructures.add(defencesSpinner, 1, 2)
 
-  override def setPlanet(turnId: TurnId, planetId: Int): Unit = {
+  override def setPlanet(turnId: TurnId, planetId: PlanetId): Unit = {
     val data = game.turnInfo(turnId).stateAfterCommands
-    val planetRecord = data.planets.get(PlanetId(planetId)).map(_ => new PlanetInfoVM(game, viewModel.turnShown, PlanetId(planetId)))
+    val planetRecord = data.planets.get(planetId).map(_ => new PlanetInfoVM(game, viewModel.turnShown, planetId))
     planet.update(planetRecord)
 
     pnNatives.visible = false
@@ -155,9 +157,22 @@ class PlanetInfoView(
     pnStructures.visible = false
     pnMinerals.visible = false
     btnStarbase.visible = false
+    colonistTaxSpinner.visible = false
+    nativeTaxSpinner.visible = false
+    factoriesSpinner.visible = false
+    minesSpinner.visible = false
+    defencesSpinner.visible = false
+    lblColonistHappinessChange.visible = false
+    lblNativeHappinessChange.visible = false
+    lblColonistIncome.visible = false
+    lblNativesIncome.visible = false
+    cbDone.visible = false
+    btnRandomFcode.visible = false
+    btnBuildStarbase.visible = false
+    btnCancelBuildStarbase.visible = false
 
     lblPlanetId.text = planetId.toString
-    lblName.text = game.specs.map.planets(planetId - 1).name
+    lblName.text = game.specs.map.planets(planetId.value - 1).name
     lblWhen.text = "(now)"
     lblOwner.text = "Planet"
     planetRecord.foreach( vm => {
@@ -174,19 +189,17 @@ class PlanetInfoView(
         lblNativesIncome.visible = true
         cbDone.visible = true
         btnRandomFcode.visible = true
-      } else {
-        colonistTaxSpinner.visible = false
-        nativeTaxSpinner.visible = false
-        factoriesSpinner.visible = false
-        minesSpinner.visible = false
-        defencesSpinner.visible = false
-        lblColonistHappinessChange.visible = false
-        lblNativeHappinessChange.visible = false
-        lblColonistIncome.visible = false
-        lblNativesIncome.visible = false
-        cbDone.visible = false
-        btnRandomFcode.visible = false
+        if(data.bases.get(planetId).isDefined) {
+          btnStarbase.visible = true
+        } else if(vm.planetRecord.hasEnoughFor(Constants.StarbaseCost)) {
+          if(vm.buildBase == 0) {
+            btnBuildStarbase.visible = true
+          } else {
+            btnCancelBuildStarbase.visible = true
+          }
+        }
       }
+
       if(vm.ownerId != 0) lblOwner.text = s"${game.races(vm.ownerId - 1).adjective} planet"
       lblFcode.text = vm.fcode.value
       edFcode.text = vm.fcode.value
@@ -236,20 +249,30 @@ class PlanetInfoView(
       lblMolDensity.text = s"${miningRate(vm.densityMinerals.molybdenium)} / ${vm.densityMinerals.molybdenium}"
       pnMinerals.visible = true
     })
-    data.bases.get(PlanetId(planetId)).foreach{ _ =>
-      btnStarbase.visible = true
-    }
+
   }
 
   private def handleObjectChanged(mapObject: MapObject): Unit = {
     mapObject match {
       case MapObject.Planet(id, coords, displayName) if id == planet.value.map(_.planetRecord.id.value).getOrElse(0) =>
-        setPlanet(viewModel.turnShown, id)
+        setPlanet(viewModel.turnShown, PlanetId(id))
       case _ =>
     }
   }
 
   def onBaseButton(e: ActionEvent) = commands.selectStarbase.execute()
+
+  def onBuildBaseButton(e: ActionEvent) = {
+    planet.value.foreach(vm => {
+      commands.buildStarbase(vm.planetRecord)
+    })
+  }
+
+  def onCancelBuildBaseButton(e: ActionEvent) = {
+    planet.value.foreach(vm => {
+      commands.cancelBuildStarbase(vm.planetRecord)
+    })
+  }
 
   def onRandomFcodeButton(e: ActionEvent) = {
     planet.value.foreach { p =>

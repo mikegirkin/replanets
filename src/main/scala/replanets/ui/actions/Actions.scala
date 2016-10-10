@@ -148,11 +148,20 @@ class Actions(game: Game, viewModel: ViewModel)(
     viewModel.objectChanged.fire(MapObject.forPlanet(planet))
   }
 
-  def baseBuildDefences(planet: Planet, newDefencesNumber: Int): Unit = {
+  def buildDefences(planet: Planet, newDefencesNumber: Int): Unit = {
     val ti = game.turnInfo(game.lastTurn)
     val totalDefencesToBuild = newDefencesNumber - ti.initialState.planets(planet.id).defencesNumber
     game.addCommand(BuildDefences(planet.id, totalDefencesToBuild))
     viewModel.objectChanged.fire(MapObject.forPlanet(planet))
   }
 
+  def buildStarbase(planet: Planet): Unit = {
+    game.addCommand(BuildStarbase(planet.id))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet))
+  }
+
+  def cancelBuildStarbase(planet: Planet): Unit = {
+    game.addCommand(CancelBuildStarbase(planet.id))
+    viewModel.objectChanged.fire(MapObject.forPlanet(planet))
+  }
 }

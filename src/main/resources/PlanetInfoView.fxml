@@ -11,6 +11,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.StackPane?>
 <VBox fx:id = "rootPane" fx:controller="replanets.ui.PlanetInfoView"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       maxWidth="Infinity" minWidth="200" stylesheets="styles.css" styleClass="planetInfo"
@@ -160,7 +161,7 @@
             </children>
         </GridPane>
     </VBox>
-    <HBox alignment="CENTER_RIGHT">
+    <StackPane alignment="CENTER_RIGHT">
         <Button fx:id="btnStarbase" styleClass="commandButton" prefWidth="100" onAction="#onBaseButton">
             <graphic>
                 <TextFlow textAlignment="CENTER">
@@ -169,5 +170,22 @@
                 </TextFlow>
             </graphic>
         </Button>
-    </HBox>
+        <Button fx:id="btnBuildStarbase" styleClass="commandButton" prefWidth="100" onAction="#onBuildBaseButton">
+            <graphic>
+                <TextFlow textAlignment="CENTER">
+                    <Text styleClass="actionSymbol" text="B"/>
+                    <Text text="uild base"/>
+                </TextFlow>
+            </graphic>
+        </Button>
+        <Button fx:id="btnCancelBuildStarbase" styleClass="commandButton" prefWidth="100" onAction="#onCancelBuildBaseButton">
+            <graphic>
+                <TextFlow textAlignment="CENTER">
+                    <Text text="Stop "/>
+                    <Text styleClass="actionSymbol" text="b"/>
+                    <Text text="uilding base"/>
+                </TextFlow>
+            </graphic>
+        </Button>
+    </StackPane>
 </VBox>

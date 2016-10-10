@@ -42,6 +42,13 @@ case class Planet(
       0
     )
   )
+
+  def hasEnoughFor(cost: Cost) = {
+    surfaceMinerals.tritanium >= cost.tri &&
+      surfaceMinerals.duranium >= cost.dur &&
+      surfaceMinerals.molybdenium >= cost.mol &&
+      supplies + money >= cost.money
+  }
 }
 
 object PlanetsReader {

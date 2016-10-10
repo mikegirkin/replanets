@@ -127,7 +127,7 @@ class InformationView(game: Game, viewModel: ViewModel, actions: Actions) extend
   }
 
   private def showInfoAboutPlanet(mapObject: MapObject) = {
-    planetInfoView.setPlanet(viewModel.turnShown, mapObject.id)
+    planetInfoView.setPlanet(viewModel.turnShown, PlanetId(mapObject.id))
     setDetailsView(planetInfoView.rootPane)
   }
 

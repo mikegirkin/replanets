@@ -29,6 +29,7 @@ object Constants {
   val MaxBaseFighters = 60
   val DefenceCost = Cost(dur = 1, money = 10)
   val FighterCost = Cost(tri = 3, mol = 2, money = 100)
+  val StarbaseCost = Cost(tri = 402, dur = 120, mol = 340, money = 900)
 
 
   val natives: Map[Id, NativeRace] = Seq(

@@ -180,7 +180,7 @@ class CargoTransferView(
 
   private def isOwnShip(source: OwnShip)(mapObject: MapObject): Boolean = {
     mapObject match {
-      case MapObject.OwnShip(id, _, _, _) => source.id.value == id
+      case MapObject.OwnShip(id, _, _) => source.id.value == id
       case _ => false
     }
   }
@@ -198,7 +198,7 @@ class CargoTransferView(
 
   private def isOtherShip(target: ShipId)(mapObject: MapObject): Boolean = {
     mapObject match {
-      case MapObject.Target(id, _, _, _) => target.value == id
+      case MapObject.Target(id, _, _) => target.value == id
       case _ => false
     }
   }

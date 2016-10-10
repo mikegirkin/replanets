@@ -55,6 +55,8 @@ object JsonUtils {
   val buildFactoriesFormat = format[BuildFactories]
   val buildMinesFormat = format[BuildMines]
   val buildDefencesFormat = format[BuildDefences]
+  val buildStarbaseFormat = format[BuildStarbase]
+  val cancelBuildStarbaseFormat = format[CancelBuildStarbase]
 
   val playerCommandWrites = Writes[PlayerCommand] { cmd =>
     val typeValue = JsString(cmd.getClass.getSimpleName)
@@ -79,6 +81,8 @@ object JsonUtils {
       case x: BuildMines => toJson(x)(buildMinesFormat)
       case x: BuildFactories => toJson(x)(buildFactoriesFormat)
       case x: BuildDefences => toJson(x)(buildDefencesFormat)
+      case x: BuildStarbase => toJson(x)(buildStarbaseFormat)
+      case x: CancelBuildStarbase => toJson(x)(cancelBuildStarbaseFormat)
     }
     JsObject(Seq(
       "type" -> typeValue,
@@ -106,7 +110,9 @@ object JsonUtils {
     classOf[SetNativeTax].getSimpleName -> { _.validate[SetNativeTax](setNativeTaxFormat) },
     classOf[BuildMines].getSimpleName -> { _.validate[BuildMines](buildMinesFormat) },
     classOf[BuildFactories].getSimpleName -> { _.validate[BuildFactories](buildFactoriesFormat) },
-    classOf[BuildDefences].getSimpleName -> { _.validate[BuildDefences](buildDefencesFormat) }
+    classOf[BuildDefences].getSimpleName -> { _.validate[BuildDefences](buildDefencesFormat) },
+    classOf[BuildStarbase].getSimpleName -> { _.validate[BuildStarbase](buildStarbaseFormat) },
+    classOf[CancelBuildStarbase].getSimpleName -> { _.validate[CancelBuildStarbase](cancelBuildStarbaseFormat) }
   )
 
   val playerCommandReads = Reads[PlayerCommand] { json =>
