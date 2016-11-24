@@ -3,6 +3,11 @@ package replanets.model
 import replanets.common._
 import NumberExtensions._
 
+case class MoneySupplies(
+  money: Int,
+  supplies: Int
+)
+
 trait Formulas {
   val minefieldDecayRatio = 5
 
@@ -74,6 +79,21 @@ trait Formulas {
     if(available >= desired) 0
     else if(available >= 10) 0
     else Constants.techLevelsCost.slice(available, desired).sum
+  }
+
+  def maxAchievableTechLevel(available: Int, fundsAvailable: Int) = {
+    (available to 10)
+      .map(lvl => (lvl, techUpgradeCost(available, lvl)))
+      .filter {case (lvl, cost) => cost <= fundsAvailable }
+      .last
+      ._1
+  }
+
+  def remainingMoneySupplies(available: MoneySupplies, cost: Int): MoneySupplies = {
+    MoneySupplies.tupled(
+      if(available.money < cost) (0, available.supplies - (cost - available.money))
+      else (available.money - cost, available.supplies)
+    )
   }
 
   //This formula has been taken from phost docs

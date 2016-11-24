@@ -156,5 +156,14 @@ class PHostFormulasSpec extends WordSpec with Matchers {
       f.maxMinesForMoney(20, 42) shouldBe (10 + 1 + 1)
     }
   }
+
+  "max achievable tech level" should {
+    "be correct" in {
+      f.maxAchievableTechLevel(1, 4500) shouldBe 10
+      f.maxAchievableTechLevel(5, 1200) shouldBe 7
+      f.maxAchievableTechLevel(3, 4000) shouldBe 9
+      f.maxAchievableTechLevel(5, 100) shouldBe 5
+    }
+  }
 }
 

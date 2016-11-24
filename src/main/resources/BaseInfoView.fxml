@@ -4,14 +4,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.Region?>
 <VBox fx:id="rootPane" styleClass="baseInfo" stylesheets="styles.css"
       xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
       fx:controller="replanets.ui.BaseInfoView">
@@ -25,13 +23,13 @@
             <ColumnConstraints halignment="LEFT" percentWidth="50" />
         </columnConstraints>
         <children>
-            <TextFlow textAlignment="RIGHT" styleClass="gridLabel">
+            <Label text="Damage:" GridPane.rowIndex="0" />
+            <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <TextFlow textAlignment="RIGHT" styleClass="gridLabel" GridPane.rowIndex="1" GridPane.columnIndex="0">
                 <Text text="D" styleClass="actionSymbol"/>
                 <Text text="efense:"/>
             </TextFlow>
-            <HBox fx:id="phDefences" GridPane.columnIndex="1"/>
-            <Label text="Damage:" GridPane.rowIndex="1" />
-            <Label fx:id="lblDamage" text="???" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox fx:id="phDefences" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label text="Fighters:" GridPane.rowIndex="2" />
             <HBox fx:id="phFighters" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextFlow textAlignment="RIGHT" GridPane.valignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="3">
@@ -58,14 +56,17 @@
                 <ColumnConstraints halignment="LEFT" percentWidth="50"/>
             </columnConstraints>
             <children>
-                <Label text="Engines:"/>
-                <Label fx:id="lblEngines" text="???" GridPane.columnIndex="1"/>
-                <Label text="Hulls:" GridPane.rowIndex="1"/>
-                <Label fx:id="lblHulls" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Hulls:" GridPane.rowIndex="0"/>
+                <HBox fx:id="phHullsTechLevel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Engines:" GridPane.rowIndex="1"/>
+                <Label fx:id="lblEngines" text="???" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <HBox fx:id="phEngineTechLevel" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                 <Label text="Beams:" GridPane.rowIndex="2"/>
                 <Label fx:id="lblBeams" text="???" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <HBox fx:id="phBeamsTechLevel" GridPane.rowIndex="2" GridPane.columnIndex="1" />
                 <Label text="Torpedoes" GridPane.rowIndex="3"/>
                 <Label fx:id="lblTorpedoes" text="???" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <HBox fx:id="phTorpsTechLevel" GridPane.rowIndex="3" GridPane.columnIndex="1" />
             </children>
         </GridPane>
     </VBox>
@@ -73,12 +74,12 @@
     <ListView fx:id="lvStorage" styleClass="storageList"/>
     <GridPane hgap="5" vgap="5">
         <columnConstraints>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
-            <ColumnConstraints percentWidth="16.6" fillWidth="true"/>
+            <ColumnConstraints percentWidth="16.6"/>
+            <ColumnConstraints percentWidth="16.6"/>
+            <ColumnConstraints percentWidth="16.6"/>
+            <ColumnConstraints percentWidth="16.6"/>
+            <ColumnConstraints percentWidth="16.6"/>
+            <ColumnConstraints percentWidth="16.6"/>
         </columnConstraints>
         <children>
             <Button styleClass="gridButton" GridPane.columnSpan="3" onAction="#handleBuildShipButton">

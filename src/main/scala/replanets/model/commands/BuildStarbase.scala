@@ -1,7 +1,7 @@
 package replanets.model.commands
 
-import replanets.common.{PlanetId, ServerData}
-import replanets.model.Specs
+import replanets.common.{Constants, PlanetId, ServerData}
+import replanets.model.{MoneySupplies, Specs}
 
 case class BuildStarbase(
   planetId: PlanetId
@@ -19,10 +19,16 @@ case class BuildStarbase(
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
-    val planetState = state.planets(planetId).copy(buildBase = 1)
+    val planet = state.planets(planetId)
+    val remaining = specs.formulas.remainingMoneySupplies(MoneySupplies(planet.money, planet.supplies), Constants.StarbaseCost.money)
+    val newPlanetState = planet.copy(
+      buildBase = 1,
+      surfaceMinerals = planet.surfaceMinerals.minus(Constants.StarbaseCost),
+      money = remaining.money,
+      supplies = remaining.supplies
+    )
     state.copy(
-      planets = state.planets.updated(planetId, planetState)
+      planets = state.planets.updated(planetId, newPlanetState)
     )
   }
 }
-

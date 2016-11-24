@@ -1,8 +1,7 @@
 package replanets.model.commands
 
 import replanets.common.{Constants, PlanetId, ServerData}
-import replanets.model.Specs
-
+import replanets.model.{MoneySupplies, Specs}
 import replanets.model.StarbaseExtensions._
 import replanets.common.NumberExtensions._
 
@@ -26,13 +25,14 @@ case class BaseBuildDefences(
     val base = state.bases(baseId)
     val actualBuild = defencesToBuild.upperBound(base.maxPossibleDefencesBuild())
     val totalCost = Constants.DefenceCost.mul(actualBuild)
-    val (remainingMoney, remainingSupplies) =
-      if(planet.money < totalCost.money) (0, planet.supplies - (totalCost.money - planet.money))
-      else (planet.money - totalCost.money, planet.supplies)
+    val remaining = specs.formulas.remainingMoneySupplies(
+      MoneySupplies(planet.money, planet.supplies),
+      totalCost.money
+    )
     val newPlanetState = planet.copy(
       surfaceMinerals = planet.surfaceMinerals.minus(totalCost),
-      money = remainingMoney,
-      supplies = remainingSupplies
+      money = remaining.money,
+      supplies = remaining.supplies
     )
     val newBaseState = base.copy(
       defences = base.defences + actualBuild,

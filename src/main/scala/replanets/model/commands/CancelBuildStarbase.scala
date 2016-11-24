@@ -19,6 +19,7 @@ case class CancelBuildStarbase(
   }
 
   override def apply(state: ServerData, specs: Specs): ServerData = {
+    //TODO: Ideally, this code should never been executed, because this command is only intented to "cancel" the buildbase command already existing in the command seq
     val planetState = state.planets(planetId).copy(buildBase = 0)
     state.copy(
       planets = state.planets.updated(planetId, planetState)

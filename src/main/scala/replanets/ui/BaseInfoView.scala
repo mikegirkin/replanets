@@ -15,7 +15,6 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.stage.Popup
 import scalafxml.core.macros.sfxml
-
 import replanets.model.StarbaseExtensions._
 import replanets.common.NumberExtensions._
 
@@ -33,9 +32,12 @@ class BaseInfoView(
   val phFighters: Pane,
   val lblPrimaryOrder: Label,
   val lblEngines: Label,
-  val lblHulls: Label,
+  val phEngineTechLevel: Pane,
+  val phHullsTechLevel: Pane,
   val lblBeams: Label,
+  val phBeamsTechLevel: Pane,
   val lblTorpedoes: Label,
+  val phTorpsTechLevel: Pane,
 
   val lvStorage: ListView[(Int, String)],
 
@@ -71,6 +73,63 @@ class BaseInfoView(
   )
 
   phFighters.children = Seq(fightersSpinner)
+
+  private def techLevelSpinner(
+    getter: Starbase => Int,
+    shipBeingBuiltTechLevelRequirement: Starbase => Option[Int],
+    setter: Int => Unit
+  ) = new Spinner(
+    createStringBinding(() => starbase.value.fold(0)(getter).toString, starbase),
+    (delta) => starbase.value.foreach { s =>
+      val initiallyHad = getter(
+        game.turnInfo(viewModel.turnShown).initialState.bases(s.id)
+      )
+      val shipBeingBuiltRequires = shipBeingBuiltTechLevelRequirement(s)
+      val minimalPossibleLevel = (initiallyHad +: shipBeingBuiltRequires.toSeq).max
+      val fundsAvailable = s.planet.supplies + s.planet.money
+      val boundedTechLevel = (getter(s) + delta).bounded(
+        minimalPossibleLevel,
+        game.specs.formulas.maxAchievableTechLevel(initiallyHad, fundsAvailable))
+      setter(boundedTechLevel)
+    }
+  )
+
+  val hullsTechLevelSpinner = techLevelSpinner(
+    _.hullsTech,
+    _.shipBeingBuilt.map(_.hull.techLevel.toInt),
+    level => starbase.value.foreach { s =>
+      actions.baseSetTechLevels(s, level, s.engineTech, s.beamTech, s.torpedoTech)
+    }
+  )
+
+  val enginesTechLevelSpinner = techLevelSpinner(
+    _.engineTech,
+    _.shipBeingBuilt.map(_.engine.techLevel.toInt),
+    level => starbase.value.foreach { s =>
+      actions.baseSetTechLevels(s, s.hullsTech, level, s.beamTech, s.torpedoTech)
+    }
+  )
+
+  val beamTechLevelSpinner = techLevelSpinner(
+    _.beamTech,
+    _.shipBeingBuilt.flatMap(_.beams.map(_.spec.techLevel)),
+    level => starbase.value.foreach { s =>
+      actions.baseSetTechLevels(s, s.hullsTech, s.engineTech, level, s.torpedoTech)
+    }
+  )
+
+  val torpedoTechLevelSpinner = techLevelSpinner(
+    _.torpedoTech,
+    _.shipBeingBuilt.flatMap(_.launchers.map(_.spec.techLevel)),
+    level => starbase.value.foreach { s =>
+      actions.baseSetTechLevels(s, s.hullsTech, s.engineTech, s.beamTech, level)
+    }
+  )
+
+  phHullsTechLevel.children = Seq(hullsTechLevelSpinner)
+  phEngineTechLevel.children = Seq(enginesTechLevelSpinner)
+  phBeamsTechLevel.children = Seq(beamTechLevelSpinner)
+  phTorpsTechLevel.children = Seq(torpedoTechLevelSpinner)
 
   val primaryOrderSelector =
     new ListView[(Int, String)] {
@@ -127,7 +186,6 @@ class BaseInfoView(
     lblPrimaryOrder.text = primaryOrderText
     primaryOrderSelector.selectionModel.delegate.get.select((base.primaryOrder, primaryOrderText))
     lblEngines.text = base.engineTech.toString
-    lblHulls.text = base.hullsTech.toString
     lblBeams.text = base.beamTech.toString
     lblTorpedoes.text = base.torpedoTech.toString
 
