@@ -3,8 +3,9 @@ package replanets.model
 import java.nio.file.{Files, Path}
 
 import replanets.common._
-import replanets.model.commands.PlayerCommand
 import replanets.model.trn.TrnWriter
+import NumberExtensions._
+import replanets.model.commands.v0.PlayerCommand
 
 case class Game(
   name: String,
@@ -36,6 +37,10 @@ case class Game(
     val trnWriter = new TrnWriter(this)
     val trnFilepath = gameDb.dbDirectoryPath.resolve(s"${lastTurn.value}").resolve(filename)
     Files.write(trnFilepath, trnWriter.write().toArray)
+  }
+
+  def buildTorpedoes(starbaseId: PlanetId, torpedoType: LauncherId, delta: Int) = {
+
   }
 
 }

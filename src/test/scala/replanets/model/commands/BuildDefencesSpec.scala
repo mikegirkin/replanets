@@ -3,6 +3,7 @@ package replanets.model.commands
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common.{PlanetId, TurnId}
 import replanets.model.TestGame_10
+import replanets.model.commands.v0.{BuildDefences, BuildFactories}
 
 class BuildDefencesSpec extends WordSpec with Matchers with TestGame_10 {
   "Build defences command" should {

@@ -5,8 +5,8 @@ import java.nio.file.Paths
 import java.nio.{ByteBuffer, ByteOrder}
 
 import replanets.common._
+import replanets.model.commands.v0.PlayerCommand
 import replanets.model.{Game, Starbase}
-import replanets.model.commands.PlayerCommand
 import replanets.recipes.{BYTE, DWORD}
 
 import scala.io.{Codec, Source}

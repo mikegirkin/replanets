@@ -3,6 +3,7 @@ package replanets.model
 import play.api.libs.json.Json._
 import play.api.libs.json._
 import replanets.common._
+import replanets.model.commands.v0._
 import replanets.model.commands.{SetNativeTax, _}
 
 object JsonUtils {

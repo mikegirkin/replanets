@@ -4,6 +4,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common.{PlanetId, TurnId}
 import replanets.model.TestGame_10
+import replanets.model.commands.v0.SetNativeTax
 
 class SetNativeTaxSpec extends WordSpec with Matchers with MockitoSugar with TestGame_10 {
   "SetNativeTax command" should {

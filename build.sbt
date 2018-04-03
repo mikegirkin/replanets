@@ -5,7 +5,7 @@ lazy val root = (project in file(".")).
   settings(
     name := "replanets",
     version := "1.0.0",
-    scalaVersion := "2.11.8"
+    scalaVersion := "2.12.0"
   )
 
 unmanagedJars in Compile += Attributed.blank(file(System.getenv("JAVA_HOME") + "/jre/lib/ext/jfxrt.jar"))

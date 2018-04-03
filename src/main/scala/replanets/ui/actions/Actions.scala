@@ -3,6 +3,7 @@ package replanets.ui.actions
 import replanets.common._
 import replanets.model._
 import replanets.model.commands._
+import replanets.model.commands.v0._
 import replanets.ui.MapObject
 import replanets.ui.viewmodels.ViewModel
 

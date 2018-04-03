@@ -1,6 +1,6 @@
 package replanets.ui.controls
 
-import replanets.common.{Missions, OwnShip, ServerData, Ship}
+import replanets.common.{Missions, OwnShip, GameState, Ship}
 
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
@@ -20,7 +20,7 @@ case class SelectedMission(
 
 class SelectMissionView(
   ship: () => OwnShip,
-  state: ServerData,
+  state: GameState,
   missionSpecs: Missions,
   onSelect: (SelectedMission) => Unit
 ) extends Popup {

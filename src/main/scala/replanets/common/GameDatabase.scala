@@ -9,7 +9,7 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import replanets.model.JsonUtils._
-import replanets.model.commands.PlayerCommand
+import replanets.model.commands.v0.PlayerCommand
 
 class GameDatabase(gamePath: Path, val playingRace: RaceId) {
   val dbFoldername = "db"
@@ -39,7 +39,7 @@ class GameDatabase(gamePath: Path, val playingRace: RaceId) {
     result
   }
 
-  def loadRsts(specs: Specs): Iterable[(Int, Int, ServerData)] = {
+  def loadRsts(specs: Specs): Iterable[(Int, Int, GameState)] = {
     val fileListInDb = Files.newDirectoryStream(dbDirectoryPath)
     fileListInDb.filter(f => Files.isDirectory(f))
       .flatMap { turnDirectory =>

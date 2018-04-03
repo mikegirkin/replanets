@@ -4,6 +4,7 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
+import replanets.model.commands.v0.{SetPlanetFcode, SetShipFcode}
 import replanets.model.{Game, Specs, TestGame_10, TurnInfo}
 
 class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar {
@@ -31,7 +32,7 @@ class SetPlanetFcodeCommandSpec extends WordSpec with Matchers with MockitoSugar
       when(planet1.fcode).thenReturn(Fcode("AAB"))
       val planet2 = mock[Planet]
       when(planet2.fcode).thenReturn(Fcode("sdd"))
-      val serverData = mock[ServerData]
+      val serverData = mock[GameState]
       when(serverData.planets).thenReturn(
         Map(
           planetId1 -> planet1,

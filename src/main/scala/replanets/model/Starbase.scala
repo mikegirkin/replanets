@@ -16,7 +16,7 @@ case class Starbase(
   storedHulls: Map[HullId, Int],
   storedBeams: IndexedSeq[Int],
   storedLaunchers: IndexedSeq[Int],
-  storedTorpedoes: IndexedSeq[Int],
+  storedTorpedoes: scala.collection.mutable.Map[LauncherId, Int],
   fightersNumber: Int,
   actionedShipId: Int,
   shipAction: Int,

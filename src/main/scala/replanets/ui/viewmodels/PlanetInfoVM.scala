@@ -2,7 +2,7 @@ package replanets.ui.viewmodels
 
 import replanets.common._
 import replanets.model.Game
-import replanets.model.commands.SetPlanetFcode
+import replanets.model.commands.v0.SetPlanetFcode
 
 class PlanetInfoVM(game: Game, turn: TurnId, planetId: PlanetId) {
   val planetRecord = game.turnInfo(turn).stateAfterCommands.planets(planetId)

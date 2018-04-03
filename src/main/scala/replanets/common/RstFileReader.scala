@@ -5,29 +5,6 @@ import java.nio.file.{Files, Path}
 import replanets.model._
 import replanets.recipes.{DWORD, SpacePaddedString}
 
-case class ServerData(
-  isWinplan: Boolean,
-  subversion: String,
-
-  ships: Map[ShipId, Ship],
-  planets: Map[PlanetId, Planet],
-  bases: Map[PlanetId, Starbase],
-  messages: IndexedSeq[MessageInfo],
-  generalInfo: GeneralTurnInformation,
-  mineFields: IndexedSeq[MineFieldRecord],
-  ionStorms: IndexedSeq[IonStorm],
-  explosions: IndexedSeq[ExplosionRecord]
-) {
-
-  def ownShips: Map[ShipId, OwnShip] = ships.filter { case (_, ship) => ship.isInstanceOf[OwnShip] }.mapValues{ _.asInstanceOf[OwnShip] }
-
-  def getShipsAtCoords(coords: IntCoords): Seq[Ship] = {
-    ships.values
-      .filter(ship => ship.coords == coords)
-      .toSeq
-  }
-}
-
 object RstFileReader {
 
   def read(file: Path, specs: Specs) = {
@@ -92,7 +69,7 @@ object RstFileReader {
 
     val ships = buildShipsMap(specs, shipRecords, targets, shipCoords)
 
-    ServerData(isWinplan, subversion, ships, planets, bases, messages, generalInfo, mineFields, ionStorms, explosions)
+    GameState(isWinplan, subversion, ships, planets, bases, messages, generalInfo, mineFields, ionStorms, explosions)
   }
 
   def readGeneralInfo(file: Path) = {

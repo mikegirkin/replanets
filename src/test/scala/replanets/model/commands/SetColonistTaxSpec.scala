@@ -5,6 +5,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import replanets.common._
 import replanets.model.TestGame_1
+import replanets.model.commands.v0.{SetColonistTax, SetPlanetFcode}
 
 class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with TestGame_1 {
   "SetColonistTaxRateCommand" should {
@@ -24,7 +25,7 @@ class SetColonistTaxSpec extends WordSpec with Matchers with MockitoSugar with T
       val cmd2 = SetColonistTax(planetId, 12)
       val planet = mock[Planet]
       when(planet.colonistTax).thenReturn(12)
-      val initialState = mock[ServerData]
+      val initialState = mock[GameState]
       when(initialState.planets).thenReturn(
         Map(
           PlanetId(213) -> planet
